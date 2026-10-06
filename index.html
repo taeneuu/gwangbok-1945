@@ -42,7 +42,7 @@ button{font-family:inherit;cursor:pointer}
 .ch.on .face{transform:scale(1.1)}
 /* 인물 사진 */
 .face{position:relative;overflow:hidden}
-.face img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) sepia(.22) contrast(1.06);background:#d8ccb4}
+.face img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;background:#d8ccb4}
 @keyframes pop{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
 /* panel */
 .panel{padding:18px 20px 26px;flex:1;display:flex;flex-direction:column;gap:14px}
@@ -283,6 +283,16 @@ ul.fact li{margin:3px 0}
 details.opt-more{margin-top:18px;border:2px dashed var(--line);border-radius:12px;padding:10px 14px;background:#fffdf6}
 details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
 @media (max-width:720px){
+  #top{gap:8px;padding:8px 12px}
+  #top .part{white-space:normal;font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+  #top .ibtn{padding:6px 8px;font-size:12px}
+  .vis{aspect-ratio:auto;height:clamp(230px,62vw,300px);max-height:none}
+  .tags{left:8px;top:8px}
+  .tag{font-size:12px;padding:2px 9px}
+  .ch .nm{font-size:12px;padding:1px 8px}
+  .wcards.strip{position:static;justify-content:center;padding:12px 12px 0;animation:pop .4s both}
+  .wcards.strip .wcard{width:auto;flex:1 1 0;max-width:150px}
+  .wcards.strip .wcard.one{max-width:240px}
   .opts{grid-template-columns:1fr}
   .src{grid-template-columns:1fr}
   .cards3,.sel3,.fate,.sumg{grid-template-columns:1fr}
@@ -336,6 +346,12 @@ details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
 <div id="pop"></div>
 
 <script>
+/* =====================================================================
+   [v6 변경 내역] 인물 사진 컬러 + 모바일 화면 잘림 수정
+   - .face img 흑백·세피아 효과 제거 (넣은 사진 색 그대로)
+   - 모바일: 상단 단계 이름 2줄 표시, 그림 영역 높이 키움, 사진 카드는 그림 아래 줄로 이동
+   - 지도의 '전국 지부 145개' 상자 위치 조정
+   ===================================================================== */
 /* =====================================================================
    [v5 변경 내역] 20분 역사 시뮬레이션으로 압축·재배치 (기능·디자인 유지)
    - 제목: 「1945, 해방된 조선의 선택」 / 부제 「광복 이후, 새로운 나라를 만드는 세 가지 길」
@@ -564,8 +580,9 @@ function stopAll(ms=300){ ACTIVE.slice().forEach(h=>h.stop(ms)); ACTIVE=[]; }
 function showCredit(img,key){ const t=CREDIT[key]; if(t&&!img.nextElementSibling?.classList?.contains('ptag')) img.insertAdjacentHTML('afterend',`<div class="ptag">${t}</div>`); }
 /* 장면 위 작은 사진 카드: [{img:'war1', d:'8월 6일', cap:'설명'}] (사진이 없으면 글자 카드만) */
 function showCards(cards){
-  const v=$('.vis'); if(!v) return; v.querySelector('.wcards')?.remove();
-  v.insertAdjacentHTML('beforeend',`<div class="wcards">${cards.map(c=>`<div class="wcard ${cards.length===1?'one':''}"><img src="images/${c.img}.jpg" alt="" onerror="this.remove()" onload="showCredit(this,'${c.img}')"><b>${c.d||''}</b>${c.cap}</div>`).join('')}</div>`);
+  const v=$('.vis'); if(!v) return; v.querySelector('.wcards')?.remove(); stage.querySelector('.wcards.strip')?.remove();
+  const mobile=window.matchMedia('(max-width:720px)').matches; /* [v6] 모바일: 그림 아래 줄에 표시 */
+  v.insertAdjacentHTML(mobile?'afterend':'beforeend',`<div class="wcards ${mobile?'strip':''}">${cards.map(c=>`<div class="wcard ${cards.length===1?'one':''}"><img src="images/${c.img}.jpg" alt="" onerror="this.remove()" onload="showCredit(this,'${c.img}')"><b>${c.d||''}</b>${c.cap}</div>`).join('')}</div>`);
 }
 
 /* ================= 타자 효과 ================= */
@@ -693,7 +710,7 @@ const BG={
       inner+=`<g class="dot" style="animation-delay:.1s"><circle cx="155" cy="255" r="11" fill="#f3c76a" stroke="#2a2119" stroke-width="2.5"/></g><text x="141" y="252" text-anchor="end" font-size="16" font-weight="900" fill="#2a2119" stroke="#fffaf0" stroke-width="4" paint-order="stroke">서울 (본부)</text>`;
     }
     inner+='</g>';
-    if(mode==='branch') inner+=`<g class="fadein" style="animation-delay:3.8s"><rect x="560" y="290" width="220" height="50" rx="10" fill="#fffaf0" stroke="#2a2119" stroke-width="2"/><text x="670" y="322" text-anchor="middle" font-size="20" font-weight="900" fill="#b3352b">전국 지부 145개</text></g>`;
+    if(mode==='branch') inner+=`<g class="fadein" style="animation-delay:3.8s"><rect x="490" y="292" width="190" height="46" rx="10" fill="#fffaf0" stroke="#2a2119" stroke-width="2"/><text x="585" y="322" text-anchor="middle" font-size="19" font-weight="900" fill="#b3352b">전국 지부 145개</text></g>`;
     return svg(inner);
   },
   doc:()=>svg(`<rect width="800" height="360" fill="#5a3b25"/>${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M0 ${i*42+10} Q400 ${i*42+22} 800 ${i*42+8}" stroke="#4a2f1d" stroke-width="2" fill="none"/>`).join('')}
