@@ -1,0 +1,1410 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>광복 이후 세 가지 길</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&family=Noto+Serif+KR:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#f4ecdc;--paper2:#e9dcc0;--card:#fffaf0;--ink:#2a2119;--muted:#6f6253;
+  --red:#b3352b;--red2:#8f261e;--blue:#23467e;--gold:#b98a2e;--green:#2e6a4c;--line:#d3c19c;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#1b1815;color:var(--ink);font-family:'Noto Sans KR','Apple SD Gothic Neo','Malgun Gothic',sans-serif;-webkit-font-smoothing:antialiased}
+button{font-family:inherit;cursor:pointer}
+#app{max-width:1040px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column;background:var(--paper);box-shadow:0 0 40px rgba(0,0,0,.5)}
+/* header */
+#top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#2a2119;color:#f4ecdc;position:sticky;top:0;z-index:20}
+#top .logo{font-family:'Noto Serif KR',serif;font-weight:900;font-size:16px;white-space:nowrap}
+#top .part{flex:1;min-width:0;font-size:13px;color:#d9c9a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#top .part b{color:#fff;font-weight:700}
+#top .dots{display:flex;gap:5px}
+#top .dots i{width:9px;height:9px;border-radius:50%;background:#5b4d3f;display:block}
+#top .dots i.done{background:#b98a2e}
+#top .dots i.now{background:#e8574b;box-shadow:0 0 0 3px rgba(232,87,75,.3)}
+#top .ibtn{background:#43372c;color:#f4ecdc;border:0;border-radius:8px;padding:7px 10px;font-size:13px;white-space:nowrap}
+#top .ibtn:hover{background:#584838}
+#stage{flex:1;display:flex;flex-direction:column}
+/* visual */
+.vis{position:relative;width:100%;aspect-ratio:800/360;max-height:46vh;overflow:hidden;background:#000;flex-shrink:0}
+.vis svg.bg{position:absolute;inset:0;width:100%;height:100%;display:block}
+.tags{position:absolute;left:12px;top:12px;display:flex;flex-wrap:wrap;gap:6px;z-index:3}
+.tag{background:rgba(255,250,240,.92);border:1.5px solid var(--ink);border-radius:99px;padding:3px 11px;font-size:13px;font-weight:700}
+.chars{position:absolute;inset:0;pointer-events:none;z-index:2}
+.ch{position:absolute;bottom:7%;display:flex;flex-direction:column;align-items:center;transition:opacity .3s,filter .3s,transform .3s;animation:pop .5s both}
+.ch.l{left:9%}.ch.r{right:9%}.ch.c{left:50%;transform:translateX(-50%)}
+.ch .face{width:clamp(62px,11vw,108px);aspect-ratio:1;border-radius:50%;background:var(--c);color:#fff8e6;display:grid;place-items:center;border:4px solid #fff8e6;box-shadow:0 6px 16px rgba(0,0,0,.35);font-family:'Noto Serif KR',serif;font-weight:900;transition:transform .3s}
+.ch .face span{font-size:clamp(20px,3.4vw,34px);line-height:1}
+.ch .face.len3 span{font-size:clamp(15px,2.5vw,25px)}
+.ch .nm{margin-top:6px;background:#fff8e6;border:1.5px solid var(--ink);border-radius:99px;padding:2px 10px;font-weight:700;font-size:13px;white-space:nowrap}
+.ch.dim{opacity:.5;filter:grayscale(.6)}
+.ch.on .face{transform:scale(1.1)}
+/* 인물 사진 */
+.face{position:relative;overflow:hidden}
+.face img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:50% 18%;filter:grayscale(1) sepia(.22) contrast(1.06);background:#d8ccb4}
+@keyframes pop{from{opacity:0;translate:0 14px}to{opacity:1;translate:0 0}}
+/* panel */
+.panel{padding:18px 20px 26px;flex:1;display:flex;flex-direction:column;gap:14px}
+.dlg{position:relative;background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:22px 20px 18px;min-height:112px;cursor:pointer;box-shadow:4px 4px 0 var(--ink);font-size:clamp(17px,2.1vw,20px);line-height:1.65;user-select:none}
+.dlg.nar{background:#2f2721;color:#f4ecdc;border-color:#2f2721;box-shadow:4px 4px 0 #8a7556;font-family:'Noto Serif KR',serif}
+.dlg .who{position:absolute;top:-15px;left:16px;background:var(--c);color:#fff;font-weight:700;font-size:14px;padding:3px 14px;border-radius:99px;border:2px solid var(--ink)}
+.dlg .more{position:absolute;right:14px;bottom:8px;font-size:12px;color:var(--muted);animation:blink 1.2s infinite}
+.dlg.nar .more{color:#cbb894}
+.recon{font-size:12.5px;color:var(--muted);margin-top:-4px}
+@keyframes blink{50%{opacity:.25}}
+.actions{display:flex;justify-content:flex-end;align-items:center;gap:10px;flex-wrap:wrap}
+.btn{border:2px solid var(--ink);background:var(--card);color:var(--ink);font-weight:700;font-size:16px;padding:11px 22px;border-radius:12px;box-shadow:3px 3px 0 var(--ink);transition:transform .1s,box-shadow .1s}
+.btn:hover:not(:disabled){transform:translate(-1px,-1px);box-shadow:4px 4px 0 var(--ink)}
+.btn:active:not(:disabled){transform:translate(2px,2px);box-shadow:1px 1px 0 var(--ink)}
+.btn.primary{background:var(--red);color:#fff}
+.btn.big{font-size:20px;padding:14px 34px}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn.ghost{box-shadow:none;border-color:var(--line);background:transparent;font-size:14px;padding:8px 14px}
+/* question */
+.q{background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:18px;box-shadow:4px 4px 0 var(--ink)}
+.qlabel{display:inline-block;background:var(--ink);color:#f4ecdc;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px;margin-bottom:8px;letter-spacing:.02em}
+.qlabel.write{background:var(--red)}
+.q h3{margin:0 0 14px;font-family:'Noto Serif KR',serif;font-size:clamp(19px,2.5vw,24px);line-height:1.45}
+.q .lead{font-size:15px;color:var(--muted);margin:-6px 0 12px;line-height:1.6}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opts.one{grid-template-columns:1fr}
+.opt{display:flex;align-items:center;gap:10px;text-align:left;background:#fff;border:2px solid var(--line);border-radius:12px;padding:13px 14px;font-size:clamp(16px,2vw,18px);font-weight:500;color:var(--ink);min-height:58px;transition:all .15s}
+.opt:hover{border-color:var(--ink);background:#fff7e6}
+.opt .num{flex-shrink:0;width:30px;height:30px;border-radius:50%;background:var(--paper2);display:grid;place-items:center;font-weight:900;font-size:15px}
+.opt.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.opt.sel .num{background:var(--red);color:#fff}
+.opt.big{justify-content:center;font-size:22px;font-weight:900;font-family:'Noto Serif KR',serif;min-height:68px}
+.reason{margin-top:16px;padding-top:14px;border-top:2px dashed var(--line);animation:pop .35s both}
+.hidden{display:none!important}
+.mine{font-size:15px;margin-bottom:10px}
+.mine b{background:#fde7c4;padding:2px 8px;border-radius:6px}
+.reason label{display:block;font-weight:900;font-size:17px;margin-bottom:8px}
+.reason label small{font-weight:500;color:var(--muted);font-size:15px;margin-left:6px}
+.reason input,.sent input{width:100%;font-size:18px;padding:13px 14px;border:2px solid var(--ink);border-radius:10px;background:#fff;font-family:inherit;color:var(--ink)}
+.reason input:focus,.sent input:focus{outline:3px solid #f0b85a;outline-offset:1px}
+.sent{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;font-size:18px;line-height:1.6;font-family:'Noto Serif KR',serif;font-weight:700}
+.sent input{flex:1 1 230px;width:auto;font-family:'Noto Sans KR',sans-serif;font-weight:500;font-size:17px;padding:10px 12px}
+.sent .fixed{background:#fde7c4;padding:2px 8px;border-radius:6px}
+.hint{font-size:13px;color:var(--muted);margin-top:8px}
+.hints{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.hints button{border:1.5px dashed var(--muted);background:#fff;border-radius:99px;padding:5px 11px;font-size:13px;color:var(--ink)}
+.hints button:hover{border-style:solid;background:#fff7e6}
+/* history */
+.hist{background:#fff6df;border:2px solid var(--ink);border-left:10px solid var(--gold);border-radius:14px;padding:18px 20px;box-shadow:4px 4px 0 var(--ink);font-size:17px;line-height:1.75;animation:pop .4s both}
+.hhead{font-family:'Noto Serif KR',serif;font-weight:900;font-size:21px;margin-bottom:10px}
+.cmp{background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:9px 12px;font-size:15px;margin-bottom:12px}
+.chip{display:inline-block;background:var(--ink);color:#fff;font-size:12px;font-weight:700;padding:2px 8px;border-radius:5px;margin-right:4px}
+.hrow{display:grid;grid-template-columns:96px 1fr;gap:10px;padding:8px 0;border-bottom:1px dashed var(--line);align-items:start}
+.hrow:last-of-type{border-bottom:0}
+.hrow .lb{font-size:12.5px;font-weight:900;background:var(--paper2);border-radius:6px;padding:3px 6px;text-align:center;margin-top:3px}
+.hrow.mine-r .lb{background:var(--ink);color:#fff}
+.hrow.real .lb{background:var(--blue);color:#fff}
+.verdict{margin-top:12px;background:#eaf3ec;border-radius:10px;padding:10px 12px;font-size:16px;font-weight:500}
+.key{margin-top:14px;text-align:center;font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(20px,2.8vw,27px);color:var(--red2);padding:12px;border-top:2px solid var(--ink);border-bottom:2px solid var(--ink);background:#fffaf0}
+.common{margin-top:14px;background:#2f2721;color:#f4ecdc;border-radius:12px;padding:14px 16px;font-size:16px;line-height:1.7;font-weight:500}
+.common b{color:#f0c46b}
+ol.cond{margin:8px 0 0;padding-left:24px}
+ol.cond li{margin:2px 0}
+ul.fact{margin:4px 0 0;padding-left:20px}
+ul.fact li{margin:3px 0}
+/* terms */
+.term{border-bottom:2px dotted var(--gold);cursor:help;font-weight:700}
+.dlg.nar .term{border-color:#e0b860}
+#pop{position:fixed;z-index:60;max-width:300px;background:#2a2119;color:#f4ecdc;padding:11px 14px;border-radius:10px;font-size:14px;line-height:1.6;box-shadow:0 8px 24px rgba(0,0,0,.35);display:none}
+#pop b{color:#f0c46b;display:block;margin-bottom:2px}
+/* prologue */
+.pro{flex:1;min-height:calc(100vh - 52px);background:#000;color:#eee;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;position:relative;overflow:hidden;padding:20px}
+.pro .date{font-family:'Courier New',monospace;font-size:clamp(40px,8vw,84px);letter-spacing:.08em;color:#f2e6cc}
+.pro .tap{position:absolute;bottom:22px;left:0;right:0;text-align:center;font-size:13px;color:#9a8f7e;animation:blink 1.4s infinite}
+.news{background:#ece2c8;color:#111;width:min(580px,92%);padding:18px 24px 22px;border:1px solid #6d5f45;box-shadow:0 20px 50px rgba(0,0,0,.6);transform:rotate(-2deg);animation:drop .7s cubic-bezier(.2,1.4,.4,1) both;font-family:'Noto Serif KR',serif}
+.news .mast{display:flex;justify-content:space-between;align-items:center;border-bottom:4px double #111;padding-bottom:6px;margin-bottom:12px;font-size:14px}
+.news .mast b{font-size:30px;font-weight:900;letter-spacing:.2em}
+.news h1{margin:4px 0 10px;font-size:clamp(34px,6.5vw,58px);line-height:1.15;font-weight:900;text-align:center}
+.news p{margin:0;font-size:15px;border-top:1px solid #111;padding-top:8px;text-align:center}
+@keyframes drop{from{opacity:0;transform:scale(1.6) rotate(-8deg)}to{opacity:1;transform:scale(1) rotate(-2deg)}}
+.pvis{width:min(900px,100%);aspect-ratio:800/360;position:relative;border-radius:8px;overflow:hidden;animation:fade 1s both}
+.pvis svg{width:100%;height:100%;display:block}
+.pnar{margin-top:22px;font-family:'Noto Serif KR',serif;font-size:clamp(19px,3vw,28px);min-height:1.6em;text-align:center;line-height:1.6}
+.pnar2{font-family:'Noto Serif KR',serif;font-size:clamp(22px,3.6vw,34px);text-align:center}
+.bigq{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(36px,7vw,70px);text-align:center;line-height:1.3;margin:0 0 34px;color:#fff;animation:fade 1.2s both}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+/* part card */
+.pcard{text-align:center;max-width:720px;animation:fade 1s both}
+.pcard .pk{font-family:'Courier New',monospace;color:#e8a86a;letter-spacing:.2em;font-size:16px}
+.pcard h2{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(32px,6vw,56px);margin:8px 0 14px;color:#fff}
+.pcard p{font-size:clamp(16px,2.4vw,20px);line-height:1.7;color:#d9c9a8;margin:0 0 26px;font-family:'Noto Serif KR',serif}
+.coreq{display:inline-block;border:1.5px solid #6b5a45;border-radius:12px;padding:10px 16px;font-size:clamp(14px,2vw,17px);color:#f4ecdc;font-family:'Noto Serif KR',serif;background:rgba(255,255,255,.04)}
+.coreq small{display:block;color:#a8977c;font-size:12px;margin-bottom:2px;font-family:'Noto Sans KR',sans-serif}
+/* full pages */
+.full{padding:26px 22px 34px;display:flex;flex-direction:column;gap:18px;flex:1}
+.ttl .kicker{font-size:13px;font-weight:900;color:var(--red);letter-spacing:.08em}
+.ttl h2{margin:4px 0 6px;font-family:'Noto Serif KR',serif;font-size:clamp(26px,4vw,38px);font-weight:900;line-height:1.3}
+.ttl p{margin:0;color:var(--muted);font-size:16px;line-height:1.7}
+/* intro */
+.intro{background:radial-gradient(ellipse at top,#3b2f25,#1b1612);color:#f4ecdc;flex:1;min-height:calc(100vh - 52px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:30px 20px;text-align:center;gap:20px}
+.intro .flag{width:120px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.5))}
+.intro h1{margin:0;font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(38px,7vw,64px);letter-spacing:.02em}
+.intro .sub{font-family:'Noto Serif KR',serif;font-size:clamp(17px,2.6vw,22px);color:#e6cf9f}
+.steps5{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:720px}
+.steps5 span{background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:99px;padding:6px 12px;font-size:14px}
+.steps5 em{font-style:normal;color:#e8a86a;margin:0 2px}
+.namebox{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.namebox input{font-size:17px;padding:11px 14px;border-radius:10px;border:2px solid #8a7556;background:#fffaf0;width:230px;font-family:inherit}
+.intro .note{font-size:13px;color:#a8977c;line-height:1.7}
+.resume{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;align-items:center;font-size:14px;color:#e6cf9f}
+/* source */
+.src{display:grid;grid-template-columns:1.15fr 1fr;gap:16px}
+.orig{background:#efe4c6;border:1px solid #8a7556;padding:20px 22px;font-family:'Noto Serif KR',serif;font-size:16px;line-height:1.9;box-shadow:inset 0 0 40px rgba(120,90,40,.25),4px 4px 0 var(--ink);position:relative}
+.orig h4{margin:0 0 4px;text-align:center;font-size:20px;font-weight:900}
+.orig .src-meta{text-align:center;font-size:13px;color:#5d4f3a;margin-bottom:12px}
+.orig p{margin:0 0 8px}
+.orig mark{background:linear-gradient(transparent 55%,#f3c76a 55%);color:inherit}
+.orig.pickable mark{cursor:pointer;border-radius:3px;transition:background .15s}
+.orig.pickable mark:hover{background:#f3c76a}
+.orig.pickable mark.on{background:#e8574b;color:#fff;box-shadow:0 0 0 2px #e8574b}
+.orig .cut{color:#7b6a50;font-size:13px}
+.easy{background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:18px;box-shadow:4px 4px 0 var(--ink)}
+.easy h4{margin:0 0 10px;font-size:18px}
+.easy ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:9px}
+.easy li{font-size:16px;line-height:1.6;padding-left:44px;position:relative}
+.easy li b{position:absolute;left:0;top:1px;background:var(--blue);color:#fff;font-size:12px;padding:2px 6px;border-radius:5px}
+.easy .sum{margin-top:14px;background:#fde7c4;border-radius:10px;padding:10px 12px;font-weight:700;font-size:16px;line-height:1.6}
+.step{display:inline-block;background:var(--blue);color:#fff;font-size:12px;font-weight:900;padding:2px 8px;border-radius:5px;margin-right:6px}
+/* meet / select */
+.cards3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.pc{perspective:900px;min-height:270px;cursor:pointer;background:none;border:0;padding:0;text-align:center;color:var(--ink)}
+.pc .in{position:relative;width:100%;height:100%;min-height:270px;transition:transform .6s;transform-style:preserve-3d}
+.pc.flip .in{transform:rotateY(180deg)}
+.pc .fr,.pc .bk{position:absolute;inset:0;backface-visibility:hidden;border:2px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:18px}
+.pc .fr{background:var(--card)}
+.pc .bk{background:var(--c);color:#fff;transform:rotateY(180deg)}
+.pc .face{width:96px;height:96px;border-radius:50%;background:var(--c);color:#fff8e6;display:grid;place-items:center;font-family:'Noto Serif KR',serif;font-weight:900;font-size:26px;border:4px solid #fff;box-shadow:0 4px 10px rgba(0,0,0,.25)}
+.pc .face.len3{font-size:21px}
+.pc .nm{font-family:'Noto Serif KR',serif;font-size:24px;font-weight:900}
+.pc .sb{font-size:13px;color:var(--muted);line-height:1.5}
+.pc .tp{font-size:13px;color:var(--red);font-weight:700}
+.pc .qt{font-family:'Noto Serif KR',serif;font-size:18px;line-height:1.6}
+.pc .kw{background:#fff;color:var(--ink);font-weight:900;font-size:20px;padding:6px 16px;border-radius:99px}
+.sel3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.sc{background:var(--card);border:2px solid var(--ink);border-radius:16px;box-shadow:4px 4px 0 var(--ink);padding:20px 16px;display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;transition:all .15s;color:var(--ink)}
+.sc:hover{transform:translateY(-3px)}
+.sc.on{background:var(--c);color:#fff;transform:translateY(-4px);box-shadow:6px 6px 0 var(--ink)}
+.sc .face{width:84px;height:84px;border-radius:50%;background:var(--c);color:#fff8e6;display:grid;place-items:center;font-family:'Noto Serif KR',serif;font-weight:900;font-size:24px;border:4px solid #fff}
+.sc .face.len3{font-size:19px}
+.sc .nm{font-size:15px;font-weight:700}
+.sc .path{font-family:'Noto Serif KR',serif;font-size:19px;font-weight:900;line-height:1.4}
+.sc .kws{display:flex;gap:5px;flex-wrap:wrap;justify-content:center}
+.sc .kws span{border:1.5px solid currentColor;border-radius:99px;padding:1px 9px;font-size:12.5px;font-weight:700}
+.sc .done{font-size:12px;background:var(--gold);color:#fff;border-radius:6px;padding:2px 8px}
+.cnt{font-size:14px;color:var(--muted);font-weight:700}
+.notice{background:#2f2721;color:#f4ecdc;border-radius:14px;padding:16px 18px;font-size:16px;line-height:1.75;box-shadow:4px 4px 0 #8a7556}
+.notice b{color:#f0c46b;font-size:17px}
+/* reflect */
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.two>div{background:var(--card);border:2px solid var(--ink);border-radius:14px;padding:16px;font-size:16px;line-height:1.7;box-shadow:3px 3px 0 var(--ink)}
+.two h4{margin:0 0 6px;font-size:16px}
+/* timeline */
+.tl{position:relative;padding-left:22px;display:flex;flex-direction:column;gap:8px}
+.tl:before{content:'';position:absolute;left:7px;top:6px;bottom:6px;width:3px;background:var(--line)}
+.tl div{position:relative;background:var(--card);border:1.5px solid var(--line);border-radius:10px;padding:8px 12px;font-size:15px;line-height:1.55}
+.tl div:before{content:'';position:absolute;left:-21px;top:13px;width:11px;height:11px;border-radius:50%;background:var(--line);border:2px solid var(--paper)}
+.tl div b{display:inline-block;min-width:92px;color:var(--muted)}
+.tl div.hl{border-color:var(--ink);background:#fff3d8;font-weight:700}
+.tl div.hl:before{background:var(--red)}
+.tl div.end{border-color:var(--ink);background:#2a2119;color:#f4ecdc}
+.tl div.end b{color:#e6cf9f}
+.fate{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.fate div{border:2px solid var(--c);border-radius:12px;padding:12px;background:#fff;font-size:14px;line-height:1.6}
+.fate div b{display:block;color:var(--c);font-size:16px;margin-bottom:2px}
+.fate div.me{background:#fff3d8;box-shadow:3px 3px 0 var(--c)}
+/* final */
+.pick{display:flex;flex-wrap:wrap;gap:8px}
+.pick button{border:2px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font-size:16px;font-weight:700;color:var(--ink)}
+.pick button:hover{border-color:var(--ink)}
+.pick button.sel{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pick.list button{border-radius:12px;text-align:left;font-weight:500;font-size:15px;width:100%}
+.pick.list button small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.pick.list button.sel small{color:#d9c9a8}
+.fq+.fq{margin-top:20px;padding-top:16px;border-top:2px dashed var(--line)}
+.fq h4{margin:0 0 10px;font-family:'Noto Serif KR',serif;font-size:19px}
+/* ending */
+.cert{background:#fffaf0;border:3px double var(--ink);border-radius:6px;padding:24px 24px 18px;box-shadow:6px 6px 0 var(--ink)}
+.cert h2{margin:0;text-align:center;font-family:'Noto Serif KR',serif;font-size:28px;font-weight:900}
+.cert .meta{text-align:center;color:var(--muted);font-size:14px;margin:6px 0 16px}
+.cert h5{margin:16px 0 6px;font-size:14px;color:var(--red);letter-spacing:.04em}
+.sumg{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.sumg div{border:1.5px solid var(--line);border-radius:10px;padding:10px 12px;background:#fff;font-size:15px;line-height:1.5}
+.sumg div small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.ans{background:#fff3d8;border-radius:10px;padding:10px 14px;font-family:'Noto Serif KR',serif;font-size:17px;line-height:1.7}
+.rec{display:flex;flex-direction:column;gap:8px}
+.rec div{border-bottom:1px dashed var(--line);padding:6px 0 8px;font-size:15px;line-height:1.6}
+.rec div small{display:block;color:var(--muted);font-size:12px;font-weight:700}
+.rec div i{font-style:normal;color:#5b4c3c}
+.empty{color:var(--muted);font-size:14px}
+.credit{font-size:12px;color:var(--muted);text-align:center;margin-top:10px}
+/* drawer & modal */
+#drawer{position:fixed;top:0;right:0;bottom:0;width:min(380px,92vw);background:var(--paper);z-index:50;transform:translateX(105%);transition:transform .3s;box-shadow:-10px 0 30px rgba(0,0,0,.4);display:flex;flex-direction:column}
+#drawer.open{transform:none}
+#drawer header{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:#2a2119;color:#fff;font-weight:900}
+#drawer header button{background:none;border:0;color:#fff;font-size:22px}
+#drawer .rec{padding:12px 16px;overflow:auto}
+#modal{position:fixed;inset:0;background:rgba(20,15,10,.7);z-index:55;display:none;align-items:center;justify-content:center;padding:16px}
+#modal.open{display:flex}
+#modal .box{background:var(--paper);max-width:760px;width:100%;max-height:88vh;overflow:auto;border-radius:16px;border:2px solid var(--ink);padding:20px;box-shadow:6px 6px 0 #000}
+#modal .tabs{display:flex;gap:8px;margin:10px 0 14px;flex-wrap:wrap}
+#modal .tabs button{border:2px solid var(--ink);background:#fff;border-radius:99px;padding:6px 14px;font-weight:700;font-size:14px}
+#modal .tabs button.on{background:var(--ink);color:#fff}
+/* anims inside svg */
+.cheer .p{animation:bob .55s ease-in-out infinite alternate}
+@keyframes bob{to{transform:translateY(-7px)}}
+.draw{stroke-dasharray:420;stroke-dashoffset:420;animation:drawl 1.6s .4s forwards}
+@keyframes drawl{to{stroke-dashoffset:0}}
+.fadein{opacity:0;animation:fade .8s forwards}
+.dot{opacity:0;animation:dotin .45s forwards;transform-box:fill-box;transform-origin:center}
+@keyframes dotin{from{opacity:0;transform:scale(2.5)}to{opacity:1;transform:scale(1)}}
+.flagw{animation:wave 1.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:left center}
+@keyframes wave{to{transform:skewY(4deg) scaleX(.94)}}
+.vis img.bgphoto,.pvis img.bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.35) grayscale(.35) contrast(1.05);animation:fade 2.2s both;z-index:1}
+.ptag{position:absolute;right:8px;bottom:6px;z-index:3;font-size:11px;color:#f4ecdc;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:6px}
+.wcards{position:absolute;right:12px;top:12px;z-index:4;display:flex;gap:8px;animation:pop .5s both}
+.wcard{width:clamp(84px,13vw,132px);background:#fffaf0;border:1.5px solid var(--ink);border-radius:8px;padding:5px;box-shadow:3px 3px 0 var(--ink);font-size:11.5px;line-height:1.35;font-weight:700}
+.wcard img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:grayscale(1) sepia(.2);border-radius:4px;margin-bottom:4px}
+.wcard b{display:block;color:var(--red);font-size:11px}
+.wcard.one{width:clamp(130px,20vw,200px)}
+.newsbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;filter:grayscale(1)}
+@media (max-width:720px){
+  .opts{grid-template-columns:1fr}
+  .src{grid-template-columns:1fr}
+  .cards3,.sel3,.fate,.sumg{grid-template-columns:1fr}
+  .pc,.pc .in{min-height:210px}
+  .two{grid-template-columns:1fr}
+  .hrow{grid-template-columns:1fr;gap:4px}
+  .hrow .lb{justify-self:start}
+  #top .dots{display:none}
+  #top .logo{display:none}
+  .panel{padding:16px 16px 24px}
+}
+@media print{
+  html,body,#app{background:#fff!important;box-shadow:none}
+  #top,.actions,.noprint,#drawer,#modal,#pop{display:none!important}
+  .cert{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <symbol id="tg" viewBox="0 0 360 240">
+      <rect width="360" height="240" fill="#fff"/>
+      <g transform="translate(180 120) rotate(33.69)">
+        <circle r="60" fill="#0047a0"/>
+        <path d="M-60 0A60 60 0 0 1 60 0A30 30 0 0 0 0 0A30 30 0 0 1 -60 0Z" fill="#cd2e3a"/>
+      </g>
+      <g fill="#111">
+        <g transform="translate(82 55) rotate(-56.31)"><rect x="-30" y="-20" width="60" height="10"/><rect x="-30" y="-5" width="60" height="10"/><rect x="-30" y="10" width="60" height="10"/></g>
+        <g transform="translate(278 185) rotate(-56.31)"><rect x="-30" y="-20" width="27.5" height="10"/><rect x="2.5" y="-20" width="27.5" height="10"/><rect x="-30" y="-5" width="27.5" height="10"/><rect x="2.5" y="-5" width="27.5" height="10"/><rect x="-30" y="10" width="27.5" height="10"/><rect x="2.5" y="10" width="27.5" height="10"/></g>
+        <g transform="translate(278 55) rotate(56.31)"><rect x="-30" y="-20" width="27.5" height="10"/><rect x="2.5" y="-20" width="27.5" height="10"/><rect x="-30" y="-5" width="60" height="10"/><rect x="-30" y="10" width="27.5" height="10"/><rect x="2.5" y="10" width="27.5" height="10"/></g>
+        <g transform="translate(82 185) rotate(56.31)"><rect x="-30" y="-20" width="60" height="10"/><rect x="-30" y="-5" width="27.5" height="10"/><rect x="2.5" y="-5" width="27.5" height="10"/><rect x="-30" y="10" width="60" height="10"/></g>
+      </g>
+      <rect width="360" height="240" fill="none" stroke="#999" stroke-width="2"/>
+    </symbol>
+  </defs>
+</svg>
+
+<div id="app">
+  <header id="top">
+    <div class="logo">광복 이후 세 가지 길</div>
+    <div class="part" id="partLabel"></div>
+    <div class="dots" id="dots"></div>
+    <button class="ibtn" id="recBtn">📒 나의 기록</button>
+    <button class="ibtn" id="sndBtn" title="소리 켜기/끄기">🔊</button>
+  </header>
+  <main id="stage"></main>
+</div>
+<div id="drawer"><header><span>📒 나의 기록</span><button id="drClose" aria-label="닫기">×</button></header><div class="rec" id="drList"></div></div>
+<div id="modal"><div class="box" id="modalBox"></div></div>
+<div id="pop"></div>
+
+<script>
+/* =====================================================================
+   [v4 변경 내역] 실제 소리·사진 파일을 넣을 자리 + 8·15 연출 강화
+   - 같은 폴더의 images/, audio/ 안에 정해진 이름의 파일이 있으면 자동 사용, 없으면 기존 SVG·무음
+     (파일 목록은 아래 SND_FILES, bgPhotoKey(), CH의 loc, 장면의 cards 참고)
+   - 코드로 만든 소리 추가: 라디오 잡음(static), 시계 초침(clock), 낮은 긴장음(drone)
+   - 새 함수: play(), cue(), stopAll(), showCards(), showCredit(), openSources()
+   - go(): 장면이 바뀌면 소리 정지 (keep:1 인 단계는 이어서 재생)
+   - R.scene: 장면 소리(amb)·대사별 소리(sfx)·소리 끊기(cut)·사진 카드(cards) 처리
+   - R.prologue(8·15): 잡음+옥음방송 → 완전한 정적 → 1945.08.15 정오 → 호외 → 조용한 거리 → 만세 → 실제 사진 → 현악 → 정적 → 질문
+   - frame(): 배경 사진 레이어, faceInner(): images/ 인물 사진 우선 → 위키미디어 → 한자 배지
+   - R.history: SOURCES에 사료가 들어 있으면 '당시 상황을 보여주는 사료' 버튼 표시
+   ===================================================================== */
+/* =====================================================================
+   [v3 변경 내역] 복습형 → 수업 전 '도입형' RPG로 서사·장면 순서만 수정
+   - 1945년 8월 초 → 8월 10일 전후 → 8월 15일 → 8월 16일 → 8월 하순 → 9월 순서로 COMMON 재배치
+   - 추가 장면: 8월 초 프롤로그, 총독부의 걱정(8월 10일 전후), 엔도–여운형(8월 15일 아침),
+                건국동맹(광복 직전의 준비), 8월 16일 거리, '광복 직후 조선의 문제' 카드, 수업 연결 장면
+   - 추가 선택(평가 없음): '이 순간 무엇을 준비할까?', '왜 일본 측은 여운형을 찾았을까?'
+   - R.prologue: 8·15 장면에 라디오 항복 방송 연출 추가, 마지막 질문 문구 수정
+   - 추가 렌더러 R.monologue: 8월 초 프롤로그·수업 연결 장면용 (기존 .pro 스타일 재사용)
+   - 도입부에서 1946~1948년 결과 숨김: 38선·포고 해설 문구 수정, 신탁통치 연결 장면은 본편 시작으로 이동
+   - 세 사람 등장(MEET): 여운형→김구→이승만 순서, 1945년 시점 설명으로 문구 수정
+   - PARTS[0] 이름 '광복 직후' → '1945년 8월', 시작 화면 안내문 수정
+   - STORE_KEY v3로 변경(장면 순서가 바뀌어 v2 저장 기록과 섞이지 않도록)
+   - 그대로 유지: CSS, 함수 구조, 저장·기록·인쇄, ROUTES(인물 경로), TL, FATE, 결과 화면
+   ===================================================================== */
+/* ================= 기본 상태 ================= */
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const stage = $('#stage');
+const S = { name:'', rec:{}, order:[], route:null, done:[], extra:{}, muted:false };
+const PARTS = ['1945년 8월','외세와 새로운 질서','세 가지 길','나의 답'];
+const CORE_Q = '광복은 되었는데, 왜 하나의 나라를 바로 만들지 못했을까?';
+const COMMON_LINE = '어느 한 사람의 선택만으로 이후의 역사가 결정된 것은 아닙니다. 국제 정세와 여러 정치 세력의 갈등, 사회적 혼란이 함께 작용했습니다.';
+const RECON = '※ 이 대화는 당시의 역사적 상황과 자료를 바탕으로 재구성한 것입니다.';
+const STORE_KEY = 'gwangbok3_v4';
+
+/* ================= 용어 사전 ================= */
+const TERMS = {
+  '치안':'사회의 안전과 질서를 지키는 일. 경찰이 하는 일을 떠올리면 쉬워요.',
+  '행정':'나라 살림을 실제로 운영하는 일. 세금 걷기, 학교·도로 관리 등.',
+  '정치범':'독립운동처럼 정치적인 이유로 감옥에 갇힌 사람.',
+  '조선총독부':'일제가 조선을 지배하기 위해 서울에 둔 최고 통치 기관.',
+  '정무총감':'조선총독부의 2인자. 1945년에는 엔도 류사쿠가 이 자리에 있었어요.',
+  '건준':'조선건국준비위원회의 줄임말. 광복 직후 치안·행정을 맡고 새 나라 세우기를 준비한 조직이에요. 정부는 아니었어요.',
+  '건국준비위원회':'조선건국준비위원회(건준). 광복 직후 여운형·안재홍 등이 만든 조직으로, 치안과 질서를 지키고 새 나라 건설을 준비했어요. 정부는 아니었어요.',
+  '건국동맹':'조선건국동맹. 1944년 여운형이 일본의 패망과 광복 이후를 대비해 비밀리에 만든 단체예요.',
+  '치안대':'건준이 지역의 질서를 지키기 위해 만든 자치 조직.',
+  '강령':'단체가 앞으로 이루려는 목표와 방향을 정리한 글.',
+  '38선':'북위 38도선. 1945년 미국과 소련이 일본군의 항복을 나누어 받기 위해 그은 임시 군사 경계선이에요. 처음부터 국경은 아니었어요.',
+  '소련군':'소련(지금의 러시아 등을 포함한 사회주의 국가)의 군대. 1945년 8월 38선 북쪽에 들어왔어요.',
+  '인민위원회':'광복 직후 북쪽 각 지역에 만들어진 자치 조직. 소련군은 이를 통해 영향력을 넓혔어요.',
+  '무장 해제':'군대가 가진 무기를 거두어 싸울 수 없게 하는 것.',
+  '군정':'군대가 직접 다스리는 통치 방식.',
+  '미군정':'1945년 9월부터 1948년 8월까지 미국 군대가 38도선 남쪽을 직접 다스린 것. 대한민국 정부가 세워지기 전이었어요.',
+  '포고':'정부나 군대가 사람들에게 널리 알리는 공식 명령.',
+  '사료':'역사를 연구하는 데 쓰이는 옛 자료(문서, 신문, 사진 등).',
+  '임시정부':'대한민국 임시정부. 1919년 상하이에서 세워진 독립운동 정부로, 광복 무렵에는 김구가 주석이었어요.',
+  '신탁통치':'스스로 정부를 운영할 준비가 덜 되었다고 보고, 다른 나라들이 일정 기간 대신 관리하는 것. 광복 후 찬성·반대를 두고 크게 대립했어요.',
+  '모스크바 3국 외상 회의':'1945년 12월 미국·영국·소련 외무장관 회의. 한국에 임시 정부를 세우고, 최대 5년간 신탁통치를 협의하기로 했어요.',
+  '미·소 공동 위원회':'한국 임시 정부를 세우는 방법을 논의한 미국·소련 대표 회의. 1946년, 1947년 두 번 모두 결렬되었어요.',
+  '좌익':'사회주의·공산주의 쪽 생각을 가진 세력.',
+  '우익':'자본주의·민족주의 쪽 생각을 가진 세력.',
+  '좌우합작':'좌익과 우익이 힘을 합쳐 하나의 통일 정부를 세우려 한 운동. 여운형과 김규식이 이끌었어요.',
+  '단독 정부':'한반도 전체가 아니라 남한이나 북한 한쪽에만 따로 세우는 정부.',
+  '남북 협상':'1948년 4월 김구·김규식이 평양에 가서 북측 지도자들과 통일 정부를 논의한 회의.',
+  '총선거':'국민이 투표해 국회의원 전체를 한꺼번에 뽑는 선거.',
+  '제헌 국회':'헌법을 만들기 위해 5·10 총선거로 뽑힌 우리나라 첫 국회.',
+  '유엔':'국제 연합(UN). 제2차 세계 대전 뒤 세계 평화를 위해 만든 국제기구.',
+  '조선인민공화국':'1945년 9월 6일 건준이 중심이 되어 선포한 정부 조직. 미군정은 인정하지 않았어요.',
+  '독립촉성중앙협의회':'1945년 10월 이승만이 여러 정당과 단체를 모아 만든 단체.',
+  '반공':'공산주의에 반대하는 것.',
+  '진주':'군대가 어떤 지역에 들어가 머무르는 것.',
+  '공용어':'나라나 기관에서 공식적으로 쓰는 언어.'
+};
+function fmt(raw){
+  return raw.replace(/\*\*(.+?)\*\*/g,'<b>$1</b>')
+            .replace(/\[\[([^\]|]+)(?:\|([^\]]+))?\]\]/g,(m,a,b)=>{const k=b||a;return `<span class="term" data-k="${k}">${a}</span>`});
+}
+function plain(raw){
+  return raw.replace(/\[\[([^\]|]+)(?:\|[^\]]+)?\]\]/g,'$1').replace(/\*\*/g,'').replace(/<[^>]+>/g,'');
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]))}
+/* 받침에 따라 조사 고르기: josa('치안','이','가') → '이' */
+function josa(w,a,b){const c=w.charCodeAt(w.length-1);if(c<0xAC00||c>0xD7A3)return a;return (c-0xAC00)%28?a:b}
+
+/* 용어 팝업 */
+document.addEventListener('click',e=>{
+  const t=e.target.closest('.term'); const pop=$('#pop');
+  if(t){
+    e.stopPropagation();
+    const k=t.dataset.k; pop.innerHTML=`<b>📖 ${k}</b>${TERMS[k]||''}`; pop.style.display='block';
+    const r=t.getBoundingClientRect(); const pw=Math.min(300,innerWidth-20);
+    pop.style.left=Math.max(10,Math.min(r.left,innerWidth-pw-10))+'px';
+    const top=r.bottom+8; pop.style.top=(top+pop.offsetHeight>innerHeight? r.top-pop.offsetHeight-8 : top)+'px';
+  } else pop.style.display='none';
+},true);
+
+/* ================= 저장 (localStorage) ================= */
+function save(){
+  try{ localStorage.setItem(STORE_KEY,JSON.stringify({S:{name:S.name,rec:S.rec,order:S.order,route:S.route,done:S.done,extra:S.extra},idx})); }catch(e){}
+}
+function loadSaved(){
+  try{ const raw=localStorage.getItem(STORE_KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+}
+function clearSaved(){ try{ localStorage.removeItem(STORE_KEY); }catch(e){} }
+
+/* ================= 소리 ================= */
+let AC=null;
+function audioInit(){ try{ AC = AC || new (window.AudioContext||window.webkitAudioContext)(); if(AC.state==='suspended') AC.resume(); }catch(e){} }
+function tick(){
+  if(S.muted||!AC) return;
+  try{
+    const len=AC.sampleRate*0.025, b=AC.createBuffer(1,len,AC.sampleRate), d=b.getChannelData(0);
+    for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,4);
+    const s=AC.createBufferSource(); s.buffer=b; const f=AC.createBiquadFilter(); f.type='highpass'; f.frequency.value=1800;
+    const g=AC.createGain(); g.gain.value=0.22; s.connect(f).connect(g).connect(AC.destination); s.start();
+  }catch(e){}
+}
+function tone(freqs,dur=0.18,type='sine',vol=0.12){
+  if(S.muted||!AC) return;
+  try{ freqs.forEach((fq,i)=>{ const o=AC.createOscillator(), g=AC.createGain(); o.type=type; o.frequency.value=fq;
+    const t=AC.currentTime+i*dur; g.gain.setValueAtTime(0,t); g.gain.linearRampToValueAtTime(vol,t+0.02); g.gain.exponentialRampToValueAtTime(0.001,t+dur*1.6);
+    o.connect(g).connect(AC.destination); o.start(t); o.stop(t+dur*1.7); }); }catch(e){}
+}
+const chime=()=>tone([660,880],0.14);
+const thud=()=>tone([90,70],0.16,'triangle',0.25);
+$('#sndBtn').onclick=()=>{S.muted=!S.muted;$('#sndBtn').textContent=S.muted?'🔇':'🔊';if(S.muted)stopAll(0)};
+
+/* ================= [v4] 실제 소리·사진 파일 =================
+   이 HTML과 같은 위치에 audio/ , images/ 폴더를 두고 아래 이름으로 파일을 넣으면 자동으로 사용됩니다.
+   파일이 없으면 소리 없이(또는 기존 그림으로) 그대로 진행됩니다. */
+const SND_FILES={
+  gyokuon:'audio/gyokuon.mp3',   // 실제 옥음방송 15~20초
+  manse:'audio/manse.mp3',       // 한 명 → 두 명 → 군중 만세
+  knock:'audio/knock_open.mp3',  // 똑똑 + 문 열림
+  street:'audio/street.mp3',     // 거리 환경음 (반복 재생)
+  paper:'audio/paper.mp3',       // 서류·신문 넘기는 소리
+  door:'audio/door_close.mp3',   // 문 닫힘
+  secret:'audio/secret.mp3',     // 연필·낮은 웅성거림·발소리 멈춤·문 잠금
+  strings:'audio/strings.mp3',   // 낮은 현악 → 밝아짐
+  jpradio:'audio/jp_radio.mp3'   // 멀리서 희미한 일본어 방송 (선택)
+};
+/* 사진 아래에 작게 표시할 출처. 파일을 넣으면 여기에 출처를 적어 주세요. 비워 두면 표시 안 함. */
+const CREDIT={
+  bg_office:'AI로 만든 재현 그림', bg_room:'AI로 만든 재현 그림', bg_room_night:'AI로 만든 재현 그림', bg_dawn:'AI로 만든 재현 그림'
+};
+/* 엔도–여운형 회담 관련 사료 (회고 발췌 등). 항목이 하나라도 있으면 해당 장면에 '사료' 버튼이 나타납니다.
+   형식: {t:'제목', meta:'출처·연도', body:'<p>발췌문</p>', easy:'쉬운 설명'} */
+const SOURCES={ endo:[] };
+
+let ACTIVE=[];
+function fadeTo(a,to,ms,done){
+  clearInterval(a._f);
+  if(ms<=0){a.volume=to;done&&done();return}
+  const from=a.volume, steps=Math.max(1,Math.round(ms/40)); let i=0;
+  a._f=setInterval(()=>{i++; a.volume=Math.max(0,Math.min(1,from+(to-from)*i/steps)); if(i>=steps){clearInterval(a._f);done&&done()}},40);
+}
+function playFile(key,o){
+  const a=new Audio(SND_FILES[key]); a.loop=!!o.loop; a.volume=0; a.preload='auto';
+  let failed=false; const fail=()=>{ if(failed) return; failed=true; ACTIVE=ACTIVE.filter(x=>x!==h); o.onerror&&o.onerror(); };
+  const h={stop:(ms=300)=>{ fadeTo(a,0,ms,()=>a.pause()); ACTIVE=ACTIVE.filter(x=>x!==h); }};
+  a.addEventListener('error',fail);
+  a.addEventListener('ended',()=>{ ACTIVE=ACTIVE.filter(x=>x!==h); o.onend&&o.onend(); });
+  const p=a.play(); if(p&&p.catch) p.catch(fail);
+  fadeTo(a,o.vol==null?1:o.vol,o.fadeIn||200);
+  if(o.fadeOutAfter) setTimeout(()=>h.stop(2500),o.fadeOutAfter);
+  return h;
+}
+function webStop(g,nodes){ return (ms=300)=>{ try{ const t=AC.currentTime; g.gain.cancelScheduledValues(t); g.gain.setValueAtTime(g.gain.value,t); g.gain.linearRampToValueAtTime(0,t+ms/1000+.01); nodes.forEach(n=>n.stop(t+ms/1000+.05)); }catch(e){} }; }
+/* 코드로 만든 소리: 옛 라디오 잡음 */
+function genStatic(o){
+  if(!AC) return null;
+  const len=AC.sampleRate*2, b=AC.createBuffer(1,len,AC.sampleRate), d=b.getChannelData(0);
+  for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*(Math.random()<0.003?1:0.3);
+  const src=AC.createBufferSource(); src.buffer=b; src.loop=true;
+  const bp=AC.createBiquadFilter(); bp.type='bandpass'; bp.frequency.value=2000; bp.Q.value=.7;
+  const g=AC.createGain(); g.gain.value=0; src.connect(bp).connect(g).connect(AC.destination); src.start();
+  g.gain.linearRampToValueAtTime(0.1*(o.vol==null?1:o.vol),AC.currentTime+.4);
+  return {stop:webStop(g,[src])};
+}
+/* 코드로 만든 소리: 시계 초침 */
+function genClock(o){
+  let n=0; const id=setInterval(()=>{ if(S.muted||!AC) return; n++; tone([n%2?2100:1700],0.015,'square',0.025*(o.vol==null?1:o.vol)); },1000);
+  return {stop:()=>clearInterval(id)};
+}
+/* 코드로 만든 소리: 전쟁 막바지의 낮은 긴장음 */
+function genDrone(o){
+  if(!AC) return null;
+  const g=AC.createGain(); g.gain.value=0; const lp=AC.createBiquadFilter(); lp.type='lowpass'; lp.frequency.value=220;
+  const os=[55,55.7,82.4].map(fq=>{const x=AC.createOscillator(); x.type='sine'; x.frequency.value=fq; x.connect(lp); x.start(); return x});
+  lp.connect(g).connect(AC.destination); g.gain.linearRampToValueAtTime(0.035*(o.vol==null?1:o.vol),AC.currentTime+4);
+  return {stop:webStop(g,os)};
+}
+const GEN={static:genStatic,clock:genClock,drone:genDrone};
+function play(key,o={}){
+  const none={stop(){}};
+  if(S.muted){ o.onerror&&o.onerror(); return none; }
+  audioInit();
+  let h=null;
+  if(GEN[key]) h=GEN[key](o); else if(SND_FILES[key]) h=playFile(key,o);
+  if(!h){ o.onerror&&o.onerror(); return none; }
+  ACTIVE.push(h); return h;
+}
+/* cue: 'key' 또는 {k:'key', delay, vol, loop, fadeOutAfter} 또는 그 배열 */
+function cue(c){
+  if(!c) return; if(Array.isArray(c)) return c.forEach(cue);
+  const o=typeof c==='string'?{k:c}:Object.assign({},c);
+  if(o.delay){ const my=idx; setTimeout(()=>{ if(idx===my) play(o.k,o); },o.delay); } else play(o.k,o);
+}
+function stopAll(ms=300){ ACTIVE.slice().forEach(h=>h.stop(ms)); ACTIVE=[]; }
+function showCredit(img,key){ const t=CREDIT[key]; if(t&&!img.nextElementSibling?.classList?.contains('ptag')) img.insertAdjacentHTML('afterend',`<div class="ptag">${t}</div>`); }
+/* 장면 위 작은 사진 카드: [{img:'war1', d:'8월 6일', cap:'설명'}] (사진이 없으면 글자 카드만) */
+function showCards(cards){
+  const v=$('.vis'); if(!v) return; v.querySelector('.wcards')?.remove();
+  v.insertAdjacentHTML('beforeend',`<div class="wcards">${cards.map(c=>`<div class="wcard ${cards.length===1?'one':''}"><img src="images/${c.img}.jpg" alt="" onerror="this.remove()" onload="showCredit(this,'${c.img}')"><b>${c.d||''}</b>${c.cap}</div>`).join('')}</div>`);
+}
+
+/* ================= 타자 효과 ================= */
+let T=null;
+function typeText(el,raw,done,sp=30){
+  if(T) T.stop();
+  const txt=plain(raw); let i=0; el.textContent='';
+  const id=setInterval(()=>{ i++; el.textContent=txt.slice(0,i); if(i%3===1) tick(); if(i>=txt.length) fin(); },sp);
+  function fin(){ clearInterval(id); el.innerHTML=fmt(raw); T=null; done&&done(); }
+  T={stop:()=>clearInterval(id),finish:fin};
+}
+
+/* ================= 인물 ================= */
+/* 실제 사진: 위키미디어 공용(Wikimedia Commons). 인터넷이 안 되면 한자 배지가 대신 보입니다. */
+const PHOTO='https://commons.wikimedia.org/wiki/Special:FilePath/';
+const CH = {
+  merchant:{n:'상인',h:'商',c:'#7a5a2e',loc:'n_merchant'},
+  youth:{n:'청년',h:'靑',c:'#2f5d62',loc:'n_youth'},
+  resident:{n:'주민',h:'民',c:'#6a4c6b',loc:'n_resident'},
+  endo:{n:'엔도 류사쿠',h:'遠藤',c:'#4d4d4d',hist:1,loc:'p_endo'},
+  yeo:{n:'여운형',h:'呂運亨',c:'#2e6a4c',hist:1,img:'Lyuh_Woon-hyung_(여운형).jpg',loc:'p_yeo'},
+  ahn:{n:'안재홍',h:'安在鴻',c:'#7a5230',hist:1,loc:'p_ahn'},
+  kimgu:{n:'김구',h:'金九',c:'#8e2c23',hist:1,img:'Kim_Gu_in_1949.jpg',loc:'p_kimgu'},
+  rhee:{n:'이승만',h:'李承晩',c:'#24447c',hist:1,img:'Syngman_Rhee.jpg',loc:'p_rhee'},
+  kks:{n:'김규식',h:'金奎植',c:'#58457e',hist:1,img:'Kim_Gyu-sik_in_1947.jpg',loc:'p_kks'},
+  aide:{n:'동지',h:'同',c:'#5d5a52',loc:'n_aide'}
+};
+function faceCls(h){return h.length>=3?'len3':''}
+function faceInner(C){
+  /* [v4] images/ 폴더 사진 → 위키미디어 사진 → 한자 배지 순서로 표시 */
+  const remote=C.img?`${PHOTO+encodeURIComponent(C.img)}?width=300`:'';
+  const first=C.loc?`images/${C.loc}.jpg`:remote, alt=C.loc?remote:'';
+  return (first?`<img src="${first}" data-alt="${alt}" alt="${C.n} 사진" loading="lazy" referrerpolicy="no-referrer" onerror="if(this.dataset.alt){this.src=this.dataset.alt;this.dataset.alt=''}else{this.remove()}">`:'')+`<span>${C.h}</span>`;
+}
+
+/* ================= 배경 그림 ================= */
+const svg=(inner)=>`<svg class="bg" viewBox="0 0 800 360" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">${inner}</svg>`;
+
+function crowd(cheer,y0=300,n=30){
+  const cols=['#3d3029','#ece4d2','#5b4636','#e3dac6','#2f2a26','#d5cab3','#6b5442'];
+  let s=`<g class="${cheer?'cheer':''}">`;
+  for(let i=0;i<n;i++){
+    const x=12+i*(780/n)+(i%3)*3, y=y0+(i%2)*14, c=cols[i%cols.length], d=((i*37)%10)/14;
+    s+=`<g class="p" style="animation-delay:${d}s">`;
+    if(cheer && i%2===0) s+=`<path d="M${x-7} ${y+8} L${x-15} ${y-22} M${x+7} ${y+8} L${x+15} ${y-22}" stroke="${c}" stroke-width="6" stroke-linecap="round"/><circle cx="${x-15}" cy="${y-23}" r="3.5" fill="#e8c8a4"/><circle cx="${x+15}" cy="${y-23}" r="3.5" fill="#e8c8a4"/>`;
+    s+=`<path d="M${x-12} ${y+44} Q${x-13} ${y+6} ${x} ${y+4} Q${x+13} ${y+6} ${x+12} ${y+44}Z" fill="${c}" stroke="#2a2119" stroke-width="1"/><circle cx="${x}" cy="${y-6}" r="9" fill="#e8c8a4" stroke="#2a2119"/><path d="M${x-9.5} ${y-8} Q${x} ${y-21} ${x+9.5} ${y-8}Z" fill="#1d1a17"/>`;
+    if(cheer && i%4===1) s+=`<line x1="${x+13}" y1="${y+14}" x2="${x+13}" y2="${y-48}" stroke="#4a3626" stroke-width="2.5"/><g class="flagw"><use href="#tg" x="${x+14}" y="${y-48}" width="36" height="24"/></g>`;
+    s+='</g>';
+  }
+  return s+'</g>';
+}
+function hanok(y,fill='#7d5a44',wall='#b38a69'){
+  let s='';
+  for(let i=0;i<5;i++){const x=i*180-30;
+    s+=`<rect x="${x+22}" y="${y+8}" width="126" height="${290-y-8}" fill="${wall}" stroke="#5a3e2b" stroke-width="1.5"/><rect x="${x+45}" y="${y+22}" width="30" height="34" fill="#efe1c3" stroke="#5a3e2b"/><rect x="${x+95}" y="${y+22}" width="30" height="34" fill="#efe1c3" stroke="#5a3e2b"/><path d="M${x} ${y+4} Q${x+85} ${y-26} ${x+170} ${y+4} L${x+158} ${y+12} L${x+12} ${y+12}Z" fill="${fill}"/>`;}
+  return s;
+}
+function room(warm='#d9c39d',dark='#b89e74',night=false){
+  return `<defs><linearGradient id="rw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${warm}"/><stop offset="1" stop-color="${dark}"/></linearGradient><radialGradient id="rl" cx=".5" cy=".3" r=".7"><stop offset="0" stop-color="#fff6d8" stop-opacity="${night?.35:.5}"/><stop offset="1" stop-color="#fff6d8" stop-opacity="0"/></radialGradient></defs>
+  <rect width="800" height="360" fill="url(#rw)"/>
+  <rect x="80" y="40" width="190" height="170" fill="${night?'#1d2740':'#cfe0e6'}" stroke="#5a3e2b" stroke-width="8"/>
+  <line x1="175" y1="40" x2="175" y2="210" stroke="#5a3e2b" stroke-width="5"/><line x1="80" y1="125" x2="270" y2="125" stroke="#5a3e2b" stroke-width="5"/>
+  ${night?'<circle cx="235" cy="75" r="16" fill="#f4ecc8"/>':''}
+  <path d="M60 30 Q90 120 70 230 L40 230 L40 30Z M290 30 Q260 120 280 230 L310 230 L310 30Z" fill="#8e2c23" opacity=".85"/>
+  <rect x="500" y="60" width="200" height="130" fill="#f1e4c6" stroke="#5a3e2b" stroke-width="5"/>
+  <path d="M520 160 L560 110 L600 140 L640 90 L680 150" stroke="#8a7556" stroke-width="3" fill="none"/>
+  <rect y="280" width="800" height="80" fill="#6b4a33"/>
+  <rect x="300" y="236" width="300" height="20" fill="#4f3523"/><rect x="315" y="256" width="14" height="40" fill="#4f3523"/><rect x="571" y="256" width="14" height="40" fill="#4f3523"/>
+  <rect x="380" y="226" width="70" height="10" fill="#fffaf0" transform="rotate(-4 415 231)"/><rect x="460" y="224" width="60" height="12" fill="#efe4c6"/>
+  <rect width="800" height="360" fill="url(#rl)"/>
+  ${night?'<rect width="800" height="360" fill="#0b1020" opacity=".35"/>':''}`;
+}
+/* 한반도 지도 (위도·경도 근사 좌표) */
+const KP=[[33.5,150.5],[78.5,119],[150.5,69.5],[204.5,83],[240.5,56],[276.5,38],[321.5,42.5],[281,65],[254,114.5],[227,146],[177.5,155],[173,182],[213.5,209],[227,227],[240.5,245],[254,263],[263,326],[267.5,348.5],[245,366.5],[218,375.5],[186.5,384.5],[132.5,402.5],[123.5,380],[132.5,344],[141.5,326],[123.5,299],[141.5,281],[137,258.5],[128,245],[96.5,240.5],[74,240.5],[56,227],[65,209],[78.5,200],[51.5,164]];
+function smooth(p){
+  const n=p.length; let d=`M${p[0][0]} ${p[0][1]}`;
+  for(let i=0;i<n;i++){const p0=p[(i-1+n)%n],p1=p[i],p2=p[(i+1)%n],p3=p[(i+2)%n];
+    const c1=[p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6], c2=[p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6];
+    d+=` C${c1[0].toFixed(1)} ${c1[1].toFixed(1)} ${c2[0].toFixed(1)} ${c2[1].toFixed(1)} ${p2[0]} ${p2[1]}`;}
+  return d+'Z';
+}
+const KOREA=smooth(KP);
+const JEJU='<ellipse cx="132" cy="440" rx="17" ry="7"/>';
+const CITIES=[['신의주',44,140],['평양',99,192],['함흥',178,150],['원산',170,184],['청진',268,72],['해주',100,232],['',138,238],['',186,240],['강릉',232,248],['',140,262],['',152,272],['청주',177,297],['대전',172,312],['전주',158,336],['대구',225,332],['광주',146,364],['부산',240,360],['목포',134,378]];
+function mapBase(){
+  return `<defs><linearGradient id="sea" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1e2c3c"/><stop offset="1" stop-color="#15202c"/></linearGradient><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M40 0H0V40" fill="none" stroke="#2c3e52" stroke-width="1"/></pattern><clipPath id="kc"><path d="${KOREA}"/>${JEJU}</clipPath></defs>
+  <rect width="800" height="360" fill="url(#sea)"/><rect width="800" height="360" fill="url(#grid)"/>`;
+}
+function mapLand(){return `<path d="${KOREA}" fill="#e7dcc3" stroke="#8a7556" stroke-width="2"/><g fill="#e7dcc3" stroke="#8a7556" stroke-width="2">${JEJU}</g>`}
+
+const BG={
+  none:()=>svg('<rect width="800" height="360" fill="#2a2119"/>'),
+  street:st=>svg(`<defs><linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#f3d7a6"/><stop offset="1" stop-color="#e0a575"/></linearGradient></defs>
+    <rect width="800" height="360" fill="url(#sky)"/><circle cx="660" cy="74" r="42" fill="#fff4da" opacity=".85"/>
+    <g fill="#c99a78">${[[0,140,90],[86,112,70],[150,160,110],[262,132,60],[318,96,92],[420,150,80],[498,120,120],[620,145,70],[686,108,114]].map(([x,y,w])=>`<rect x="${x}" y="${y}" width="${w}" height="${290-y}"/>`).join('')}</g>
+    ${hanok(212)}
+    <rect y="290" width="800" height="70" fill="#8b6b51"/>
+    ${st.cheer?`<g><line x1="250" y1="140" x2="250" y2="300" stroke="#5a3e2b" stroke-width="5"/><line x1="550" y1="140" x2="550" y2="300" stroke="#5a3e2b" stroke-width="5"/><rect x="250" y="140" width="300" height="46" fill="#fffaf0" stroke="#5a3e2b" stroke-width="2"/><text x="400" y="172" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="26" fill="#a02a22">조선 독립 만세</text></g>`:''}
+    ${crowd(!!st.cheer, st.cheer?296:304, st.cheer?30:22)}`),
+  gov:()=>svg(`<defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b4741"/><stop offset="1" stop-color="#2b2925"/></linearGradient><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e1e3"/><stop offset="1" stop-color="#9fb1b8"/></linearGradient></defs>
+    <rect width="800" height="360" fill="url(#gw)"/>
+    ${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${i*100+10}" y="20" width="80" height="250" fill="none" stroke="#3a3833" stroke-width="3"/>`).join('')}
+    <path d="M300 250 V90 Q400 10 500 90 V250Z" fill="url(#gl)" stroke="#1f1d1a" stroke-width="10"/>
+    <path d="M330 250 V170 H470 V250Z M360 170 Q400 120 440 170Z" fill="#8a9aa2" opacity=".75"/><rect x="394" y="108" width="12" height="20" fill="#8a9aa2"/>
+    <line x1="400" y1="40" x2="400" y2="250" stroke="#1f1d1a" stroke-width="6"/><line x1="300" y1="160" x2="500" y2="160" stroke="#1f1d1a" stroke-width="6"/>
+    <rect y="285" width="800" height="75" fill="#3a2a1e"/><rect x="230" y="246" width="340" height="22" fill="#5a3b25"/><rect x="250" y="268" width="16" height="40" fill="#4a2f1d"/><rect x="534" y="268" width="16" height="40" fill="#4a2f1d"/>
+    <rect x="360" y="236" width="80" height="10" fill="#efe4c6"/><path d="M90 300 h60 v-70 h-60z M650 300 h60 v-70 h-60z" fill="#3e2a1c"/>`),
+  office:()=>svg(`${room('#dcc7a1','#bea47a')}<g transform="translate(540 66) scale(.27)"><path d="${KOREA}" fill="#c9b48a" stroke="#6b5442" stroke-width="5"/></g>`),
+  room:st=>svg(room(st.night?'#6d6253':'#dcc7a1', st.night?'#4b4237':'#bea47a', !!st.night)),
+  map:st=>{
+    const mode=st.map||'38';
+    let inner=mapBase()+`<g transform="translate(274 8) scale(.7)">`;
+    if(mode==='38'){
+      inner+=mapLand()+`<g clip-path="url(#kc)"><rect x="0" y="0" width="360" height="236" fill="#b3352b" class="fadein" style="animation-delay:1.9s;opacity:0" fill-opacity=".38"/><rect x="0" y="236" width="360" height="240" fill="#23467e" class="fadein" style="animation-delay:2.3s" fill-opacity=".35"/></g>`+
+        `<line x1="-40" y1="236" x2="400" y2="236" stroke="#f3c76a" stroke-width="4" stroke-dasharray="10 6" class="fadein" style="animation-delay:.3s"/>`+
+        `<line x1="-40" y1="236" x2="400" y2="236" stroke="#f3c76a" stroke-width="4" class="draw"/>`+
+        `<text x="372" y="230" fill="#f3c76a" font-size="17" font-weight="700" class="fadein" style="animation-delay:1.4s">북위 38도선</text>`+
+        `<g class="fadein" style="animation-delay:2.1s"><rect x="128" y="112" width="104" height="34" rx="17" fill="#fffaf0" stroke="#b3352b" stroke-width="2"/><text x="180" y="135" text-anchor="middle" font-size="17" font-weight="900" fill="#b3352b">소련군</text></g>`+
+        `<g class="fadein" style="animation-delay:2.5s"><rect x="138" y="296" width="96" height="34" rx="17" fill="#fffaf0" stroke="#23467e" stroke-width="2"/><text x="186" y="319" text-anchor="middle" font-size="17" font-weight="900" fill="#23467e">미군</text></g>`+
+        `<circle cx="99" cy="192" r="5" fill="#2a2119"/><text x="78" y="186" text-anchor="end" font-size="14" fill="#f4ecdc" font-weight="700">평양</text>`+
+        `<circle cx="155" cy="255" r="5" fill="#2a2119"/><text x="163" y="270" font-size="14" fill="#2a2119" font-weight="700">서울</text>`;
+    } else {
+      inner+=mapLand();
+      CITIES.forEach((c,i)=>{inner+=`<g class="dot" style="animation-delay:${0.5+i*0.18}s"><circle cx="${c[1]}" cy="${c[2]}" r="6" fill="#b3352b" stroke="#fffaf0" stroke-width="2"/></g>`+(c[0]?`<text x="${c[1]+9}" y="${c[2]+4}" font-size="13" fill="#3a2a1e" stroke="#fffaf0" stroke-width="3" paint-order="stroke" font-weight="700" class="fadein" style="animation-delay:${0.6+i*0.18}s">${c[0]}</text>`:'')});
+      inner+=`<g class="dot" style="animation-delay:.1s"><circle cx="155" cy="255" r="11" fill="#f3c76a" stroke="#2a2119" stroke-width="2.5"/></g><text x="141" y="252" text-anchor="end" font-size="16" font-weight="900" fill="#2a2119" stroke="#fffaf0" stroke-width="4" paint-order="stroke">서울 (본부)</text>`;
+    }
+    inner+='</g>';
+    if(mode==='branch') inner+=`<g class="fadein" style="animation-delay:3.8s"><rect x="560" y="290" width="220" height="50" rx="10" fill="#fffaf0" stroke="#2a2119" stroke-width="2"/><text x="670" y="322" text-anchor="middle" font-size="20" font-weight="900" fill="#b3352b">전국 지부 145개</text></g>`;
+    return svg(inner);
+  },
+  doc:()=>svg(`<rect width="800" height="360" fill="#5a3b25"/>${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M0 ${i*42+10} Q400 ${i*42+22} 800 ${i*42+8}" stroke="#4a2f1d" stroke-width="2" fill="none"/>`).join('')}
+    <g transform="rotate(-4 400 180)"><rect x="250" y="40" width="300" height="300" fill="#efe4c6" stroke="#8a7556" stroke-width="2"/><text x="400" y="86" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="22" fill="#2a2119">포고 제1호</text>${[0,1,2,3,4,5,6,7].map(i=>`<rect x="280" y="${110+i*24}" width="${i%3===2?170:240}" height="7" fill="#a8977c"/>`).join('')}</g>
+    <rect x="600" y="210" width="110" height="16" rx="3" fill="#2a2119" transform="rotate(25 655 218)"/>`),
+  news:st=>svg(`<rect width="800" height="360" fill="#6b4a33"/>${[0,1,2,3,4,5,6,7].map(i=>`<path d="M0 ${i*48+12} Q400 ${i*48+24} 800 ${i*48+6}" stroke="#5a3b25" stroke-width="2" fill="none"/>`).join('')}
+    <g transform="rotate(-3 400 180)"><rect x="170" y="30" width="460" height="310" fill="#ece2c8" stroke="#6d5f45"/><line x1="190" y1="76" x2="610" y2="76" stroke="#111" stroke-width="3"/><text x="400" y="64" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="20" font-weight="900" fill="#111">${st.mast||'신문'}</text>
+    <text x="400" y="130" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="44" font-weight="900" fill="#111">${st.headline||''}</text>
+    <text x="400" y="168" text-anchor="middle" font-family="Noto Serif KR,serif" font-size="18" fill="#333">${st.sub||''}</text>
+    ${[0,1,2,3,4,5].map(i=>`<rect x="200" y="${196+i*22}" width="180" height="7" fill="#a8977c"/><rect x="420" y="${196+i*22}" width="180" height="7" fill="#a8977c"/>`).join('')}</g>`),
+  rally:st=>svg(`<defs><linearGradient id="rs" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#cfd9dc"/><stop offset="1" stop-color="#e9dcc0"/></linearGradient></defs><rect width="800" height="360" fill="url(#rs)"/>
+    ${hanok(170,'#6e5240','#c2a283')}
+    <rect x="300" y="150" width="200" height="90" fill="#8e6a4c" stroke="#4a3626" stroke-width="3"/>
+    ${st.banner?`<rect x="220" y="92" width="360" height="44" fill="#fffaf0" stroke="#4a3626" stroke-width="2"/><text x="400" y="123" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="24" fill="#8e2c23">${st.banner}</text>`:''}
+    <rect y="270" width="800" height="90" fill="#8b6b51"/>${crowd(false,300,26)}`),
+  ballot:()=>svg(`<rect width="800" height="360" fill="#e6dcc6"/><rect y="270" width="800" height="90" fill="#9b7d60"/>
+    <rect x="250" y="30" width="300" height="50" fill="#fffaf0" stroke="#4a3626" stroke-width="2"/><text x="400" y="64" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="24" fill="#23467e">총선거 투표소</text>
+    <rect x="330" y="150" width="140" height="120" fill="#6b4a33" stroke="#2a2119" stroke-width="4"/><rect x="370" y="150" width="60" height="8" fill="#2a2119"/><text x="400" y="222" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="26" fill="#fffaf0">투표함</text>
+    <g transform="translate(386 118) rotate(-8)"><rect width="34" height="40" fill="#fff" stroke="#2a2119"/><path d="M7 12 h20 M7 20 h20 M7 28 h12" stroke="#999"/></g>
+    ${crowd(false,300,22)}`),
+  dawn:()=>svg(`<defs><linearGradient id="dw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b3550"/><stop offset=".6" stop-color="#d98e6a"/><stop offset="1" stop-color="#f2c98f"/></linearGradient></defs><rect width="800" height="360" fill="url(#dw)"/><circle cx="400" cy="300" r="70" fill="#fff0c8" opacity=".9"/><path d="M0 290 Q200 250 400 285 T800 280 V360 H0Z" fill="#3b2f25"/>`)
+};
+
+/* ================= 기록 ================= */
+function rec(id,o){ if(!S.rec[id]) S.order.push(id); S.rec[id]=o; save(); }
+function recLine(r){ return r.sentence ? `<b>${esc(r.choice)}</b> <i>— ${esc(r.sentence)}</i>` : `<b>${esc(r.choice)}</b>${r.reason?` <i>— ${esc(r.reason)}</i>`:''}`; }
+function recHTML(){
+  if(!S.order.length) return '<p class="empty">아직 기록이 없어요. 선택하고 생각을 적으면 여기에 쌓여요.</p>';
+  return S.order.map(id=>{const r=S.rec[id];return `<div><small>${esc(r.label)}</small>${recLine(r)}</div>`}).join('');
+}
+$('#recBtn').onclick=()=>{$('#drList').innerHTML=recHTML();$('#drawer').classList.add('open')};
+$('#drClose').onclick=()=>$('#drawer').classList.remove('open');
+
+/* ================= 흐름 ================= */
+let flow=[], idx=0;
+function updateTop(st){
+  const p=st.part;
+  $('#partLabel').innerHTML = p==null? `<b>${CORE_Q}</b>` : `PART ${p+1} · <b>${PARTS[p]}</b>`;
+  $('#dots').innerHTML=PARTS.map((_,i)=>`<i class="${p==null?'':i<p?'done':i===p?'now':''}" title="PART ${i+1} ${PARTS[i]}"></i>`).join('');
+}
+function go(i){
+  if(T){T.stop();T=null}
+  idx=Math.max(0,Math.min(i,flow.length-1)); const st=flow[idx]; updateTop(st);
+  $('#pop').style.display='none';
+  if(!st.keep) stopAll(300); /* [v4] */
+  stage.innerHTML=''; R[st.t](st);
+  window.scrollTo({top:0});
+  if(idx>0) save();
+}
+function next(){ go(idx+1); }
+function rebuildFlow(){ flow = COMMON.slice(); if(S.route) flow = flow.concat(buildRoute(S.route), ENDING); }
+
+/* [v4] 장면 배경에 깔 사진 이름 (images/이름.jpg) */
+function bgPhotoKey(st){
+  if(st.bg==='street') return st.cheer?'bg_cheer':'bg_street';
+  if(st.bg==='room') return st.night?'bg_room_night':'bg_room';
+  return ({gov:'bg_gov',office:'bg_office',rally:'bg_rally',ballot:'bg_ballot',dawn:'bg_dawn'})[st.bg]||'';
+}
+function photoLayer(key){ return key?`<img class="bgphoto" src="images/${key}.jpg" alt="" onerror="this.remove()" onload="showCredit(this,'${key}')">`:''; }
+function frame(st){
+  const chars=(st.chars||[]).map(c=>{const C=CH[c.k];return `<div class="ch ${c.p}" data-k="${c.k}" style="--c:${C.c}"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div></div>`}).join('');
+  stage.innerHTML=`<div class="vis">${(BG[st.bg]||BG.none)(st)}${photoLayer(bgPhotoKey(st))}<div class="tags">${st.place?`<span class="tag">📍 ${fmt(st.place)}</span>`:''}${st.date?`<span class="tag">🗓 ${st.date}</span>`:''}</div><div class="chars">${chars}</div></div><div class="panel" id="panel"></div>`;
+  return $('#panel');
+}
+function speak(k){ $$('.ch').forEach(e=>{e.classList.toggle('on',!!k&&e.dataset.k===k);e.classList.toggle('dim',!!k&&e.dataset.k!==k)}); }
+function nextBtn(label='다음 ▶',dis=false){return `<div class="actions"><button class="btn primary" id="nx" ${dis?'disabled':''}>${label}</button></div>`}
+function hasHist(st){ return (st.lines||[]).some(L=>L.who&&CH[L.who].hist); }
+
+/* 한 문장 쓰기 블록: pre [입력] post */
+function sentHTML(pre,post,ph,id='why'){
+  return `<div class="sent">${pre?`<span>${pre}</span>`:''}<input id="${id}" maxlength="80" autocomplete="off" placeholder="예) ${esc(ph||'')}">${post?`<span>${post}</span>`:''}</div>`;
+}
+
+/* ================= 렌더러 ================= */
+const R={};
+
+R.intro=()=>{
+  const sv=loadSaved(); const canResume = sv && sv.idx>1;
+  stage.innerHTML=`<div class="intro">
+    <svg class="flag" viewBox="0 0 360 240"><use href="#tg"/></svg>
+    <h1>광복 이후 세 가지 길</h1>
+    <div class="coreq"><small>오늘의 핵심 질문</small>「${CORE_Q}」</div>
+    <div class="sub"><b>아직 역사를 배우기 전입니다.</b> 지금부터 여러분은 1945년의 조선으로 들어갑니다.<br>어떤 선택이 옳았는지 판단하기 전에, <b>당시 사람이라면 어떤 선택을 했을지</b> 생각해 봅시다.</div>
+    <div class="steps5"><span>① 상황 보기</span><em>→</em><span>② 대화 듣기</span><em>→</em><span>③ 선택하기</span><em>→</em><span>④ 핵심 장면에서 한 줄 쓰기</span><em>→</em><span>⑤ 실제 역사 확인</span></div>
+    <div class="namebox"><input id="nm" maxlength="20" placeholder="학번 이름 (예: 10305 김하늘)"><button class="btn primary big" id="st">${canResume?'처음부터 시작 ▶':'시작하기 ▶'}</button></div>
+    ${canResume?`<div class="resume">💾 이전에 하던 기록이 있어요 <button class="btn" id="rs">이어하기 ▶</button></div>`:''}
+    <div class="note">⏱ 약 15~20분 · 🎧 소리가 중요해요(이어폰 권장) · 밑줄 친 <span class="term" data-k="사료" style="color:#f0c46b">어려운 말</span>을 누르면 뜻이 나와요<br>📒 진행 상황은 이 브라우저에 자동 저장되고, 마지막 화면에서 복사·인쇄할 수 있어요</div>
+  </div>`;
+  $('#nm').value = S.name || (sv&&sv.S&&sv.S.name) || '';
+  const start=()=>{
+    if(canResume && !confirm('처음부터 시작하면 이전 기록이 지워져요. 계속할까요?')) return;
+    clearSaved(); Object.assign(S,{rec:{},order:[],route:null,done:[],extra:{}});
+    S.name=$('#nm').value.trim(); audioInit(); rebuildFlow(); next();
+  };
+  $('#st').onclick=start;
+  $('#nm').onkeydown=e=>{if(e.key==='Enter')start()};
+  if(canResume) $('#rs').onclick=()=>{ Object.assign(S,sv.S); const nm=$('#nm').value.trim(); if(nm) S.name=nm; audioInit(); rebuildFlow(); go(sv.idx); };
+};
+
+/* [v4] 8월 15일 정오: 잡음+옥음방송 → 정적 → 날짜 → 호외 → 거리 → 만세 → 실제 사진 → 현악 → 정적 → 질문 */
+R.prologue=()=>{
+  stage.innerHTML=`<div class="pro" id="pro" data-adv="1"><div id="pin" style="width:100%;display:flex;flex-direction:column;align-items:center;position:relative"></div><div class="tap" id="tap"></div></div>`;
+  const pin=$('#pin'), tap=$('#tap'); let ph=-1, can=false, tmr=null, auto=null;
+  const ready=(delay=0)=>{clearTimeout(tmr);tmr=setTimeout(()=>{can=true;tap.textContent='화면을 눌러 계속 ▶'},delay)};
+  const goNext=()=>{clearTimeout(auto);clearTimeout(tmr);can=false;tap.textContent='';ph++; if(phases[ph]) phases[ph]();};
+  const at=(p,fn,ms)=>{auto=setTimeout(()=>{ if(ph===p && document.body.contains(pin)) fn(); },ms)};
+  const nar=t=>typeText(pin.querySelector('.pnar'),t,()=>ready(250),55);
+  const phases=[
+    /* 0. 검은 화면, 라디오 잡음 → 옥음방송 */
+    ()=>{ pin.innerHTML=`<div class="pnar2" style="color:#8a7f70;font-family:'Courier New',monospace;letter-spacing:.1em">치지직—</div><div class="coreq" id="rsub" style="margin-top:26px;font-size:clamp(16px,2.4vw,21px);opacity:0;transition:opacity 1.2s"><small>라디오</small>“…짐은 제국 정부로 하여금 미·영·중·소 4국에 그 공동선언을 수락할 뜻을 통고하게 하였노라…”</div>`;
+      const stc=play('static');
+      const end=()=>{ stc.stop(800); at(0,goNext,900); };
+      at(0,()=>{ $('#rsub').style.opacity=1; play('gyokuon',{vol:.9,onend:end,onerror:()=>at(0,end,5500)}); },1800);
+      ready(8000); },
+    /* 1. 완전한 정적 */
+    ()=>{ stopAll(0); pin.innerHTML=''; at(1,goNext,2600); },
+    /* 2. 1945. 08. 15. 정오 */
+    ()=>{ pin.innerHTML='<div class="date"></div><div class="pnar2" id="noon" style="margin-top:14px;opacity:0;transition:opacity 1s">정오</div>';
+      typeText(pin.firstChild,'1945. 08. 15.',()=>{$('#noon').style.opacity=1;ready(700)},150); },
+    /* 3. 호외 — 탁! */
+    ()=>{ pin.innerHTML=`<img class="newsbg" src="images/src_hoeoe.jpg" alt="" onerror="this.remove()"><div class="news" style="position:relative"><div class="mast"><span>1945년 8월 15일</span><b>號外</b><span>호외</span></div><h1>일본, 연합국에<br>무조건 항복</h1><p>정오, 일왕의 항복 방송이 라디오를 통해 흘러나왔다.</p></div>`;
+      thud(); play('paper'); ready(900); },
+    /* 4. 아직 조용한 거리 */
+    ()=>{ pin.innerHTML=`<div class="pvis" id="pv">${BG.street({})}</div><div class="pnar"></div>`;
+      nar('거리는 아직 조용하다. 사람들은 방금 들은 소식을 믿지 못한다.'); },
+    /* 5. 한 명 → 두 명 → 군중 만세 */
+    ()=>{ play('manse',{vol:.6});
+      nar('“독립 만세!” 한 사람의 외침에 하나둘 목소리가 더해진다.');
+      at(5,()=>{ const pv=$('#pv'); if(pv) pv.innerHTML=BG.street({cheer:1}); },2600); },
+    /* 6. 실제 사진 */
+    ()=>{ const pv=$('#pv'); if(pv){ if(!pv.querySelector('.cheer')) pv.innerHTML=BG.street({cheer:1}); pv.insertAdjacentHTML('beforeend',photoLayer('photo_0816')); }
+      nar('사람들은 태극기를 꺼내 들고 거리로 쏟아져 나왔다. 35년 동안 이어진 일본의 식민 지배가 끝났다.'); },
+    /* 7. 조선은 해방되었다 + 현악 */
+    ()=>{ play('strings',{vol:.6}); typeText(pin.querySelector('.pnar'),'**조선은 해방되었다.**',()=>ready(900),70); },
+    /* 8. 갑작스러운 정적 */
+    ()=>{ stopAll(0); pin.innerHTML='<div class="pnar2"></div>'; typeText(pin.firstChild,'그런데…',()=>ready(1500),180); },
+    /* 9. 질문 */
+    ()=>{ tap.textContent=''; pin.innerHTML=`<div class="pnar2" style="color:#d9c9a8">광복은 되었는데, 아직 새로운 정부는 없었다.</div><h1 class="bigq" style="margin-top:22px">「이제 조선은<br>누가 다스리지?」</h1><button class="btn primary big" id="go">다음 장면으로 ▶</button>`; thud();
+         $('#go').onclick=e=>{e.stopPropagation();clearTimeout(auto);next()}; $('#pro').removeAttribute('data-adv'); }
+  ];
+  const adv=()=>{ if(T){T.finish();return} if(ph===-1||can) goNext(); };
+  $('#pro').onclick=adv; adv();
+};
+
+/* [v3 추가] 검은 화면 + 타자 효과로 짧은 문장을 차례로 보여 주는 장면 (8월 초 프롤로그, 수업 연결 장면) */
+R.monologue=st=>{
+  stage.innerHTML=`<div class="pro" id="pro" data-adv="1"><div id="pin" style="width:100%;display:flex;flex-direction:column;align-items:center"></div><div class="tap" id="tap"></div></div>`;
+  const pin=$('#pin'), tap=$('#tap'); let ph=-1, can=false, tmr=null;
+  const ready=(delay=0)=>{clearTimeout(tmr);tmr=setTimeout(()=>{can=true;tap.textContent='화면을 눌러 계속 ▶'},delay)};
+  const phases=[];
+  if(st.typed) phases.push(()=>{pin.innerHTML='<div class="date"></div>';typeText(pin.firstChild,st.typed,()=>ready(300),150)});
+  st.lines.forEach(t=>phases.push(()=>{pin.innerHTML='<div class="pnar2" style="line-height:1.6;max-width:760px"></div>';typeText(pin.firstChild,t,()=>ready(200),55)}));
+  phases.push(()=>{tap.textContent='';pin.innerHTML=`${st.final}<button class="btn primary big" id="go" style="margin-top:28px">${st.button}</button>`;thud();
+    $('#go').onclick=e=>{e.stopPropagation();next()}; $('#pro').removeAttribute('data-adv');});
+  const adv=()=>{ if(T){T.finish();return} if(ph===-1||can){can=false;tap.textContent='';ph++; if(phases[ph]) phases[ph]();} };
+  $('#pro').onclick=adv; adv();
+};
+
+/* 파트 시작 카드 */
+R.partcard=st=>{
+  stage.innerHTML=`<div class="pro" id="pro" data-adv="1"><div class="pcard"><div class="pk">PART ${st.part+1}</div><h2>${PARTS[st.part]}</h2><p>${st.text}</p><div class="coreq"><small>핵심 질문</small>「${CORE_Q}」</div></div><div class="tap">화면을 눌러 시작 ▶</div></div>`;
+  thud(); $('#pro').onclick=next;
+};
+
+R.scene=st=>{
+  const p=frame(st); let li=0, done=false; const note=hasHist(st);
+  cue(st.amb); /* [v4] 장면 소리 */
+  function show(){
+    const L=st.lines[li], last=li===st.lines.length-1; const C=L.who?CH[L.who]:null;
+    speak(L.who||null);
+    if(L.cut) stopAll(0); cue(L.sfx); if(L.cards) showCards(L.cards); /* [v4] 대사별 소리·카드 */
+    p.innerHTML=`<div class="dlg ${C?'':'nar'}" data-adv="1">${C?`<div class="who" style="--c:${C.c}">${C.n}</div>`:''}<div class="txt"></div><div class="more"></div></div>${note?`<div class="recon">${RECON}</div>`:''}${last?nextBtn('다음 ▶',true):''}`;
+    const dlg=p.querySelector('.dlg'); done=false;
+    typeText(dlg.querySelector('.txt'),L.text,()=>{done=true; if(last){const b=$('#nx');b.disabled=false;b.onclick=next;dlg.removeAttribute('data-adv');speak(null)} else dlg.querySelector('.more').textContent='눌러서 계속 ▼'});
+    dlg.onclick=e=>{ if(e.target.closest('.term')) return; if(T){T.finish();return} if(done&&!last){li++;show()} };
+  }
+  show();
+};
+
+/* 선택 장면: 기본은 클릭만. write가 있으면 핵심 서술 활동(한 문장) */
+const NUMS='①②③④⑤', ABC='ABCD';
+R.choice=st=>{
+  const p=frame(st); speak(null);
+  const mk=st.abc?ABC:NUMS; const W=st.write;
+  p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}<h3>${fmt(st.q)}</h3>
+    <div class="opts ${st.abc?'one':''}">${st.opts.map((o,i)=>`<button class="opt ${st.big?'big':''}" data-i="${i}">${st.big?'':`<span class="num">${mk[i]}</span>`}<span>${fmt(o)}</span></button>`).join('')}</div>
+    ${W?`<div class="reason hidden"><label>✏️ ${W.lead}</label><div id="sentBox"></div><div class="hint">빈칸만 채우면 돼요. 짧게 써도 괜찮아요. (2글자 이상)</div></div>`:''}</div>${nextBtn('다음 ▶',true)}`;
+  let pick=-1; const nx=$('#nx'); const prev=S.rec[st.id];
+  const short=i=>st.short?st.short[i]:plain(st.opts[i]);
+  const check=()=>{ const inp=$('#why'); nx.disabled = !(pick>=0 && (!W || (inp && inp.value.trim().length>=2))); };
+  const choose=(i,keep)=>{
+    pick=i; $$('.opt').forEach(b=>b.classList.toggle('sel',+b.dataset.i===i));
+    if(W){
+      const old=$('#why')?$('#why').value:(keep||'');
+      p.querySelector('.reason').classList.remove('hidden');
+      $('#sentBox').innerHTML=sentHTML(W.pre(short(i)),W.post,W.ph);
+      const inp=$('#why'); inp.value=old; inp.oninput=check;
+      inp.onkeydown=e=>{if(e.key==='Enter'&&!nx.disabled) nx.click()};
+    }
+    check();
+  };
+  $$('.opt').forEach(b=>b.onclick=e=>{ if(e.target.closest('.term')) return; tick(); choose(+b.dataset.i); if(W) setTimeout(()=>$('#why')?.focus(),50); });
+  if(prev) choose(prev.i, prev.reason);
+  nx.onclick=()=>{
+    const o={label:st.label,choice:plain(st.opts[pick]),short:short(pick),i:pick};
+    if(W){ o.reason=$('#why').value.trim(); o.sentence=plain(`${W.pre(short(pick))} ${o.reason} ${W.post||''}`).trim(); }
+    rec(st.id,o); chime(); next();
+  };
+};
+
+/* 실제 역사에서는? — 나의 판단 / 역사적 맥락 / 역사적 사실 / 실제 인물의 선택 / 핵심 생각 */
+R.history=st=>{
+  const p=frame(st); speak(null);
+  const r=st.ref?S.rec[st.ref]:null;
+  const row=(cls,lb,html)=>`<div class="hrow ${cls}"><span class="lb">${lb}</span><div>${html}</div></div>`;
+  let rows='';
+  if(r) rows+=row('mine-r','나의 판단', st.mine? st.mine(r) : `나는 「${esc(r.short||r.choice)}」${josa(r.short||r.choice,'을','를')} 선택했다.`);
+  if(st.ctx) rows+=row('','역사적 맥락',fmt(st.ctx));
+  if(st.fact) rows+=row('',st.factLabel||'역사적 사실',fmt(st.fact)); /* [v3] factLabel 선택 항목 추가 */
+  if(st.real) rows+=row('real','실제 인물의 선택',fmt(st.real));
+  p.innerHTML=`<div class="hist"><div class="hhead">📜 ${st.title||'실제 역사에서는?'}</div>${rows}
+    ${st.key?`<div class="key">「${st.key}」</div>`:''}</div>
+    <div class="actions">${st.src&&SOURCES[st.src]&&SOURCES[st.src].length?'<button class="btn ghost" id="srcb">📜 당시 상황을 보여주는 사료</button>':''}${st.bonus?'<button class="btn ghost" id="bn">⭐ BONUS 사료 더 보기 (선택)</button>':''}<button class="btn primary" id="nx">다음 ▶</button></div>`;
+  chime();
+  $('#nx').onclick=next; if(st.bonus) $('#bn').onclick=openBonus; if($('#srcb')) $('#srcb').onclick=()=>openSources(st.src);
+};
+
+/* 사료 찾기 활동: 원문 속 표현을 눌러 고르고, (필요하면) 한 문장 쓰기 */
+R.find=st=>{
+  const W=st.write;
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">${st.kicker}</div><h2>${st.title}</h2><p>${fmt(st.intro)}</p></div>
+  <div class="src">
+    <div class="orig pickable"><h4>${st.doc.title}</h4><div class="src-meta">${st.doc.meta}</div>${st.doc.body}</div>
+    <div class="easy"><h4>💡 쉽게 읽기</h4>${st.easy}</div>
+  </div>
+  <div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>
+    <h3><span class="step">STEP ${W?2:1}</span>${fmt(st.q)}</h3>
+    <div class="mine" id="found">👆 왼쪽 원문에서 <b>노란 표현</b> 하나를 눌러 보세요.</div>
+    ${W?`<div class="reason hidden" id="wbox"><label><span class="step">STEP 3</span>${W.lead}</label>${sentHTML(W.pre,W.post,W.ph)}<div class="hint">빈칸만 채우면 돼요. (2글자 이상)</div></div>`:''}
+    ${st.after?`<div class="verdict hidden" id="after">${fmt(st.after)}</div>`:''}
+  </div>${nextBtn(st.nextLabel||'다음 ▶',true)}</div>`;
+  let pick=-1; const marks=$$('.orig mark'), nx=$('#nx');
+  const check=()=>{ nx.disabled = !(pick>=0 && (!W || $('#why').value.trim().length>=2)); };
+  const choose=i=>{
+    pick=i; marks.forEach((m,j)=>m.classList.toggle('on',j===i));
+    $('#found').innerHTML=`<b>내가 찾은 표현:</b> 「${esc(marks[i].textContent)}」`;
+    if(W){ $('#wbox').classList.remove('hidden'); }
+    if(st.after) $('#after').classList.remove('hidden');
+    check();
+  };
+  marks.forEach((m,i)=>m.onclick=()=>{tick();choose(i);if(W)setTimeout(()=>$('#why')?.focus(),50)});
+  if(W){ $('#why').oninput=check; $('#why').onkeydown=e=>{if(e.key==='Enter'&&!nx.disabled) nx.click()}; }
+  const prev=S.rec[st.id]; if(prev){ if(W) $('#why').value=prev.reason||''; choose(prev.i); }
+  nx.onclick=()=>{
+    const o={label:st.label,choice:marks[pick].textContent,short:marks[pick].textContent,i:pick};
+    if(W){ o.reason=$('#why').value.trim(); o.sentence=`${W.pre} ${o.reason} ${W.post}`.trim(); }
+    rec(st.id,o); chime(); next();
+  };
+};
+
+const BONUS=[
+  {t:'미군정 장관 아놀드의 성명',meta:'1945년 10월 10일 (일부 발췌, 현대어로 다듬음)',body:`<p>북위 38도 이남의 조선에는 <mark>오직 하나의 정부가 있을 뿐</mark>이다.</p><p>이 정부는 맥아더 원수의 포고와 하지 중장의 명령, 그리고 군정 장관의 행정령에 의하여 정당하게 수립된 것이다.</p>`,easy:'미군정은 자신만이 남한의 유일한 정부라고 밝혔어요. 즉 건준이 세운 조선인민공화국도, 대한민국 임시정부도 정부로 인정하지 않았어요.'},
+  {t:'건준의 강령 (전체)',meta:'조선건국준비위원회 · 1945년 8월 말 (현대어로 다듬음)',body:`<p>1. 우리는 <mark>완전한 독립 국가 건설</mark>을 기함.</p><p>2. 우리는 전 민족의 정치적·경제적·사회적 기본 요구를 실현할 수 있는 <mark>민주주의 정권의 수립</mark>을 기함.</p><p>3. 우리는 일시적 과도기에 있어서 <mark>국내 질서를 자주적으로 유지</mark>하며 대중 생활의 확보를 기함.</p>`,easy:'건준의 목표는 ① 완전한 독립 ② 민주주의 정부 ③ 스스로 질서 지키기였어요. ※ 「기함」= 꼭 이루겠다고 다짐한다는 뜻.'}
+];
+/* [v4] SOURCES 사료 팝업 (BONUS 팝업과 같은 모양) */
+function openSources(key){
+  const list=SOURCES[key]||[]; if(!list.length) return; let cur=0; const box=$('#modalBox');
+  const draw=()=>{const b=list[cur];box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">📜 당시 상황을 보여주는 사료</b><button class="btn ghost" id="mc">닫기 ✕</button></div>
+    ${list.length>1?`<div class="tabs">${list.map((x,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${x.t}</button>`).join('')}</div>`:'<div style="height:12px"></div>'}
+    <div class="orig"><h4>${b.t}</h4><div class="src-meta">${b.meta||''}</div>${b.body||''}</div>
+    ${b.easy?`<div class="easy" style="margin-top:14px"><h4>💡 쉽게 읽기</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`:''}`;
+    $('#mc').onclick=()=>$('#modal').classList.remove('open');
+    box.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{cur=+x.dataset.i;draw()});};
+  draw(); $('#modal').classList.add('open');
+}
+function openBonus(){
+  let cur=0; const box=$('#modalBox');
+  const draw=()=>{const b=BONUS[cur];box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">⭐ BONUS 사료 (선택 활동)</b><button class="btn ghost" id="mc">닫기 ✕</button></div>
+    <div class="tabs">${BONUS.map((x,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${x.t}</button>`).join('')}</div>
+    <div class="orig"><h4>${b.t}</h4><div class="src-meta">${b.meta}</div>${b.body}</div>
+    <div class="easy" style="margin-top:14px"><h4>💡 쉽게 읽기</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`;
+    $('#mc').onclick=()=>$('#modal').classList.remove('open');
+    box.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{cur=+x.dataset.i;draw()});};
+  draw(); $('#modal').classList.add('open');
+}
+$('#modal').onclick=e=>{if(e.target.id==='modal')$('#modal').classList.remove('open')};
+
+const MEET={
+  yeo:{sb:'국내에서 광복을 맞아<br>조직을 만들고 새 나라 건설을 준비',qt:'“서로 갈라져서는 새로운 나라를 만들 수 없습니다.”',kw:'통합'},
+  kimgu:{sb:'해외에서 독립운동을 이어 온 임시정부 주석<br>1945년 11월 중국에서 귀국',qt:'“우리에게 필요한 것은 완전한 자주독립입니다.”',kw:'자주 · 통일'},
+  rhee:{sb:'미국에서 외교 독립운동<br>1945년 10월 귀국, 새로운 정치 질서를 구상',qt:'“국제 정세를 이용해야 합니다.”',kw:'정부 수립 · 외교'}
+};
+R.meet=()=>{
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">PART 3 · 1945년 가을, 세 사람이 등장한다</div><h2>광복 이후 조선을 어떤 나라로 만들 것인가?</h2><p>같은 광복을 맞았지만, 이 질문에 대한 생각은 서로 달랐다.<br><b>카드를 눌러</b> 세 사람의 생각을 확인해 보세요.</p></div>
+  <div class="cards3">${Object.keys(MEET).map(k=>{const C=CH[k],M=MEET[k];return `<button class="pc" data-k="${k}" style="--c:${C.c}"><div class="in">
+    <div class="fr"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div><div class="sb">${M.sb}</div><div class="tp">👆 눌러서 확인</div></div>
+    <div class="bk"><div class="qt">${M.qt}</div><div class="kw">${M.kw}</div><div style="font-size:14px;opacity:.85">${C.n}</div></div></div></button>`}).join('')}</div>
+  <div class="recon">※ 카드 속 말은 인물의 생각을 쉽게 풀어 재구성한 것입니다.</div>
+  <div class="actions"><span class="cnt" id="cnt">0 / 3 확인</span><button class="btn primary" id="nx" disabled>다음 ▶</button></div></div>`;
+  const seen=new Set();
+  $$('.pc').forEach(c=>c.onclick=()=>{c.classList.toggle('flip');tick();seen.add(c.dataset.k);$('#cnt').textContent=`${seen.size} / 3 확인`;if(seen.size===3)$('#nx').disabled=false});
+  $('#nx').onclick=next;
+};
+
+const PATHS={
+  kimgu:{q:'분단을 막고 자주적인 정부를 만들 수 있을까?',kws:['자주','통일','민족','임시정부','남북 협상']},
+  yeo:{q:'서로 다른 세력을 하나로 묶을 수 있을까?',kws:['통합','좌우 협력','대중 기반','건국','민족 통합']},
+  rhee:{q:'국제 정세 속에서 먼저 국가를 세울 수 있을까?',kws:['정부 수립','국제 정세','반공','외교','국가 건설']}
+};
+const PICK_W={lead:'내가 이 인물의 길을 선택한 이유는 무엇인가?',pre:'내가 이 인물을 선택한 이유는',post:'중요하다고 생각했기 때문이다.',ph:'분단을 막는 것이'};
+R.select=()=>{
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">PART 3 · CHARACTER SELECT</div><h2>이제 당신은 누구의 길을 선택할 것인가?</h2></div>
+  <div class="notice"><b>이 게임은 '누가 옳았는가'를 고르는 게임이 아닙니다.</b><br>광복 직후 사람들은 '나라를 어떻게 만들어야 하는가?'라는 질문에 서로 다른 답을 내놓았습니다.<br>이제 여러분은 그중 한 사람의 입장에서 당시의 선택을 경험해 봅니다.</div>
+  <div class="sel3">${Object.keys(PATHS).map(k=>{const C=CH[k],P=PATHS[k];return `<button class="sc" data-k="${k}" style="--c:${C.c}"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div><div class="path">“${P.q}”</div><div class="kws">${P.kws.map(w=>`<span>${w}</span>`).join('')}</div>${S.done.includes(k)?'<div class="done">✔ 이미 플레이함</div>':''}</button>`}).join('')}</div>
+  <div class="q hidden" id="pq"><div class="qlabel write">생각 활동 ③ · 인물 선택</div><h3>${PICK_W.lead}</h3><div class="mine" id="pmine"></div>${sentHTML(PICK_W.pre,PICK_W.post,PICK_W.ph)}<div class="hint">빈칸만 채우면 돼요. (2글자 이상)</div></div>
+  <div class="actions"><button class="btn primary" id="nx" disabled>이 길을 걷는다 ▶</button></div></div>`;
+  let pick=null; const nx=$('#nx'), inp=$('#why');
+  const check=()=>{nx.disabled=!(pick && inp.value.trim().length>=2)};
+  $$('.sc').forEach(c=>c.onclick=()=>{pick=c.dataset.k;$$('.sc').forEach(x=>x.classList.toggle('on',x===c));tick();
+    $('#pq').classList.remove('hidden'); $('#pmine').innerHTML=`<b>내가 선택한 인물:</b> ${CH[pick].n}`; nx.textContent=`${CH[pick].n}의 길을 걷는다 ▶`; check(); setTimeout(()=>inp?.focus(),50);});
+  inp.oninput=check; inp.onkeydown=e=>{if(e.key==='Enter'&&!nx.disabled) nx.click()};
+  nx.onclick=()=>{ S.route=pick; const reason=inp.value.trim();
+    rec('pick',{label:'생각 활동 ③ · 내가 선택한 인물',choice:CH[pick].n,short:CH[pick].n,i:0,reason,sentence:`${PICK_W.pre} ${reason} ${PICK_W.post}`});
+    flow=flow.slice(0,idx+1).concat(buildRoute(pick),ENDING); thud(); next(); };
+};
+
+/* 인물 루트 마무리: 승리/패배가 아니라 '실제 역사에서 어떻게 이어졌을까' */
+R.routeEnd=st=>{
+  const p=frame(st); speak(null); const C=CH[st.who];
+  p.innerHTML=`<div class="hist" style="border-left-color:${C.c}"><div class="hhead">🧭 이 인물이 선택한 길은 실제 역사에서 어떻게 이어졌을까?</div>
+    <div class="cmp"><span class="chip" style="background:${C.c}">${C.n}</span> <b>${st.headline}</b></div>
+    <div>${fmt(st.body)}</div>
+    <div class="two" style="margin-top:14px"><div><h4>🙋 이 길을 지지한 사람들의 생각</h4>${st.pro}</div><div><h4>🤔 이 길을 걱정한 사람들의 생각</h4>${st.con}</div></div>
+    <div class="common">📌 <b>${COMMON_LINE}</b></div></div>${nextBtn('나의 답 정리하러 가기 ▶')}`;
+  if(!S.done.includes(st.who)) S.done.push(st.who);
+  save(); $('#nx').onclick=next;
+};
+
+const TL=[
+  ['1945. 8. 15','광복 · 여운형 등 조선건국준비위원회 결성','yeo'],
+  ['1945. 8~9','38선을 경계로 소련군(북)·미군(남) 진주 → 남쪽에 미군정','all'],
+  ['1945. 9. 6','건준 중심으로 조선인민공화국 선포 (미군정은 인정하지 않음)','yeo'],
+  ['1945. 10~11','이승만 귀국(10월) · 김구 등 임시정부 요인 개인 자격 귀국(11월)','kimgu rhee'],
+  ['1945. 12','모스크바 3국 외상 회의 → 신탁통치를 둘러싼 좌우 대립','kimgu'],
+  ['1946','미·소 공동 위원회 결렬 · 이승만 정읍 발언 · 좌우합작 운동','rhee yeo'],
+  ['1947','여운형 암살(7월) · 한국 문제 유엔으로 이관','yeo'],
+  ['1948. 4','김구·김규식, 평양 남북 협상','kimgu'],
+  ['1948. 5. 10','5·10 총선거 → 제헌 국회 구성','rhee'],
+  ['1948. 8. 15','대한민국 정부 수립 (광복 3년 뒤)','rhee'],
+  ['1948. 9. 9','북쪽에도 별도 정권 수립 → 남북 분단','end']
+];
+const FATE={
+  kimgu:'남북 협상으로 통일 정부를 추구했고, 5·10 총선거에는 참여하지 않았다. (1949년 암살)',
+  yeo:'좌우합작으로 민족 통합을 추구했다. (1947년 암살)',
+  rhee:'5·10 총선거를 거쳐 대한민국 정부 수립을 이끌고 초대 대통령이 되었다.'
+};
+R.summary=()=>{
+  const me=S.route;
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">PART 4 · 최종 타임라인</div><h2>광복에서 정부 수립까지, 3년</h2><p><b>색칠된 칸</b>은 내가 걸은 ${CH[me].n}의 길과 관련된 사건이에요. 자세한 정리는 선생님과 수업에서 함께 해요.</p></div>
+    <div class="tl">${TL.map(([d,t,w])=>`<div class="${w==='end'?'end':w.split(' ').includes(me)?'hl':''}"><b>${d}</b>${t}</div>`).join('')}</div>
+    <div class="ttl"><h2 style="font-size:22px">세 사람의 길은 이렇게 이어졌다</h2></div>
+    <div class="fate">${['kimgu','yeo','rhee'].map(k=>`<div class="${k===me?'me':''}" style="--c:${CH[k].c}"><b>${CH[k].n} ${k===me?'(나의 선택)':''}</b>${FATE[k]}</div>`).join('')}</div>
+    <div class="key" style="font-size:20px">「광복되었다는 것과 곧바로 독립 정부를 세웠다는 것은 같은 일이 아니었다.」</div>
+    ${nextBtn('나의 답 정리하기 ▶')}</div>`;
+  $('#nx').onclick=next;
+};
+
+/* 최종 성찰 ①: 가치 + 기억에 남는 선택 (클릭만) */
+const VALUES=['자주','통일','통합','국가 수립','외교','기타'];
+R.final1=()=>{
+  const E=S.extra; const ids=S.order.filter(id=>!['pick'].includes(id));
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">PART 4 · 나의 답</div><h2>나의 선택 돌아보기</h2><p>누르기만 하면 돼요.</p></div>
+    <div class="q"><div class="fq"><h4>💎 내가 중요하게 생각한 가치는?</h4><div class="pick" id="vals">${VALUES.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
+      <div class="sent hidden" id="etcBox" style="margin-top:10px"><input id="etc" maxlength="20" placeholder="예) 평화"></div></div>
+    <div class="fq"><h4>⭐ 내가 가장 기억에 남는 선택은?</h4><div class="pick list" id="mem">${ids.map(id=>{const r=S.rec[id];return `<button data-id="${id}"><small>${esc(r.label)}</small>${esc(r.choice)}</button>`}).join('')}</div></div></div>
+    ${nextBtn('다음 ▶',true)}</div>`;
+  const nx=$('#nx');
+  const check=()=>{nx.disabled=!(E.value && E.memory)};
+  const setVal=v=>{E.value=v;$$('#vals button').forEach(b=>b.classList.toggle('sel',b.dataset.v===v));$('#etcBox').classList.toggle('hidden',v!=='기타');check()};
+  const setMem=id=>{E.memory=id;$$('#mem button').forEach(b=>b.classList.toggle('sel',b.dataset.id===id));check()};
+  $$('#vals button').forEach(b=>b.onclick=()=>{tick();setVal(b.dataset.v)});
+  $$('#mem button').forEach(b=>b.onclick=()=>{tick();setMem(b.dataset.id)});
+  if(E.value) setVal(E.value); if(E.etc) $('#etc').value=E.etc; if(E.memory&&S.rec[E.memory]) setMem(E.memory);
+  nx.onclick=()=>{E.etc=$('#etc').value.trim();save();chime();next()};
+};
+
+/* 최종 성찰 ②: 그 시대에 살았다면 + 핵심 질문에 대한 나의 답 */
+const WOULD=['김구의 길','여운형의 길','이승만의 길','또 다른 길'];
+const CORE_HINTS=['미국과 소련이 나누어 점령했기','좌익과 우익의 생각이 너무 달랐기','신탁통치를 두고 크게 대립했기','미·소 협상이 실패했기','여러 세력이 하나로 뭉치지 못했기'];
+R.final2=()=>{
+  const E=S.extra;
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">PART 4 · 나의 답</div><h2>마지막 질문</h2></div>
+    <div class="q"><div class="fq"><h4>🕰 내가 그 시대에 살았다면, 실제 그 인물과 같은 선택을 했을까?</h4>
+      <div class="pick" id="would">${WOULD.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
+      <div id="wsent" class="hidden" style="margin-top:12px"></div><div class="hint">'왜냐하면' 빈칸은 써도 되고 비워 둬도 돼요.</div></div>
+    <div class="fq"><div class="qlabel write">핵심 질문 · 나의 답</div><h4 style="font-size:21px">「${CORE_Q}」</h4>
+      ${sentHTML('광복 이후에도','때문에 하나의 정부를 바로 만들기 어려웠다.','미국과 소련이 나누어 점령했기','core')}
+      <div class="hints"><span class="hint" style="margin:0 4px 0 0">💡 생각 힌트(눌러서 넣기):</span>${CORE_HINTS.map(h=>`<button data-h="${h}">${h}</button>`).join('')}</div></div></div>
+    ${nextBtn('나의 기록 완성하기 ▶',true)}</div>`;
+  const nx=$('#nx'), core=$('#core');
+  const check=()=>{nx.disabled=!(E.would && core.value.trim().length>=2)};
+  const setW=v=>{E.would=v;$$('#would button').forEach(b=>b.classList.toggle('sel',b.dataset.v===v));
+    const old=$('#wy')?$('#wy').value:(E.wouldReason||'');
+    const box=$('#wsent'); box.classList.remove('hidden');
+    box.innerHTML=sentHTML(`내가 그 시대에 살았다면 <span class="fixed">${v}</span>${josa(v,'을','를')} 선택했을 것 같다. 왜냐하면`,'때문이다.','통일이 가장 중요하다고 생각했기','wy');
+    $('#wy').value=old; check();};
+  $$('#would button').forEach(b=>b.onclick=()=>{tick();setW(b.dataset.v)});
+  $$('.hints button').forEach(b=>b.onclick=()=>{core.value=b.dataset.h;check();core.focus()});
+  core.oninput=check; core.value=E.core||''; if(E.would) setW(E.would);
+  core.onkeydown=e=>{if(e.key==='Enter'&&!nx.disabled) nx.click()};
+  nx.onclick=()=>{E.wouldReason=$('#wy')?$('#wy').value.trim():''; E.core=core.value.trim(); save(); next();};
+};
+
+function wouldSentence(E){ return E.would? `내가 그 시대에 살았다면 ${E.would}${josa(E.would,'을','를')} 선택했을 것 같다.`+(E.wouldReason?` 왜냐하면 ${E.wouldReason} 때문이다.`:'') : ''; }
+function coreSentence(E){ return E.core? `광복 이후에도 ${E.core} 때문에 하나의 정부를 바로 만들기 어려웠다.` : ''; }
+
+R.ending=()=>{
+  const E=S.extra, me=S.route, endSt=ROUTES[me].steps.find(s=>s.t==='routeEnd');
+  const d=new Date(); const ds=`${d.getFullYear()}. ${d.getMonth()+1}. ${d.getDate()}.`;
+  const val=E.value==='기타'&&E.etc? `기타 (${E.etc})` : (E.value||'-');
+  const mem=E.memory&&S.rec[E.memory]? S.rec[E.memory].choice : '-';
+  stage.innerHTML=`<div class="full"><div class="cert" id="cert"><h2>📜 나의 역사 활동 기록</h2><div class="meta">「광복 이후 세 가지 길」 · ${esc(S.name||'이름 없음')} · ${ds}</div>
+    <div class="sumg"><div><small>내가 선택한 인물</small><b>${CH[me].n}</b></div><div><small>내가 중요하게 생각한 가치</small><b>${esc(val)}</b></div><div><small>가장 기억에 남는 선택</small><b>${esc(mem)}</b></div></div>
+    <h5>실제 역사에서는?</h5><div style="font-size:15px;line-height:1.7"><b>${endSt.headline}</b> — ${fmt(endSt.body)}</div>
+    <h5>마지막 질문 · 내가 그 시대에 살았다면</h5><div class="ans">${esc(wouldSentence(E))}</div>
+    <h5>핵심 질문 · ${CORE_Q}</h5><div class="ans">${esc(coreSentence(E))}</div>
+    <h5>나의 기록 전체</h5><div class="rec">${recHTML()}</div>
+    <div class="credit">인물 사진: 위키미디어 공용(Wikimedia Commons) · 대화 장면은 역사적 상황을 바탕으로 재구성</div></div>
+    <div class="actions noprint" style="justify-content:center">
+      <button class="btn" id="cp">📋 기록 복사하기</button><button class="btn" id="pr">🖨 인쇄 / PDF 저장</button>
+      ${S.done.length<3?'<button class="btn primary" id="again">🔁 다른 인물의 길도 걸어보기</button>':''}
+      <button class="btn ghost" id="home">처음으로</button></div></div>`;
+  tone([523,659,784,1046],0.16);
+  $('#cp').onclick=()=>{
+    const txt=`[광복 이후 세 가지 길] ${S.name} (${ds})\n`+
+      `- 내가 선택한 인물: ${CH[me].n}\n- 중요하게 생각한 가치: ${val}\n- 가장 기억에 남는 선택: ${mem}\n`+
+      `- 마지막 질문: ${wouldSentence(E)}\n- 핵심 질문의 답: ${coreSentence(E)}\n[전체 기록]\n`+
+      S.order.map(id=>{const r=S.rec[id];return `- ${r.label}: ${r.choice}${r.sentence?' / '+r.sentence:(r.reason?' / '+r.reason:'')}`}).join('\n');
+    const ok=()=>{$('#cp').textContent='✅ 복사했어요!';setTimeout(()=>$('#cp').textContent='📋 기록 복사하기',1800)};
+    if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok,()=>fallback(txt,ok)); else fallback(txt,ok);
+  };
+  $('#pr').onclick=()=>window.print();
+  if($('#again')) $('#again').onclick=()=>{const i=flow.findIndex(s=>s.t==='select');go(i)};
+  $('#home').onclick=()=>{ if(confirm('처음으로 돌아갈까요? 지금까지의 기록은 지워집니다.')){clearSaved();Object.assign(S,{rec:{},order:[],route:null,done:[],extra:{}});flow=COMMON.slice();go(0)} };
+};
+function fallback(txt,ok){const t=document.createElement('textarea');t.value=txt;document.body.appendChild(t);t.select();try{document.execCommand('copy');ok()}catch(e){alert(txt)}t.remove()}
+
+/* ================= 콘텐츠 ================= */
+const COMMON=[
+  {t:'intro'},
+  /* ---------- PART 1 · 1945년 8월 (도입: 시간순 경험) ---------- */
+  /* [v3] PROLOGUE — 1945년 8월 초: 아직 광복 전 */
+  {t:'monologue',part:0,typed:'1945. 08.',lines:[
+    '1945년 8월. 일본의 패색이 짙어지고 있다.',
+    '조선 사람들은 곧 무언가 큰 변화가 일어날 것을 느끼고 있다.',
+    '그런데… 광복 이후 조선은 누가, 어떻게 움직여야 할까?'],
+    final:'<div class="coreq" style="font-size:clamp(16px,2.4vw,20px);line-height:1.7"><small>아직 역사를 배우기 전입니다</small>어떤 선택이 옳았는지 판단하기 전에,<br>당시 사람이라면 어떤 선택을 했을지 생각해 봅시다.</div>',
+    button:'1945년 8월로 들어가기 ▶'},
+  /* [v3] SCENE 1 — 1945년 8월 초: 전쟁의 끝이 다가오다 */
+  {t:'scene',part:0,bg:'street',place:'서울 거리',date:'1945년 8월 초',chars:[{k:'merchant',p:'l'},{k:'resident',p:'r'}],
+    amb:[{k:'street',vol:.25,loop:1,fadeIn:1500},{k:'drone',vol:1},{k:'jpradio',vol:.12,delay:3000}],lines:[
+    {text:'1945년 8월, 서울. 조선은 **아직 일본의 식민지**다.'},
+    {text:'8월 6일과 9일 일본에 원자 폭탄이 떨어지고, 8월 8일에는 소련이 일본에 전쟁을 선포했다.',
+      cards:[{img:'war1',d:'8월 6일',cap:'히로시마 원자 폭탄'},{img:'war2',d:'8월 8일',cap:'소련, 일본에 선전 포고'},{img:'war3',d:'8월 9일',cap:'나가사키 원자 폭탄'}]},
+    {who:'resident',text:'이번에는 정말 일본이 지는 것 아니야?'},
+    {who:'merchant',text:'쉿! 누가 들으면 어쩌려고. 아직 아무것도 확실하지 않아.'},
+    {text:'사람들은 전황이 심상치 않다는 것을 느끼지만, 누구도 확신하지 못한다.'}]},
+  {t:'choice',part:0,bg:'street',keep:1,chars:[{k:'merchant',p:'l'},{k:'resident',p:'r'}],id:'e1',label:'선택 · 1945년 8월 초',
+    situation:'정답은 없어요. 당시 사람이라면 어땠을지 떠올리며 골라 보세요.',
+    q:'당신이라면 이 순간 무엇을 준비하겠는가?',
+    opts:['일본이 지면 질서를 지킬 사람들을 미리 모아 둔다.','식량을 아껴 두고 가족의 안전부터 챙긴다.','독립 뒤 어떤 나라를 세울지 사람들과 몰래 이야기한다.','확실해질 때까지 조용히 지켜본다.'],
+    short:['질서를 지킬 사람들','가족의 안전','새 나라에 대한 이야기','조용히 지켜보기']},
+  /* [v3] SCENE 2 — 8월 10일 전후: 총독부의 걱정 */
+  {t:'scene',part:0,bg:'gov',place:'[[조선총독부]] (서울)',date:'1945년 8월 10일 전후',chars:[{k:'endo',p:'l'}],amb:[{k:'clock'}],lines:[
+    {text:'일본 정부가 연합국의 항복 요구를 받아들이려 한다는 소식이 [[조선총독부]]에 전해진다.'},
+    {text:'총독부는 걱정에 빠진다. 일본이 항복하면, 조선에 있는 일본인들은 어떻게 될까?'},
+    {who:'endo',sfx:['door',{k:'paper',delay:900}],text:'항복 뒤에 혼란이 일어나면 일본인들이 위험해진다. 질서를 지켜 줄 조선인 지도자가 필요하다.'},
+    {text:'총독부는 조선 사람들에게 영향력이 있는 인물을 찾기 시작한다.'}]},
+  /* [v3] SCENE 2 — 8월 15일 아침: 엔도와 여운형 */
+  {t:'scene',part:0,bg:'gov',place:'정무총감 관저 (서울)',date:'1945년 8월 15일 아침',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],amb:[{k:'clock',vol:.7}],lines:[
+    {text:'「일본은 곧 무너질 것이다.」 총독부는 이제 그것을 알고 있었다.'},
+    {sfx:'knock',text:'항복 방송이 나오기 몇 시간 전, 한 인물이 여운형을 찾는다. 조선총독부의 [[정무총감]] 엔도 류사쿠.'},
+    {who:'endo',text:'선생, 부탁이 있습니다. 일본인들의 안전을 지키고 질서를 유지하는 데 힘을 보태 주시오.'},
+    {who:'yeo',cut:1,text:'그 전에 조선인의 미래를 위한 조건이 필요합니다.'},
+    {who:'endo',text:'무엇을 요구하겠소?'}]},
+  {t:'choice',part:0,bg:'gov',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],id:'s0',label:'가설 세우기 · 왜 여운형이었을까?',
+    situation:'아직 답은 알려 주지 않아요. 나의 생각(가설)을 골라 보세요.',
+    q:'일본 측은 왜 하필 여운형을 찾았을까?',
+    opts:['조선 사람들 사이에서 영향력이 컸기 때문에','광복 이후를 미리 준비하고 있었기 때문에','일본과 대화가 통하는 사람이라고 생각했기 때문에','질서를 지킬 조직을 움직일 수 있을 것 같아서'],
+    short:['조선인 사이의 영향력','광복 이후에 대한 준비','일본과의 대화 가능성','조직을 움직이는 힘']},
+  {t:'choice',part:0,bg:'gov',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],id:'s2',label:'선택 · 여운형의 요구',q:'당신이 여운형이라면 무엇을 가장 먼저 요구하겠는가?',
+    opts:['[[정치범]] 석방','식량 확보','[[치안]] 유지','정치 활동의 자유']},
+  {t:'history',part:0,bg:'gov',ref:'s2',src:'endo',
+    mine:r=>`나는 「${esc(r.choice)}」${josa(r.choice,'을','를')} 가장 먼저 요구하겠다.`,
+    ctx:'총독부는 혼란을 막아 줄 조선인 지도자가 필요했고, 여운형은 이 기회에 **조선인을 위한 조건**을 내걸었어요.',
+    fact:'여운형은 다음과 같은 조건을 요구했어요.<ol class="cond"><li>정치범·경제범을 즉시 석방할 것</li><li>서울의 3개월분 식량을 확보할 것</li><li>치안 유지와 건국 활동에 간섭하지 말 것</li><li>학생과 청년의 조직 활동에 간섭하지 말 것</li><li>노동자와 농민의 조직 활동에 간섭하지 말 것</li></ol>',
+    key:'이 만남은 앞으로 어떤 일로 이어질까?'},
+  /* [v3] SCENE 3 — 광복 직전의 준비: 건국동맹 */
+  {t:'scene',part:0,bg:'office',place:'서울',date:'광복 직전',chars:[{k:'ahn',p:'l'},{k:'yeo',p:'r'}],lines:[
+    {sfx:'secret',text:'광복 직전 어느 날, 서울의 한 방. 문은 굳게 잠겨 있다.'},
+    {cut:1,text:'사실 여운형은 이미 광복 이후를 준비하고 있었다.'},
+    {text:'1944년, 그는 비밀 단체 **조선[[건국동맹]]**을 만들어 일본이 패망한 뒤를 대비해 왔다.',cards:[{img:'src_geonguk',d:'1944년',cap:'조선건국동맹 조직 — 광복 이후를 준비하다'}]},
+    {who:'ahn',text:'일본이 물러난다면 누가 치안을 유지하지요?'},
+    {who:'yeo',text:'식량은? 행정은? 일본 경찰이 사라지면 누가 질서를 지키겠소?'},
+    {who:'ahn',text:'서울만 안정시켜서는 부족합니다. 지방에도 조직이 필요합니다.'}]},
+  /* [v3] SCENE 4 — 1945년 8월 15일: 일본이 항복했다 (기존 프롤로그 연출) */
+  {t:'prologue',part:0},
+  /* [v3] SCENE 5 — 8월 16일: 광복했는데 정부가 없다 */
+  {t:'scene',part:0,bg:'street',cheer:1,amb:[{k:'manse',vol:.35,fadeOutAfter:6000}],place:'서울 거리',date:'1945년 8월 16일',chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],lines:[
+    {text:'다음 날, 서울 거리는 만세를 부르는 사람들로 가득 찼다. 감옥에서 풀려난 [[정치범]]들도 거리로 나왔다.'},
+    {who:'merchant',text:'일본은 물러갔는데 쌀은 어디서 구하지?'},
+    {who:'youth',text:'감옥에 갇혀 있던 사람들이 풀려났어! 이제 우리 손으로 나라를 세우는 거야.'},
+    {who:'resident',text:'경찰도 혼란스러운데 누가 우리를 지켜주지?'},
+    {text:'일본 경찰과 행정 기관은 혼란에 빠졌다. 그리고 아직 새로운 정부는 없다.'}]},
+  {t:'history',part:0,bg:'street',cheer:1,title:'광복 직후 조선의 문제',factLabel:'생각해 볼 문제',
+    fact:'<ul class="fact"><li>[[치안]]은 누가 담당하지?</li><li>[[행정]]은 누가 이어받지?</li><li>식량은 어떻게 확보하지?</li><li>일본이 남긴 행정 기관은 어떻게 하지?</li><li>새로운 국가는 어떻게 만들지?</li></ul>',
+    key:'광복은 이루어졌다. 하지만 새로운 국가는 아직 만들어지지 않았다.'},
+  {t:'choice',part:0,bg:'street',cheer:1,chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],id:'s1',label:'생각 활동 ① · 무엇부터 해결할까?',
+    situation:'거리에는 기쁨과 걱정이 함께 있다. 경찰도, 관청도 제대로 움직이지 않는다. 아직 새로운 정부는 없다.',
+    q:'당신이라면 무엇부터 해결하겠는가?',
+    opts:['우선 [[치안]]과 질서를 유지한다.','식량을 확보하고 배급 문제를 해결한다.','정치 세력을 모아 새로운 나라의 방향을 논의한다.','여러 문제를 동시에 해결할 조직부터 만든다.'],
+    short:['치안과 질서','식량 문제','새 나라의 방향','문제를 해결할 조직'],
+    write:{lead:'광복 직후 가장 먼저 해결해야 할 문제는 무엇이라고 생각하나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'사람들이 안전해야 하기'}},
+  /* [v3] SCENE 6 — 건국준비위원회 */
+  {t:'scene',part:0,bg:'office',place:'서울',date:'1945년 8월 15~16일',chars:[{k:'ahn',p:'l'},{k:'yeo',p:'r'}],lines:[
+    {text:'일본이 물러난 바로 다음 날, 조선의 질서를 누가 유지해야 할까?'},
+    {text:'8월 15일, 여운형과 안재홍은 **조선건국준비위원회**, 줄여서 [[건준]]을 만들었다. 건국동맹에서 준비해 온 사람들도 힘을 보탰다.'},
+    {who:'yeo',text:'지금은 질서를 지키며 새 나라를 준비해야 합니다.'},
+    {who:'ahn',text:'각 지방에도 지부를 만들어 치안을 맡게 합시다.'}]},
+  {t:'scene',part:0,bg:'map',map:'branch',place:'[[건국준비위원회]]',date:'1945년 8월 하순',lines:[
+    {text:'건준은 서울에 본부를 두고 전국 곳곳에 지부를 만들었다.'},
+    {text:'8월 말까지 전국에 **145개** 지부가 생겼다. 각 지역에서는 [[치안대]]가 질서를 지켰다.'}]},
+  {t:'history',part:0,bg:'map',map:'branch',ref:'s1',
+    mine:r=>`나는 「${esc(r.short)}」${josa(r.short,'을','를')} 가장 먼저 해결하겠다고 했다.`,
+    ctx:'실제 광복 직후에도 [[치안]], 식량, 정치, [[행정]] 문제가 **동시에** 존재했어요. 어느 하나만 고르기 어려운 상황이었지요. 당신의 판단도 당시 사람들이 실제로 고민한 문제 중 하나예요.',
+    fact:'[[건국준비위원회]]는 [[치안대]]를 만들어 질서를 지키고, 식량 문제에도 대응하며, 새 나라를 세울 준비를 했어요. 하지만 건준은 **정부가 아니라 준비 조직**이었어요.',
+    key:'광복 = 곧바로 정부가 생긴 것은 아니었다.'},
+  {t:'find',part:0,id:'g1',kicker:'PART 1 · 짧은 사료',title:'건준은 어떤 나라를 꿈꾸었을까?',label:'사료 찾기 · 건준의 강령',
+    intro:'건준이 발표한 [[강령]]의 일부예요. 두 줄만 읽으면 돼요.',
+    doc:{title:'조선건국준비위원회 강령 (일부)',meta:'1945년 8월 말 (현대어로 다듬음)',body:`<p>1. 우리는 <mark>완전한 독립 국가 건설</mark>을 기함.</p><p>2. 우리는 전 민족의 정치적·경제적·사회적 기본 요구를 실현할 수 있는 <mark>민주주의 정권의 수립</mark>을 기함.</p><p class="cut">(3. 국내 질서의 자주적 유지 — 생략)</p>`},
+    easy:`<ul><li><b>1</b>다른 나라에 기대지 않는, 완전히 독립된 나라를 세우겠다.</li><li><b>2</b>민족 모두의 바람을 이루는 민주주의 정부를 세우겠다.</li></ul><div class="sum">※ 「기함」 = 꼭 이루겠다고 다짐한다는 뜻</div>`,
+    q:'이 자료에서 새롭게 만들 나라의 모습과 관련된 내용을 하나 찾아보세요.',
+    after:'👉 건국준비위원회는 단순히 치안만 유지하려 한 조직이 아니라, 광복 이후 **새로운 국가를 만들기 위한 준비**를 시도했다는 점을 확인할 수 있어요.'},
+
+  /* ---------- PART 2 · 외세와 새로운 질서 (SCENE 7) ---------- */
+  {t:'partcard',part:1,text:'건준이 새 나라를 준비하던 그때,<br>한반도에 외국 군대가 들어온다.'},
+  {t:'scene',part:1,bg:'map',map:'38',place:'한반도',date:'1945년 8월 하순 ~ 9월',lines:[
+    {text:'조선이 해방되었다.'},
+    {text:'그런데 [[38선]] 북쪽에는 8월에 **[[소련군]]**이 들어오고,'},
+    {text:'남쪽에는 9월에 **미군**이 들어오기 시작했다. 일본군의 [[무장 해제]]를 위해 미국과 소련이 한반도를 나누어 맡은 것이다.'},
+    {text:'그리고 조선의 미래는 이제 **조선 사람들만의 문제가 아니게** 되었다.'}]},
+  {t:'choice',part:1,bg:'map',map:'38',id:'s38',label:'선택 · 38선의 의미',q:'1945년 8월의 사람들에게 38선은 어떤 의미였을까?',
+    opts:['처음부터 영구적인 한반도 국경이었다.','일본군의 무장 해제와 미·소의 점령을 위한 임시적인 기준선이었다.','새롭게 만들어진 대한민국의 행정구역이었다.','당시에는 아무런 의미가 없었다.'],
+    short:['영구적인 국경','임시적인 기준선','대한민국의 행정구역','의미 없는 선']},
+  {t:'history',part:1,bg:'map',map:'38',ref:'s38',
+    mine:r=>`내 생각: 38선은 「${esc(r.short)}」이었다.`,
+    ctx:'1945년에는 아직 대한민국도, 북쪽의 정부도 없었어요. 많은 사람들은 외국 군대가 일본군의 항복을 처리하면 곧 우리 손으로 나라를 세울 수 있으리라 기대했어요.',
+    fact:'38선은 처음부터 남북 분단을 확정하기 위한 영구적인 국경선으로 만들어진 것이 아니었어요. 일본군의 무장 해제와 미·소의 한반도 점령을 구분하기 위한 선이었어요. 그런데 북쪽에서는 소련군이 [[인민위원회]]를 통해 영향력을 넓히고, 남쪽에서는 미군이 [[미군정]]을 세우면서 남과 북은 서로 다른 군대의 관리를 받게 되었어요.',
+    key:'처음에는 임시적인 군사적 기준선이었다. 그런데 이 선은 앞으로 어떻게 될까?'},
+  {t:'find',part:1,id:'s5',kicker:'PART 2 · 사료 미션',title:'역사 속 문서를 직접 읽어보자',label:'생각 활동 ② · 맥아더 포고 제1호',
+    intro:'<span class="step">STEP 1</span>미군이 남한에 들어오면서 발표한 [[포고]]예요. 오른쪽 <b>쉽게 읽기</b>와 함께 읽어 보세요.',
+    doc:{title:'조선 인민에게 고함 — 맥아더 포고 제1호',meta:'1945년 9월 7일 발표 · 미 태평양 육군 총사령관 맥아더 (일부 발췌, 현대어로 다듬음)',body:`
+      <p><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 <mark>정부의 모든 권한은 당분간 본관의 권한 아래 시행한다.</mark></p>
+      <p><b>제2조</b> 정부, 공공 단체 등의 직원과 고용인은 <mark>별도의 명령이 있을 때까지 종래의 정상적인 기능과 업무를 수행</mark>할 것.</p>
+      <p><b>제3조</b> 주민은 <mark>본관 및 본관의 권한 아래 발포한 명령에 즉각 복종</mark>해야 한다. 점령군에 대한 모든 반항 행위는 엄벌에 처한다.</p>
+      <p class="cut">(제4조 생략)</p>
+      <p><b>제5조</b> 군정 기간 동안 <mark>영어를 모든 목적에 사용하는 공용어로 한다.</mark></p>`},
+    easy:`<ul><li><b>1조</b>38선 남쪽을 다스리는 힘은 당분간 <u>미군</u>이 갖는다.</li><li><b>2조</b>원래 관청에서 일하던 사람들은 일단 하던 일을 계속한다.</li><li><b>3조</b>주민은 미군의 명령을 따라야 한다.</li><li><b>5조</b>공식 언어는 영어다.</li></ul>`,
+    q:'이 문서에서 미군이 남한을 어떻게 다루고 있는지 보여주는 표현을 하나 찾아보세요.',
+    write:{lead:'그 표현을 보고 어떤 생각이 들었나요?',pre:'이 표현을 통해',post:'알 수 있었다.',ph:'미군이 남한을 직접 다스렸다는 것을'},
+    nextLabel:'실제 역사 확인 ▶'},
+  {t:'history',part:1,bg:'doc',ref:'s5',bonus:true,
+    mine:r=>`내가 찾은 표현: 「${esc(r.choice)}」${r.reason?`<br>→ 이 표현을 통해 ${esc(r.reason)} 알 수 있었다.`:''}`,
+    ctx:'8·15 광복 직후 곧바로 독립 정부가 세워진 것은 아니었어요.',
+    fact:'<ul class="fact"><li>1945년 9월부터 남한에는 [[미군정]]이 시작되었어요.</li><li>미군정은 일본군의 항복 처리와 질서 유지 등을 맡은 <b>점령 통치</b>의 성격을 가졌어요.</li><li>미군정은 건준이 세운 [[조선인민공화국]]도, 대한민국 [[임시정부]]도 정부로 인정하지 않았어요.</li><li>광복과 새 정부 수립 사이에는 <b>아직 많은 과정이 남아 있었어요.</b></li></ul>',
+    key:'광복되었다는 것과 곧바로 독립 정부를 세웠다는 것은 같은 일이 아니었다.'},
+
+  /* ---------- PART 3 · 세 사람 등장 (SCENE 8) → 수업 연결 ---------- */
+  {t:'partcard',part:2,text:'같은 광복을 맞았지만,<br>\'나라를 어떻게 만들어야 하는가?\'에 대한 답은 서로 달랐다.'},
+  {t:'meet',part:2},
+  /* [v3] 마지막 도입 장면: 결론이 아니라 수업으로 넘어가는 질문 */
+  {t:'monologue',part:2,typed:'1945. 08.',lines:[
+    '일본의 식민 지배는 끝났다.',
+    '그러나 조선의 미래는 아직 결정되지 않았다.',
+    '누가 나라를 운영할 것인가?',
+    '어떤 국가를 만들 것인가?',
+    '외세와는 어떻게 관계를 맺을 것인가?',
+    '그리고… **김구, 여운형, 이승만은 서로 다른 답을 내놓게 된다.**'],
+    final:'<h1 class="bigq" style="font-size:clamp(28px,5vw,48px)">그렇다면 그들은 왜<br>서로 다른 길을 선택했을까?</h1><div class="coreq">그럼 이제, 이 세 사람의 선택을 따라가 보자.</div>',
+    button:'1945년의 선택을 따라가 보기 →'},
+
+  /* ---------- 본편 (기존 내용 유지) ---------- */
+  {t:'scene',part:2,bg:'news',mast:'1945년 말 ~ 1947년',headline:'엇갈리는 길',sub:'신탁통치 · 미·소 공동 위원회 · 좌우 대립',place:'한반도',date:'그 뒤 3년',lines:[
+    {text:'그 뒤 하나의 정부를 세우는 길은 점점 복잡해졌다.'},
+    {text:'1945년 12월 [[모스크바 3국 외상 회의]]에서 [[신탁통치]] 이야기가 나오자, [[좌익]]과 [[우익]]이 찬성과 반대로 크게 부딪쳤다.'},
+    {text:'미국과 소련이 만든 [[미·소 공동 위원회]]도 결론을 내지 못했다.'},
+    {text:'**광복 이후 여러 정치 세력과 국제 세력이 충돌하면서, 하나의 정부를 만드는 과정이 복잡해졌다.**'}]},
+  {t:'select',part:2}
+];
+
+const ROUTES={
+  kimgu:{steps:[
+    {t:'scene',bg:'room',place:'중국 충칭 → 서울',date:'1945년 11월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'당신은 이제 **김구**다. 대한민국 [[임시정부]] 주석으로 오랫동안 독립운동을 이끌어 왔다.'},
+      {who:'aide',text:'주석님, 미군정은 임시정부를 정부로 인정하지 않고, 개인 자격으로만 귀국하라고 합니다.'},
+      {who:'kimgu',text:'그래도 우리가 지켜 온 임시정부가 새 나라의 중심이 되어야 하네.'}]},
+    {t:'choice',id:'r1',label:'김구의 고민 ① · 정부를 세우는 방식',q:'새 정부를 어떻게 세워야 할까?',abc:1,
+      opts:['임시정부를 중심으로 정부를 세운다.','국내 여러 세력과 함께 새 조직을 만든다.']},
+    {t:'history',ref:'r1',
+      fact:'김구와 임시정부 요인들은 1945년 11월 **개인 자격**으로 귀국했어요. 12월 [[신탁통치]] 소식이 전해지자 김구는 이를 또 다른 지배로 보고 반대 운동에 앞장섰어요.',
+      real:'김구는 임시정부의 정통성을 이어 <b>자주적인 정부</b>를 세우려 했어요.'},
+    {t:'scene',bg:'room',night:1,place:'서울 경교장',date:'1948년 초',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'미·소 협상이 실패하자 한국 문제는 [[유엔]]으로 넘어갔다.'},
+      {text:'유엔은 선거가 가능한 남한에서만 [[총선거]]를 하기로 했다. 남과 북에 따로 정부가 생길 수 있는 상황이다.'},
+      {who:'aide',text:'주석님, 북쪽 지도자들과 직접 만나 보자는 의견이 있습니다. 하지만 성과가 없을 거라는 사람도 많습니다.'}]},
+    {t:'choice',id:'r2',label:'김구의 고민 ② · 남북 협상',q:'북쪽 지도자들과 협상하러 가겠는가?',abc:1,
+      opts:['가능성이 낮아도 북으로 가서 협상한다.','협상은 어렵다고 보고 남한에서 다른 길을 찾는다.']},
+    {t:'history',ref:'r2',
+      fact:'1948년 4월 김구는 김규식과 함께 평양에서 열린 [[남북 협상]]에 참여했어요. 외국 군대 철수와 통일 정부 수립 등을 주장했지만, 실제 통일 정부로 이어지지는 못했어요.',
+      real:'김구는 어려움을 알면서도 <b>남북 협상</b>의 길을 택했어요.'},
+    {t:'scene',bg:'ballot',place:'서울',date:'1948년 5월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'남북 협상에서 돌아온 뒤, 5·10 [[총선거]]가 다가왔다.'},
+      {who:'aide',text:'선거에 참여하면 새 정부 안에서 목소리를 낼 수 있습니다.'},
+      {who:'kimgu',text:'하지만 이 선거가 분단을 굳히는 것이라면…….'}]},
+    {t:'choice',id:'r3',label:'김구의 고민 ③ · 통일 정부와 현실 정치',q:'5·10 총선거에 참여하겠는가?',abc:1,
+      opts:['참여해서 새 정부 안에서 영향력을 키운다.','분단을 굳힐 수 있는 선거에는 참여하지 않는다.']},
+    {t:'history',ref:'r3',
+      fact:'김구는 1948년 2월 「삼천만 동포에게 읍고함」을 발표해 [[단독 정부]] 수립에 반대하고 분단을 막자고 호소했어요.',
+      real:'김구는 <b>5·10 총선거에 참여하지 않았어요.</b>'},
+    {t:'routeEnd',who:'kimgu',bg:'dawn',
+      headline:'대한민국 정부 수립에 참여하지 않고 남북 협상과 통일 정부를 추구했던 김구의 선택',
+      body:'1948년 8월 남쪽에 대한민국 정부가, 9월에는 북쪽에 별도의 정권이 세워졌어요. 김구는 그 뒤에도 통일 정부를 주장하며 활동하다가 1949년 6월 암살당했어요.',
+      pro:'외세에 기대지 않고 민족이 하나 되는 나라를 세워야 한다. 분단만은 막아야 한다.',
+      con:'미·소가 대립하는 현실에서 협상만으로 통일 정부를 만들기는 어렵다. 정부 수립 과정에서 빠지게 된다.'}
+  ]},
+  yeo:{steps:[
+    {t:'scene',bg:'office',place:'서울 · 건준 본부',date:'1945년 9월 초',chars:[{k:'yeo',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'당신은 이제 **여운형**이다. [[건준]]을 이끌며 광복 직후의 혼란을 수습해 왔다.'},
+      {who:'aide',text:'선생님, 건준 안에서 [[좌익]]의 힘이 커지자 [[우익]] 인사들이 떠나고 있습니다.'},
+      {who:'yeo',text:'서로 생각이 달라도, 새 나라는 함께 만들어야 하오.'}]},
+    {t:'choice',id:'r1',label:'여운형의 고민 ① · 좌우 세력 통합',q:'흩어지는 세력을 어떻게 하겠는가?',abc:1,
+      opts:['생각이 다른 세력에게도 다시 손을 내민다.','뜻이 맞는 세력과 먼저 힘을 모은다.']},
+    {t:'history',ref:'r1',
+      fact:'건준 안에서는 생각의 차이로 갈등이 생겼고, 안재홍 등 일부 인사가 떠났어요. 1945년 9월 6일 건준이 중심이 되어 [[조선인민공화국]]을 선포했지만, 많은 우익 인사들은 참여하지 않았어요.',
+      real:'여운형은 갈등 속에서도 <b>좌우를 아우르는 통합</b>을 계속 추구했어요.'},
+    {t:'scene',bg:'office',place:'서울',date:'1945년 9~10월',chars:[{k:'yeo',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'9월, 미군이 서울에 들어와 [[미군정]]을 세웠다.'},
+      {who:'aide',text:'미군정은 조선인민공화국을 정부로 인정하지 않겠다고 합니다.'},
+      {who:'yeo',text:'(미군정과 손을 잡아야 할까, 맞서야 할까?)'}]},
+    {t:'choice',id:'r2',label:'여운형의 고민 ② · 미군정과의 관계',q:'미군정을 어떻게 대하겠는가?',abc:1,
+      opts:['미군정과 대화하며 협력할 길을 찾는다.','미군정에 맞서 우리 조직을 지킨다.']},
+    {t:'history',ref:'r2',
+      fact:'미군정은 남한의 유일한 정부는 미군정뿐이라며 조선인민공화국을 인정하지 않았어요.',
+      real:'여운형은 이후 새 정당(조선인민당)을 만들고, <b>미군정과도 대화하며</b> 활동을 이어 갔어요.'},
+    {t:'scene',bg:'room',place:'서울',date:'1946년 여름',chars:[{k:'yeo',p:'l'},{k:'kks',p:'r'}],lines:[
+      {text:'[[신탁통치]] 문제로 좌익과 우익의 대립이 깊어졌고, [[미·소 공동 위원회]]도 멈춰 섰다.'},
+      {who:'kks',text:'여 선생, 이대로면 나라가 둘로 갈라집니다. 좌우가 함께해야 합니다.'},
+      {who:'yeo',text:'양쪽 모두에게 비난받을 수도 있겠지만…….'}]},
+    {t:'choice',id:'r3',label:'여운형의 고민 ③ · 좌우합작',q:'김규식과 함께 좌우합작에 나서겠는가?',abc:1,
+      opts:['비난을 받더라도 좌우합작에 나선다.','한쪽 진영에 힘을 실어 먼저 세력을 키운다.']},
+    {t:'history',ref:'r3',
+      fact:'1946년 [[좌우합작]] 위원회가 만들어졌고, 10월에는 좌우합작 7원칙이 발표되었어요. 하지만 좌익과 우익 양쪽에서 비판을 받았어요.',
+      real:'여운형은 우익의 김규식과 함께 <b>좌우합작 운동</b>을 이끌었어요.'},
+    {t:'routeEnd',who:'yeo',bg:'dawn',
+      headline:'좌우의 협력과 민족 통합을 추구했던 여운형의 정치적 활동',
+      body:'여운형은 1947년 7월 암살당했어요. 좌우합작 운동은 힘을 잃었고, 한국 문제는 [[유엔]]으로 넘어갔어요. 이후 남과 북에 각각 정부가 세워졌어요.',
+      pro:'좌우가 함께하지 않으면 분단을 막을 수 없다. 대화와 타협이 필요하다.',
+      con:'좌익과 우익의 생각 차이가 너무 커서 하나로 묶기 어렵다. 양쪽 모두의 지지를 얻기 힘들다.'}
+  ]},
+  rhee:{steps:[
+    {t:'scene',bg:'rally',banner:'환영 이승만 박사 귀국',place:'서울',date:'1945년 10월',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'당신은 이제 **이승만**이다. 미국에서 오랫동안 외교 활동으로 독립운동을 해 왔다.'},
+      {text:'1945년 10월, 당신은 서울로 돌아왔다. 미국과 소련이 한반도를 나누어 점령하고 있다.'},
+      {who:'aide',text:'박사님, 국내 세력을 먼저 모을까요, 아니면 국제 사회부터 설득할까요?'}]},
+    {t:'choice',id:'r1',label:'이승만의 고민 ① · 국제 사회와의 외교',q:'무엇에 더 힘을 쏟겠는가?',abc:1,
+      opts:['미국 등 국제 사회의 지지를 얻는 데 힘쓴다.','국내 정치 세력을 하나로 모으는 데 먼저 힘쓴다.']},
+    {t:'history',ref:'r1',
+      fact:'이승만은 귀국 뒤 여러 정당과 단체를 모아 [[독립촉성중앙협의회]]를 만들었어요. 공산주의 세력에는 강하게 반대했어요([[반공]]).',
+      real:'이승만은 국내 세력을 모으는 한편, <b>미국 등 국제 사회를 상대로 한 외교</b>를 중요하게 여겼어요.'},
+    {t:'scene',bg:'rally',place:'전라북도 정읍',date:'1946년 6월',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'[[미·소 공동 위원회]]가 1946년 5월 결렬되었다. 통일 정부가 언제 세워질지 알 수 없었다.'},
+      {who:'aide',text:'북쪽에서는 이미 소련의 지원 아래 사실상의 정권 조직이 만들어지고 있습니다.'},
+      {who:'rhee',text:'(통일 정부를 기다릴 것인가, 남쪽에 먼저 정부를 세울 것인가…….)'}]},
+    {t:'choice',id:'r2',label:'이승만의 고민 ② · 남한 단독 정부',q:'남쪽에 먼저 정부를 세우자고 주장하겠는가?',abc:1,
+      opts:['남쪽만이라도 먼저 정부를 세우자고 주장한다.','미·소 협상이 다시 열릴 때까지 기다린다.']},
+    {t:'history',ref:'r2',
+      fact:'이 주장을 두고 찬성과 반대가 크게 엇갈렸어요. 통일 정부를 원하는 사람들은 분단이 굳어질 것을 걱정했어요.',
+      real:'1946년 6월 이승만은 정읍에서 남쪽만이라도 임시 정부나 위원회를 만들어야 한다고 연설했어요(<b>정읍 발언</b>).'},
+    {t:'scene',bg:'ballot',place:'서울',date:'1948년 초',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'두 번째 미·소 공동 위원회도 실패했고, 한국 문제는 [[유엔]]으로 넘어갔다.'},
+      {text:'유엔은 선거가 가능한 지역에서만 [[총선거]]를 하기로 했다.'},
+      {who:'aide',text:'김구 선생은 통일 정부를 위해 북으로 간다고 합니다.'}]},
+    {t:'choice',id:'r3',label:'이승만의 고민 ③ · 정부 수립과 통일 사이',q:'당신의 선택은?',abc:1,
+      opts:['총선거로 먼저 정부를 세우고 통일은 그 다음에 추진한다.','정부 수립을 미루고 남북 협상에 함께한다.']},
+    {t:'history',ref:'r3',
+      fact:'1948년 5월 10일 우리 역사 첫 보통 선거인 5·10 총선거가 실시되었고, [[제헌 국회]]는 헌법을 만들고 이승만을 대통령으로 뽑았어요.',
+      real:'이승만은 <b>5·10 총선거에 참여해 정부 수립</b>의 길을 택했어요.'},
+    {t:'routeEnd',who:'rhee',bg:'dawn',
+      headline:'국제 정세 속에서 남한의 단독 정부 수립을 추진했던 이승만',
+      body:'1948년 8월 15일 **대한민국 정부가 수립**되었고, 이승만은 초대 대통령이 되었어요. 그러나 9월에는 북쪽에도 별도의 정권이 세워지면서 남북 분단이 굳어졌어요.',
+      pro:'미·소 대립이 계속되는 현실에서 먼저 정부를 세워야 나라를 지킬 수 있다.',
+      con:'남쪽만의 정부가 세워지면 분단이 굳어질 수 있다. 통일 정부의 길이 더 멀어진다.'}
+  ]}
+};
+function buildRoute(k){
+  return ROUTES[k].steps.map(s=>{
+    const o=Object.assign({part:2},s);
+    if(o.id) o.id=`${k}_${o.id}`;
+    if(o.ref) o.ref=`${k}_${o.ref}`;
+    if(o.t==='history'&&!o.bg) o.bg=null;
+    return o;
+  }).map((o,i,arr)=>{ if(!o.bg){ const prev=arr.slice(0,i).reverse().find(x=>x.bg); if(prev){o.bg=prev.bg;o.night=prev.night;o.banner=prev.banner;o.place=o.place||prev.place;o.date=o.date||prev.date;o.chars=o.chars||prev.chars;} } return o; });
+}
+const ENDING=[
+  {t:'partcard',part:3,text:'이제 처음 질문으로 돌아가<br>나의 답을 정리해 봅시다.'},
+  {t:'summary',part:3},
+  {t:'final1',part:3},
+  {t:'final2',part:3},
+  {t:'ending',part:3}
+];
+
+/* ================= 키보드 ================= */
+document.addEventListener('keydown',e=>{
+  if($('#modal').classList.contains('open')){ if(e.key==='Escape') $('#modal').classList.remove('open'); return; }
+  if(e.target.tagName==='INPUT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key===' '||e.key==='Enter'||e.key==='ArrowRight'){
+    const a=$('[data-adv]'); const nx=$('#nx');
+    if(a){e.preventDefault();a.click()}
+    else if(nx&&!nx.disabled){e.preventDefault();nx.click()}
+  }
+});
+
+flow=COMMON.slice();
+go(0);
+</script>
+</body>
+</html>
