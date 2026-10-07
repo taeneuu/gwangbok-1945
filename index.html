@@ -277,6 +277,21 @@ ul.fact li{margin:3px 0}
 .wcard b{display:block;color:var(--red);font-size:11px}
 .wcard.one{width:clamp(130px,20vw,200px)}
 .newsbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.34;filter:grayscale(1)}
+.stagebar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:0 0 10px;font-size:12.5px;font-weight:700;color:var(--muted)}
+.stagebar span{border:1.5px solid var(--line);border-radius:99px;padding:2px 9px;background:#fff}
+.stagebar span.done{color:var(--gold);border-color:var(--gold)}
+.stagebar span.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.stagebar em{font-style:normal;color:var(--line)}
+.realfirst{background:#eef2f7;border-left:5px solid var(--blue);border-radius:10px;padding:10px 14px;margin:0 0 12px;font-size:15.5px;line-height:1.7}
+.realfirst b.t{display:block;font-size:13px;color:var(--blue);margin-bottom:2px}
+.realfirst details{margin-top:6px;font-size:14.5px}
+.realfirst details summary{cursor:pointer;color:var(--blue);font-weight:700}
+.realfirst ol{margin:6px 0 0;padding-left:20px}
+.hintbtns{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin:0 0 8px}
+.hintbtns button{border:1.5px dashed var(--muted);background:#fff;border-radius:99px;padding:5px 12px;font-size:13px;color:var(--ink)}
+.hintbtns button.open{border-style:solid;background:#fff7e6}
+.hintshow{font-size:14px;line-height:1.6;color:#4a3e2e;margin:0 0 8px}
+.hintshow div{background:#fff7e6;border-radius:8px;padding:5px 10px;margin-top:4px;animation:pop .3s both}
 .sitcard{background:#f6edd8;border-left:5px solid var(--gold);border-radius:10px;padding:10px 14px;margin:0 0 12px;font-size:16px;line-height:1.65}
 .sitcard b{display:block;font-size:13px;color:var(--red);margin-bottom:2px}
 .sitnext{font-size:13px;font-weight:900;color:var(--muted);margin:0 0 4px}
@@ -295,7 +310,7 @@ details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
 .readfirst{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(18px,2.4vw,22px);margin:0 0 8px;color:var(--ink)}
 .orig .pk{border-bottom:1.5px dashed #b9a57e;cursor:pointer;border-radius:3px;transition:background .15s}
 .orig .pk:hover{background:#f3e3b8}
-.orig .ev{border-bottom:1.5px dashed #b9a57e;border-radius:3px} /* [v8] 답의 근거 밑줄 (클릭 없음) */
+.orig .ev{background:linear-gradient(transparent 35%,rgba(247,196,44,.85) 35%,rgba(247,196,44,.85) 92%,transparent 92%);padding:0 2px;border-radius:2px;-webkit-box-decoration-break:clone;box-decoration-break:clone} /* [v8] 답의 근거 밑줄 (클릭 없음) */
 .orig .pk.on{background:#e8574b;color:#fff;border-bottom-color:transparent;box-shadow:0 0 0 2px #e8574b}
 .orig .art{border-radius:6px;transition:background .4s,box-shadow .4s}
 .orig .art.flash{background:#fbe6a6;box-shadow:0 0 0 6px #fbe6a6}
@@ -383,6 +398,17 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 <div id="pop"></div>
 
 <script>
+/* =====================================================================
+   [v9 변경 내역] PART 3→4→5 연결과 역사적 사고 강화 (분량은 거의 그대로)
+   - ③→④ 전환 장면(R.photo) 끝에 '광복은 끝이 아니었다…' 한 줄과 '내가 이 시대에 산다면 어떤 길을?' 질문
+   - ④ 시작 안내: 인물 = 하나의 노선으로 단순화하지 않기
+   - ④ 선택지에서 ＋장점/－한계를 빼고, 선택한 뒤 「그 선택을 했다면」에서 확인
+     → 「실제 역사에서는?」은 버튼을 눌러 확인 (나의 선택 → 그 선택을 했다면 → 실제 역사에서는?)
+   - ④ 세 딜레마에 단계 표시: ① 나·우리 조직의 선택 → ② 정치 세력 사이의 선택 → ③ 새 나라를 만드는 선택 (상황 문장 일부 조정)
+   - ⑤ Q1: 선택한 인물의 실제 선택(기존 routeEnd·실제 역사 내용 재활용)을 먼저 보여 준 뒤 동의 여부와 근거
+   - ⑤ Q2: 힌트는 버튼을 눌렀을 때만 하나씩 표시
+   - 기록 화면 끝 마무리 문장, 맥아더 포고령 근거 표시를 형광펜 느낌으로
+   ===================================================================== */
 /* =====================================================================
    [v8 변경 내역] 부분 수정
    1. 호외 장면 뒷사진(.newsbg)만 조금 더 선명하게 (opacity .18 → .34)
@@ -959,7 +985,7 @@ const NUMS='①②③④⑤', ABC='ABCD';
 R.choice=st=>{
   const p=frame(st); speak(null);
   const mk=st.abc?ABC:NUMS; const W=st.write;
-  p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}${st.sit?`<div class="sitcard"><b>📍 당시 상황</b>${fmt(st.sit)}</div><div class="sitnext">🤔 당신 앞에 놓인 선택</div>`:''}<h3>${fmt(st.q)}</h3>
+  p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}${st.stage?`<div class="stagebar">${STAGES.map((t,i)=>`<span class="${i+1===st.stage?'on':i+1<st.stage?'done':''}">${NUMS[i]} ${t}</span>`).join('<em>→</em>')}</div>`:''}${st.sit?`<div class="sitcard"><b>📍 당시 상황</b>${fmt(st.sit)}</div><div class="sitnext">🤔 당신 앞에 놓인 선택</div>`:''}<h3>${fmt(st.q)}</h3>
     <div class="opts ${st.abc?'one':''}">${st.opts.map((o,i)=>`<button class="opt ${st.big?'big':''}" data-i="${i}">${st.big?'':`<span class="num">${mk[i]}</span>`}<span>${fmt(o)}</span></button>`).join('')}</div>
     ${W?`<div class="reason hidden"><label>✏️ ${W.lead}</label><div id="sentBox"></div><div class="hint">빈칸만 채우면 돼요. 짧게 써도 괜찮아요. (2글자 이상)</div></div>`:''}</div>${nextBtn('다음 ▶',true)}`;
   let pick=-1; const nx=$('#nx'); const prev=S.rec[st.id];
@@ -995,13 +1021,14 @@ R.history=st=>{
   if(r) rows+=row('mine-r','나의 선택', st.mine? st.mine(r) : `나는 「${esc(w)}」${josa(w,'을','를')} 선택했다.`);
   if(st.ctx) rows+=row('','역사적 맥락',fmt(st.ctx));
   if(st.fact) rows+=row('',st.factLabel||'역사적 사실',fmt(st.fact)); /* [v3] factLabel 선택 항목 추가 */
-  if(r&&st.res&&st.res[r.i]) rows+=row('res','선택 결과',st.res[r.i]); /* [v5] */
-  if(st.real) rows+=row('real','실제 역사에서는?',fmt(st.real));
+  if(r&&st.res&&st.res[r.i]) rows+=row('res','그 선택을 했다면',st.res[r.i]); /* [v5][v9] */
+  if(st.real) rows+= st.reveal? `<div id="realbox" class="hidden">${row('real','실제 역사에서는?',fmt(st.real))}</div><div class="hrow" id="realq"><span class="lb" style="background:none"></span><div><button class="btn" id="realbtn">🤔 실제 역사에서는 어떻게 되었을까? 확인하기</button></div></div>` : row('real','실제 역사에서는?',fmt(st.real));
   p.innerHTML=`<div class="hist"><div class="hhead">📜 ${st.title||'실제 역사에서는?'}</div>${rows}
     ${st.key?`<div class="key">「${st.key}」</div>`:''}</div>
     <div class="actions">${st.src&&SOURCES[st.src]&&SOURCES[st.src].length?'<button class="btn ghost" id="srcb">📜 당시 상황을 보여주는 사료</button>':''}${st.bonus?'<button class="btn ghost" id="bn">⭐ BONUS 사료 더 보기 (선택)</button>':''}<button class="btn primary" id="nx">다음 ▶</button></div>`;
   chime();
   $('#nx').onclick=next; if(st.bonus) $('#bn').onclick=openBonus; if($('#srcb')) $('#srcb').onclick=()=>openSources(st.src);
+  if($('#realbtn')){ $('#nx').disabled=true; $('#realbtn').onclick=()=>{ $('#realq').remove(); $('#realbox').classList.remove('hidden'); $('#realbox').style.animation='pop .35s both'; $('#nx').disabled=false; chime(); }; } /* [v9] */
 };
 
 /* 사료 찾기 활동: 원문 속 표현을 눌러 고르고, (필요하면) 한 문장 쓰기 */
@@ -1123,6 +1150,7 @@ R.meet=()=>{
   $('#nx').onclick=next;
 };
 
+const STAGES=['나·우리 조직의 선택','정치 세력 사이의 선택','새 나라를 만드는 선택']; /* [v9] */
 const PATHS={
   kimgu:{q:'분단을 막고 자주적인 정부를 만들 수 있을까?',kws:['통일','자주']},
   yeo:{q:'서로 다른 세력을 하나로 묶을 수 있을까?',kws:['통합','좌우 협력']},
@@ -1131,7 +1159,7 @@ const PATHS={
 const PICK_W={lead:'내가 이 인물의 길을 선택한 이유는 무엇인가?',pre:'내가 이 인물을 선택한 이유는',post:'중요하다고 생각했기 때문이다.',ph:'분단을 막는 것이'};
 R.select=()=>{
   stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">④ 1945, 나는 어떤 길을 선택할까?</div><h2>1945, 나는 어떤 길을 선택할까?</h2><p>광복 이후, 새로운 나라를 만드는 방법을 두고 사람들의 생각은 달랐다.<br>이제 당신이 한 사람의 정치 지도자가 되어 그 시대의 선택을 직접 경험해 보자.</p></div>
-  <div class="notice"><b>정답을 고르는 게임이 아닙니다.</b> 세 사람 중 <b>한 명</b>을 골라, 그 사람 앞에 놓였던 선택을 직접 해 보세요.<br><span style="font-size:14px;color:#cbb894">※ ${COMMON_LINE}</span></div>
+  <div class="notice"><b>정답을 고르는 게임이 아닙니다.</b> 세 사람 중 <b>한 명</b>을 골라, 그 사람 앞에 놓였던 선택을 직접 해 보세요.<br><span style="font-size:14px;color:#cbb894">※ 실제 역사 속 인물의 선택을 참고해 당시 상황을 체험하는 활동이에요. 하지만 한 인물의 생각과 행동을 하나의 노선으로만 단순화할 수는 없어요.</span></div>
   <div class="sel3">${Object.keys(PATHS).map(k=>{const C=CH[k],P=PATHS[k];return `<button class="sc" data-k="${k}" style="--c:${C.c}"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div><div class="kws">${P.kws.map(w=>`<span>${w}</span>`).join('')}</div><div class="path" style="font-size:17px">“${P.q}”</div>${S.done.includes(k)?'<div class="done">✔ 이미 플레이함</div>':''}</button>`}).join('')}</div>
   <div class="actions"><button class="btn primary big" id="nx" disabled>이 길을 걷는다 ▶</button></div></div>`;
   let pick=null; const nx=$('#nx');
@@ -1203,17 +1231,20 @@ R.final1=()=>{
 
 /* 최종 성찰 ②: 그 시대에 살았다면 + 핵심 질문에 대한 나의 답 */
 const WOULD=['동의한다','일부만 동의한다','동의하지 않는다'];
-const CORE_HINTS=['미국과 소련의 대립','남북 분단','정치 세력 간의 갈등'];
+const CORE_HINTS=[{t:'미국과 소련의 대립',q:'남과 북에 들어온 두 나라의 생각은 같았을까?'},{t:'남북 분단',q:'38선 남쪽과 북쪽은 누가 관리했을까?'},{t:'정치 세력 간의 갈등',q:'새 나라를 만드는 방법에 대해 사람들의 생각은 같았을까?'}];
 R.final2=()=>{
   const E=S.extra; const ids=S.order.filter(id=>id!=='pick');
   const nm=CH[S.route].n, myCh=S.order.filter(id=>id.startsWith(S.route+'_r')).map(id=>S.rec[id].choice); /* [v8] */
+  const rsteps=ROUTES[S.route].steps, endSt=rsteps.find(x=>x.t==='routeEnd'), realList=rsteps.filter(x=>x.t==='history'&&x.real).map(x=>x.real); /* [v9] 기존 '실제 역사' 내용 재활용 */
   stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">⑤ 내가 선택한 길 · 마지막 질문</div><h2>나의 생각 정리하기</h2></div>
-    <div class="q qa"><div class="fq"><div class="qlabel write">질문 1</div><h4 style="font-size:21px">PART 4에서 내가 걸은 ${nm}의 길. ${nm}${josa(nm,'은','는')} 어떤 문제를 해결하려 했을까? 내가 그 인물이었다면, 그 선택에 동의했을까?</h4>
+    <div class="q qa"><div class="fq"><div class="qlabel write">질문 1 · 인물의 선택을 판단하기</div>
+      <div class="realfirst"><b class="t">📜 먼저, 실제 역사에서는?</b>${fmt(endSt.headline)}<details><summary>${nm}의 실제 선택 다시 보기</summary><ol>${realList.map(t=>`<li>${fmt(t)}</li>`).join('')}</ol></details></div>
+      <h4 style="font-size:21px">그렇다면 나는? 당시의 상황을 고려했을 때, 나는 ${nm}의 이 선택에 동의하는가? 왜 그렇게 생각하는가?</h4>
       ${myCh.length?`<div class="hint" style="margin:-4px 0 10px">📒 내가 PART 4에서 한 선택: ${myCh.map((c,i)=>`${NUMS[i]} ${esc(c)}`).join(' &nbsp;')}</div>`:''}
       <div class="pick" id="would">${WOULD.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
-      <textarea id="wy" maxlength="400" style="margin-top:12px" placeholder="2~3문장으로 써 보세요. 예) ${nm}${josa(nm,'은','는')} ___ 문제를 해결하려고 ___을 선택했다. 나는 이 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea></div>
-    <div class="fq"><div class="qlabel write">질문 2</div><h4 style="font-size:21px">광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h4>
-      <div class="hints" style="margin:0 0 10px"><span class="hint" style="margin:0 4px 0 0">💡 이런 말을 써서 내 말로 설명해 보세요:</span>${CORE_HINTS.map(h=>`<button data-h="${h}">${h}</button>`).join('')}</div>
+      <textarea id="wy" maxlength="400" style="margin-top:12px" placeholder="당시 상황을 근거로 2~3문장으로 써 보세요. 예) 당시에는 ___ 상황이었다. 그래서 나는 ${nm}의 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea></div>
+    <div class="fq"><div class="qlabel write">질문 2 · 핵심 질문: 광복 이후를 종합하기</div><h4 style="font-size:21px">광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h4>
+      <div class="hintbtns"><span class="hint" style="margin:0 4px 0 0">💡 힌트가 필요하다면 눌러보세요.</span>${CORE_HINTS.map((h,i)=>`<button data-i="${i}">힌트 ${i+1}</button>`).join('')}</div><div class="hintshow" id="hintshow"></div>
       <textarea id="core" maxlength="400" placeholder="예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다."></textarea></div>
     <details class="opt-more" id="more"><summary>➕ 더 해 보기 (선택)</summary>
       <div class="fq" style="margin-top:12px"><h4>💎 내가 중요하게 생각한 가치는?</h4><div class="pick" id="vals">${VALUES.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div></div>
@@ -1228,7 +1259,7 @@ R.final2=()=>{
   $$('#would button').forEach(b=>b.onclick=()=>{tick();setW(b.dataset.v)});
   $$('#vals button').forEach(b=>b.onclick=()=>{tick();setVal(b.dataset.v)});
   $$('#mem button').forEach(b=>b.onclick=()=>{tick();setMem(b.dataset.id)});
-  $$('.hints button').forEach(b=>b.onclick=()=>{ const t=b.dataset.h; core.value=(core.value.trim()?core.value.trim()+' ':'')+t; check(); core.focus(); });
+  $$('.hintbtns button').forEach(b=>b.onclick=()=>{ if(b.classList.contains('open')) return; tick(); b.classList.add('open'); const h=CORE_HINTS[+b.dataset.i]; $('#hintshow').insertAdjacentHTML('beforeend',`<div><b>힌트 ${+b.dataset.i+1}. ${h.t}</b> — ${h.q}</div>`); }); /* [v9] 누를 때만 표시 */
   wy.oninput=check; core.oninput=check;
   wy.value=E.wouldReason||''; core.value=E.core||'';
   if(E.would) setW(E.would); if(E.value) setVal(E.value); if(E.memory&&S.rec[E.memory]) setMem(E.memory);
@@ -1246,9 +1277,10 @@ R.ending=()=>{
   stage.innerHTML=`<div class="full"><div class="cert" id="cert"><h2>📜 나의 역사 활동 기록</h2><div class="meta">「1945, 해방된 조선의 선택」 · ${esc(S.name||'이름 없음')} · ${ds}</div>
     <div class="sumg"><div><small>내가 선택한 인물</small><b>${CH[me].n}</b></div><div><small>내가 중요하게 생각한 가치</small><b>${esc(val)}</b></div><div><small>가장 기억에 남는 선택</small><b>${esc(mem)}</b></div></div>
     <h5>실제 역사에서는?</h5><div style="font-size:15px;line-height:1.7"><b>${endSt.headline}</b> — ${fmt(endSt.body)}</div>
-    <h5>질문 1 · ${CH[me].n}의 선택, 나는 동의할까? 그 이유는?</h5><div class="ans">${esc(wouldSentence(E))}</div>
+    <h5>질문 1 · ${CH[me].n}의 실제 선택, 나는 동의하는가? 왜?</h5><div class="ans">${esc(wouldSentence(E))}</div>
     <h5>질문 2 · 광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h5><div class="ans">${esc(coreSentence(E))}</div>
     <h5>나의 기록 전체</h5><div class="rec">${recHTML()}</div>
+    <div class="key" style="font-size:19px;margin-top:18px">「광복했지만, 나라를 만드는 것은 또 다른 문제였다.」<div style="font-size:14px;font-weight:500;color:var(--muted);margin-top:4px;font-family:'Noto Sans KR',sans-serif">이제 수업에서 그 이유를 함께 알아봅시다.</div></div>
     <div class="credit">인물 사진: 위키미디어 공용(Wikimedia Commons) · 대화 장면은 역사적 상황을 바탕으로 재구성</div></div>
     <div class="actions noprint" style="justify-content:center">
       <button class="btn" id="cp">📋 기록 복사하기</button><button class="btn" id="pr">🖨 인쇄 / PDF 저장</button>
@@ -1258,7 +1290,7 @@ R.ending=()=>{
   $('#cp').onclick=()=>{
     const txt=`[1945, 해방된 조선의 선택] ${S.name} (${ds})\n`+
       `- 내가 선택한 인물: ${CH[me].n}\n- 중요하게 생각한 가치: ${val}\n- 가장 기억에 남는 선택: ${mem}\n`+
-      `- 질문 1 (${CH[me].n}의 선택에 동의하는가, 왜?): ${wouldSentence(E)}\n- 질문 2 (왜 하나의 정부를 바로 만들지 못했을까?): ${coreSentence(E)}\n[전체 기록]\n`+
+      `- 질문 1 (${CH[me].n}의 실제 선택에 동의하는가, 왜?): ${wouldSentence(E)}\n- 질문 2 (왜 하나의 정부를 바로 만들지 못했을까?): ${coreSentence(E)}\n[전체 기록]\n`+
       S.order.map(id=>{const r=S.rec[id];return `- ${r.label}: ${r.choice}${r.sentence?' / '+r.sentence:(r.reason?' / '+r.reason:'')}`}).join('\n');
     const ok=()=>{$('#cp').textContent='✅ 복사했어요!';setTimeout(()=>$('#cp').textContent='📋 기록 복사하기',1800)};
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok,()=>fallback(txt,ok)); else fallback(txt,ok);
@@ -1351,8 +1383,9 @@ const COMMON=[
   {t:'photo',part:2,img:'flag_change',vis:'flag',cap:'1945년 9월 9일, 조선총독부',lines:[
     '1945년 9월 9일, 서울 조선총독부.',
     '건물 앞 깃대에서 일장기가 내려가고, 그 자리에 성조기가 올라갔다.',
-    '일본의 식민 통치는 끝났다. 그러나 조선은 곧바로 자주적인 정부를 세운 것이 아니었다.'],
-    final:'<h1 class="bigq" style="font-size:clamp(26px,5vw,44px);margin:0">남쪽에서는<br>미군정이 시작되었다.</h1>',
+    '일본의 식민 통치는 끝났다. 그러나 조선은 곧바로 자주적인 정부를 세운 것이 아니었다. 남쪽에서는 미군정이 시작되었다.',
+    '광복은 끝이 아니었다. 일본이 물러난 자리에서, 이제 새로운 나라를 어떻게 만들어 갈지 선택해야 했다.'],
+    final:'<h1 class="bigq" style="font-size:clamp(24px,4.6vw,40px);margin:0">1945년, 내가 이 시대에 산다면<br>어떤 길을 선택했을까?</h1>',
     button:'④ 나의 길 고르러 가기 ▶'},
 
   /* ---------- ④ 1945, 나는 어떤 길을 선택할까? (약 7분) ---------- */
@@ -1366,7 +1399,7 @@ const ROUTES={
       {text:'당신은 이제 **김구**다. 중국에서 대한민국 [[임시정부]]를 이끌며 오랫동안 독립운동을 해 왔다.'},
       {who:'aide',text:'주석님, 남쪽을 다스리는 미군이 임시정부를 ‘정부’로 인정하지 않겠답니다. 한 사람의 개인으로만 귀국하라고 합니다.'}]},
     {t:'choice',id:'r1',label:'김구의 선택 ① · 1945년 11월',
-      sit:'광복 소식을 듣고 고국으로 돌아가려 한다. 그런데 남쪽을 다스리는 미군은 임시정부를 나라의 정부로 인정하지 않는다.',
+      sit:'광복 소식을 듣고 고국으로 돌아가려 한다. 그런데 남쪽을 다스리는 미군은 임시정부를 나라의 정부로 인정하지 않는다. 먼저 나와 임시정부 동지들이 어떻게 할지 정해야 한다.',
       q:'그래도 지금 귀국하겠는가?',
       dl:[{t:'개인 자격이라도 지금 귀국해 나라 만들기에 참여한다.',pro:'서둘러 국내 정치에 참여할 수 있다.',con:'임시정부가 정부로 인정받지 못한 채 시작해야 한다.'},
           {t:'임시정부가 정부로 인정받을 때까지 기다린다.',pro:'임시정부가 정당한 정부라는 자격을 지킬 수 있다.',con:'그 사이 국내 정치에서 뒤처질 수 있다.'}]},
@@ -1376,7 +1409,7 @@ const ROUTES={
       {text:'유엔은 선거를 할 수 있는 남쪽에서만 먼저 선거를 하기로 했다. 이대로라면 남과 북에 따로 정부가 생길 수 있다.'},
       {who:'aide',text:'주석님, 북쪽 지도자들을 직접 만나 담판을 지어 보자는 의견이 있습니다.'}]},
     {t:'choice',id:'r2',label:'김구의 선택 ② · 1948년 초',
-      sit:'남쪽만의 선거가 다가오고, 나라가 둘로 갈라질 위기다. 북쪽 지도자를 만나도 성과가 있을지는 알 수 없다.',
+      sit:'남쪽만의 선거가 다가오고, 나라가 둘로 갈라질 위기다. 남쪽과 북쪽 정치 세력의 생각은 서로 다르고, 북쪽 지도자를 만나도 성과가 있을지는 알 수 없다.',
       q:'북쪽 지도자들을 만나러 가겠는가?',
       dl:[{t:'북쪽으로 가서 지도자들과 하나의 정부를 만드는 방법을 의논한다.',term:'남북 협상',pro:'하나의 나라를 만들 가능성을 끝까지 이어 갈 수 있다.',con:'아무 성과 없이 끝날 위험이 크다.'},
           {t:'남쪽에 남아 현실적으로 할 수 있는 일을 찾는다.',pro:'남쪽 정치에서 영향력을 지킬 수 있다.',con:'분단을 막을 기회를 놓칠 수 있다.'}]},
@@ -1385,7 +1418,7 @@ const ROUTES={
       {text:'1948년 5월 10일, 남쪽에서만 국회의원을 뽑는 선거([[총선거]])가 열리게 되었다.'},
       {who:'kimgu',text:'이 선거로 남쪽만의 정부가 생기면, 나라가 둘로 굳어지는 것 아닌가…….'}]},
     {t:'choice',id:'r3',label:'김구의 선택 ③ · 1948년 5월',
-      sit:'선거에 나가면 새 정부 안에서 목소리를 낼 수 있다. 하지만 남쪽만의 정부를 인정하는 셈이 될 수도 있다.',
+      sit:'이 선거로 새 나라의 모습이 정해진다. 선거에 나가면 새 정부 안에서 목소리를 낼 수 있다. 하지만 남쪽만의 정부를 인정하는 셈이 될 수도 있다.',
       q:'5·10 총선거에 참여하겠는가?',
       dl:[{t:'선거에 참여해 새 정부 안에서 목소리를 낸다.',term:'5·10 총선거 참여',pro:'새 나라의 헌법과 정부를 만드는 데 영향을 줄 수 있다.',con:'남쪽만의 정부를 인정하는 셈이 될 수 있다.'},
           {t:'남쪽만의 선거에는 참여하지 않는다.',term:'단독 선거 불참',pro:'‘하나의 나라’라는 원칙을 지킬 수 있다.',con:'새 정부를 만드는 과정에서 빠지게 된다.'}]},
@@ -1401,7 +1434,7 @@ const ROUTES={
       {text:'당신은 이제 **여운형**이다. [[건준]]을 이끌며 광복 직후의 혼란을 수습해 왔다.'},
       {who:'aide',text:'선생님, 곧 미군이 들어옵니다. 그 전에 우리 손으로 정부를 세웠다고 발표하자는 목소리가 큽니다. 하지만 함께하지 않겠다는 사람들도 많습니다.'}]},
     {t:'choice',id:'r1',label:'여운형의 선택 ① · 1945년 9월',
-      sit:'미군이 들어오면 남쪽을 직접 다스릴 것이다. 그 전에 우리 정부를 발표할 수 있지만, 아직 모든 세력이 함께하지는 않았다.',
+      sit:'미군이 들어오면 남쪽을 직접 다스릴 것이다. 건준을 이끄는 내가 결정해야 한다. 그 전에 우리 정부를 발표할 수 있지만, 아직 모든 세력이 함께하지는 않았다.',
       q:'미군이 오기 전에 정부를 발표하겠는가?',
       dl:[{t:'서둘러 우리 손으로 세운 정부를 발표한다.',term:'조선인민공화국 선포',pro:'미군이 오기 전에 조선인의 정부를 보여 줄 수 있다.',con:'함께하지 않은 사람들의 반발을 살 수 있다.'},
           {t:'더 많은 사람이 함께할 때까지 기다린다.',pro:'더 넓은 지지를 모을 수 있다.',con:'그 사이 미군이 먼저 자리를 잡을 수 있다.'}]},
@@ -1410,7 +1443,7 @@ const ROUTES={
       {text:'미군은 남쪽을 다스리는 정부는 ‘미군정’ 하나뿐이라고 발표했다. 여운형 쪽이 발표한 정부도 인정하지 않았다.'},
       {who:'yeo',text:'(미군과 손을 잡아야 할까, 맞서야 할까?)'}]},
     {t:'choice',id:'r2',label:'여운형의 선택 ② · 1945년 가을',
-      sit:'지금 남쪽을 실제로 다스리는 것은 미군이다. 미군과 손을 잡을지, 거리를 둘지 정해야 한다.',
+      sit:'지금 남쪽을 실제로 다스리는 것은 미군이다. 미군정과 우리 세력의 관계를 정해야 한다. 손을 잡을지, 거리를 둘지.',
       q:'미군정을 어떻게 대하겠는가?',
       dl:[{t:'미군정과 대화하며 함께할 길을 찾는다.',pro:'현실 정치에서 영향력을 키울 수 있다.',con:'지지자들에게 비판받을 수 있다.'},
           {t:'미군정에 맞서 우리 조직을 지킨다.',pro:'자주성을 분명히 지킬 수 있다.',con:'미군정과 충돌해 활동이 어려워질 수 있다.'}]},
@@ -1419,7 +1452,7 @@ const ROUTES={
       {text:'광복 뒤 사람들은 크게 두 편으로 갈렸다. 사회주의 쪽([[좌익]])과 자본주의·민족주의 쪽([[우익]])이다.'},
       {who:'kks',text:'여 선생, 두 편이 이렇게 싸우면 나라가 둘로 갈라집니다. 양쪽이 손을 잡아야 합니다.'}]},
     {t:'choice',id:'r3',label:'여운형의 선택 ③ · 1946년',
-      sit:'두 편의 생각 차이는 매우 크다. 양쪽을 이으려 하면 양쪽 모두에게 비판받을 수 있다.',
+      sit:'이대로 두 편이 갈라서면 나라도 둘로 나뉠 수 있다. 어떤 나라를 세울지가 걸린 문제다. 하지만 양쪽을 이으려 하면 양쪽 모두에게 비판받을 수 있다.',
       q:'김규식과 함께 두 편을 하나로 묶는 일에 나서겠는가?',
       dl:[{t:'비판을 받더라도 두 편이 손잡게 하는 일에 나선다.',term:'좌우합작 운동',pro:'분단을 막을 통합의 길을 열 수 있다.',con:'양쪽 모두에게 공격받을 수 있다.'},
           {t:'한쪽 편에 힘을 실어 먼저 세력을 키운다.',pro:'확실한 지지 세력을 얻을 수 있다.',con:'두 편의 대립이 더 깊어질 수 있다.'}]},
@@ -1435,7 +1468,7 @@ const ROUTES={
       {text:'당신은 이제 **이승만**이다. 미국에서 오랫동안 외교로 독립운동을 해 왔다.'},
       {who:'aide',text:'박사님, 나라 안의 세력을 먼저 모을까요, 아니면 미국 같은 나라들의 지지부터 얻을까요?'}]},
     {t:'choice',id:'r1',label:'이승만의 선택 ① · 1945년 10월',
-      sit:'광복 직후, 남쪽에는 미군이, 북쪽에는 소련군이 와 있다. 나라의 앞날은 강대국들의 생각에도 크게 좌우된다.',
+      sit:'광복 직후, 남쪽에는 미군이, 북쪽에는 소련군이 와 있다. 나라의 앞날은 강대국들의 생각에도 크게 좌우된다. 먼저 내가 어디에 힘을 쏟을지 정해야 한다.',
       q:'무엇에 더 힘을 쏟겠는가?',
       dl:[{t:'미국 등 다른 나라들의 지지를 얻는 데 힘쓴다.',pro:'국제 무대에서 한국 문제를 풀 힘을 얻을 수 있다.',con:'나라 안의 지지 기반이 약해질 수 있다.'},
           {t:'나라 안의 여러 세력을 하나로 모으는 데 먼저 힘쓴다.',pro:'나라 안의 지지 기반을 넓힐 수 있다.',con:'국제 정세의 흐름을 놓칠 수 있다.'}]},
@@ -1444,7 +1477,7 @@ const ROUTES={
       {text:'미국과 소련은 함께 회의를 열어 하나의 정부를 만들 방법을 의논했다([[미·소 공동 위원회]]). 그러나 의견이 맞지 않아 회의가 멈춰 버렸다.'},
       {text:'이제 언제 하나의 정부가 생길지 아무도 알 수 없게 되었다.'}]},
     {t:'choice',id:'r2',label:'이승만의 선택 ② · 1946년 6월',
-      sit:'남쪽만이라도 먼저 정부를 세우자는 생각이 나오기 시작했다. 하지만 기다리면 하나의 정부를 만들 기회가 다시 올 수도 있다.',
+      sit:'남쪽만이라도 먼저 정부를 세우자는 생각이 나오기 시작했다. 이 주장은 통일 정부를 바라는 다른 정치 세력과 큰 갈등을 부를 수 있다. 기다리면 하나의 정부를 만들 기회가 다시 올 수도 있다.',
       q:'당신이라면?',
       dl:[{t:'남쪽만이라도 먼저 정부를 세우자고 주장한다.',term:'남한 단독 정부 주장',pro:'정부의 틀을 빠르게 만들 수 있다.',con:'남북 분단이 굳어질 가능성이 있다.'},
           {t:'미국과 소련이 다시 의논할 때까지 기다린다.',term:'미·소 공동 위원회 재개 기대',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 계속 늦어질 수 있다.'}]},
@@ -1453,7 +1486,7 @@ const ROUTES={
       {text:'결국 한국 문제는 국제기구인 [[유엔]]으로 넘어갔다. 유엔은 선거를 할 수 있는 곳에서만 먼저 선거를 하기로 했다.'},
       {who:'aide',text:'김구 선생은 하나의 정부를 위해 북쪽 지도자들을 만나러 간다고 합니다.'}]},
     {t:'choice',id:'r3',label:'이승만의 선택 ③ · 1948년 초',
-      sit:'선거를 하면 남쪽에 정부가 생긴다. 하지만 북쪽과 따로 정부가 생겨 나라가 갈라질 수 있다.',
+      sit:'이 선택으로 새 나라의 모습이 정해진다. 선거를 하면 남쪽에 정부가 생긴다. 하지만 북쪽과 따로 정부가 생겨 나라가 갈라질 수 있다.',
       q:'당신의 선택은?',
       dl:[{t:'선거로 남쪽에 먼저 정부를 세운다.',term:'5·10 총선거 참여',pro:'나라의 틀을 갖추고 국제적으로 인정받을 수 있다.',con:'북쪽과 따로 정부가 생겨 분단이 굳어질 수 있다.'},
           {t:'정부 세우기를 미루고 북쪽과의 협상에 함께한다.',term:'남북 협상',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 언제 될지 알 수 없다.'}]},
@@ -1468,13 +1501,13 @@ const ROUTES={
 function buildRoute(k){
   return ROUTES[k].steps.map(s=>{
     const o=Object.assign({part:s.t==='routeEnd'?4:3},s);
-    if(o.id) o.id=`${k}_${o.id}`;
+    if(o.id){ o.stage=+o.id.slice(1); o.id=`${k}_${o.id}`; } /* [v9] r1·r2·r3 → 단계 1·2·3 */
     if(o.ref) o.ref=`${k}_${o.ref}`;
     /* [v5] 딜레마(dl) → 장단점이 함께 보이는 선택지 */
-    if(o.dl){ o.abc=1; o.opts=o.dl.map(d=>`<b>${d.t}</b>${d.term?`<small class="termtag">→ ${d.term}</small>`:''}<span class="pros">＋ ${d.pro}</span><span class="cons">－ ${d.con}</span>`); o.short=o.dl.map(d=>d.t); }
+    if(o.dl){ o.abc=1; o.opts=o.dl.map(d=>`<b>${d.t}</b>${d.term?`<small class="termtag">→ ${d.term}</small>`:''}`); /* [v9] 장점·한계는 선택 뒤 '그 선택을 했다면'에서 */ o.short=o.dl.map(d=>d.t); }
     return o;
   }).map((o,i,arr)=>{
-    if(o.t==='history'&&o.ref&&!o.res){ const ch=arr[i-1]; if(ch&&ch.dl){ o.res=ch.dl.map(d=>`👍 ${d.pro}<br>⚠️ ${d.con}`); o.title=o.title||'나의 선택 → 실제 역사에서는?'; } }
+    if(o.t==='history'&&o.ref&&!o.res){ const ch=arr[i-1]; if(ch&&ch.dl){ o.res=ch.dl.map(d=>`<span class="pros">＋ 좋은 점: ${d.pro}</span><br><span class="cons">－ 한계: ${d.con}</span>`); o.title=o.title||'나의 선택 → 실제 역사에서는?'; o.reveal=1; } }
     if(!o.bg){ const prev=arr.slice(0,i).reverse().find(x=>x.bg); if(prev){o.bg=prev.bg;o.night=prev.night;o.banner=prev.banner;o.place=o.place||prev.place;o.date=o.date||prev.date;o.chars=o.chars||prev.chars;} }
     return o;
   });
