@@ -282,6 +282,30 @@ ul.fact li{margin:3px 0}
 .qa textarea:focus{outline:3px solid #f0b85a;outline-offset:1px}
 details.opt-more{margin-top:18px;border:2px dashed var(--line);border-radius:12px;padding:10px 14px;background:#fffdf6}
 details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
+/* [v7] 사료 읽기 활동 */
+.readfirst{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(18px,2.4vw,22px);margin:0 0 8px;color:var(--ink)}
+.orig .pk{border-bottom:1.5px dashed #b9a57e;cursor:pointer;border-radius:3px;transition:background .15s}
+.orig .pk:hover{background:#f3e3b8}
+.orig .pk.on{background:#e8574b;color:#fff;border-bottom-color:transparent;box-shadow:0 0 0 2px #e8574b}
+.orig .art{border-radius:6px;transition:background .4s,box-shadow .4s}
+.orig .art.flash{background:#fbe6a6;box-shadow:0 0 0 6px #fbe6a6}
+.orig .pre{color:#4a3e2e}
+.orig .num{display:inline-block;min-width:22px;font-weight:900}
+.srcq .blk+.blk{margin-top:16px;padding-top:14px;border-top:2px dashed var(--line)}
+.srcq h4{margin:0 0 6px;font-size:17px}
+.srcq .qq{font-family:'Noto Serif KR',serif;font-size:18px;font-weight:700;line-height:1.5;margin:0 0 10px}
+details.help{border:2px dashed var(--line);border-radius:12px;padding:10px 14px;background:#fffdf6}
+details.help summary{cursor:pointer;font-weight:700}
+details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
+.chk+.chk{margin-top:14px}
+.chk .opt{min-height:48px;padding:10px 12px;font-size:16px}
+.chk .opt.ok{background:#2e6a4c;border-color:#2e6a4c;color:#fff}
+.chk .opt.ok .num{background:#fff;color:#2e6a4c}
+.chk .opt.no{border-color:#b3352b;background:#fdecea;animation:shake .35s}
+.chk .fb{font-size:14px;margin-top:6px;font-weight:700;min-height:1.2em}
+.chk .fb.ok{color:#2e6a4c}.chk .fb.no{color:#b3352b}
+@keyframes shake{25%{transform:translateX(-4px)}75%{transform:translateX(4px)}}
+.photocap{margin-top:10px;font-size:12px;color:#9a8f7e;text-align:center}
 @media (max-width:720px){
   #top{gap:8px;padding:8px 12px}
   #top .part{white-space:normal;font-size:12px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
@@ -347,6 +371,18 @@ details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
 
 <script>
 /* =====================================================================
+   [v7 변경 내역] 광복 전후 장면 정확도 + 사료 읽기 활동 개선
+   - ② 엔도–여운형(8월 15일 이른 아침, 항복 발표 직전, 총독부 배경)과
+        여운형–안재홍(8월 15일 광복 당일, 사무실 배경 → 건준 조직)을 서로 다른 장면으로 분리
+   - 건준 강령: 지정 원문 3문장으로 교체, 제목 「건국준비위원회 강령」
+   - R.find 개편: '쉽게 읽기' 삭제 → 📜 먼저 원문을 읽어보세요 → 👀 사료에서 찾아보세요(노란 표시 없이 직접 찾기)
+                  → 💡 도움말(눌러야 열림, 정답 대신 다시 읽는 방법 안내) → 📌 잠깐! 확인 질문(맞혀야 다음으로)
+   - 맥아더 포고령: 제목 「태평양 미 육군 총사령관 맥아더 포고령」 제1호, 전문·제1조·제2조, 확인 질문 2개(1조·2조)
+   - ③→④ 사이 R.photo 장면 추가: 1945년 9월 9일 조선총독부 일장기 하강·성조기 게양 (images/flag_change.jpg, 없으면 그림)
+   - BONUS·사료 팝업의 '쉽게 읽기' 제목 → '도움말'
+   - STORE_KEY v7 (장면 순서가 바뀌어 이전 기록과 섞이지 않도록)
+   ===================================================================== */
+/* =====================================================================
    [v6 변경 내역] 인물 사진 컬러 + 모바일 화면 잘림 수정
    - .face img 흑백·세피아 효과 제거 (넣은 사진 색 그대로)
    - 모바일: 상단 단계 이름 2줄 표시, 그림 영역 높이 키움, 사진 카드는 그림 아래 줄로 이동
@@ -401,7 +437,7 @@ const PARTS = ['광복, 그런데 나라가 없다','광복 직후, 무엇부터
 const CORE_Q = '광복은 되었는데, 왜 하나의 나라를 바로 만들지 못했을까?';
 const COMMON_LINE = '실제 역사는 한 사람의 선택만으로 결정되지 않았습니다. 광복 이후의 역사는 국제 정세, 미군과 소련군의 주둔, 여러 정치 세력의 갈등과 협상 속에서 전개되었습니다.';
 const RECON = '※ 이 대화는 당시의 역사적 상황과 자료를 바탕으로 재구성한 것입니다.';
-const STORE_KEY = 'gwangbok3_v5';
+const STORE_KEY = 'gwangbok3_v7';
 
 /* ================= 용어 사전 ================= */
 const TERMS = {
@@ -412,6 +448,7 @@ const TERMS = {
   '정무총감':'조선총독부의 2인자. 1945년에는 엔도 류사쿠가 이 자리에 있었어요.',
   '건준':'조선건국준비위원회의 줄임말. 광복 직후 치안·행정을 맡고 새 나라 세우기를 준비한 조직이에요. 정부는 아니었어요.',
   '건국준비위원회':'조선건국준비위원회(건준). 광복 직후 여운형·안재홍 등이 만든 조직으로, 치안과 질서를 지키고 새 나라 건설을 준비했어요. 정부는 아니었어요.',
+  '과도기':'어떤 상태에서 다른 상태로 넘어가는 중간 시기.',
   '건국동맹':'조선건국동맹. 1944년 여운형이 일본의 패망과 광복 이후를 대비해 비밀리에 만든 단체예요.',
   '치안대':'건준이 지역의 질서를 지키기 위해 만든 자치 조직.',
   '강령':'단체가 앞으로 이루려는 목표와 방향을 정리한 글.',
@@ -942,35 +979,77 @@ R.history=st=>{
 
 /* 사료 찾기 활동: 원문 속 표현을 눌러 고르고, (필요하면) 한 문장 쓰기 */
 R.find=st=>{
-  const W=st.write;
+  /* [v7] 원문 읽기 → 사료에서 찾기 → (필요할 때만) 도움말 → 확인 질문 → 다음 */
+  const F=st.find, C=st.checks||[];
   stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">${st.kicker}</div><h2>${st.title}</h2><p>${fmt(st.intro)}</p></div>
   <div class="src">
-    <div class="orig pickable"><h4>${st.doc.title}</h4><div class="src-meta">${st.doc.meta}</div>${st.doc.body}</div>
-    <div class="easy"><h4>💡 쉽게 읽기</h4>${st.easy}</div>
-  </div>
-  <div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>
-    <h3><span class="step">STEP ${W?2:1}</span>${fmt(st.q)}</h3>
-    <div class="mine" id="found">👆 왼쪽 원문에서 <b>노란 표현</b> 하나를 눌러 보세요.</div>
-    ${W?`<div class="reason hidden" id="wbox"><label><span class="step">STEP 3</span>${W.lead}</label>${sentHTML(W.pre,W.post,W.ph)}<div class="hint">빈칸만 채우면 돼요. (2글자 이상)</div></div>`:''}
-    ${st.after?`<div class="verdict hidden" id="after">${fmt(st.after)}</div>`:''}
+    <div><div class="readfirst">📜 먼저 원문을 읽어보세요.</div>
+      <div class="orig ${F?'pickable':''}"><h4>${st.doc.title}</h4><div class="src-meta">${st.doc.meta}</div>${st.doc.body}</div></div>
+    <div class="q srcq"><div class="qlabel">${st.label}</div>
+      ${F?`<div class="blk"><h4>👀 사료에서 찾아보세요</h4><div class="qq">${fmt(F.q)}</div><div class="mine" id="found">👆 원문에서 해당하는 표현을 눌러 보세요.</div></div>`:''}
+      ${st.guide?`<div class="blk"><h4>${st.guide}</h4></div>`:''}
+      ${st.help?`<div class="blk"><details class="help"><summary>💡 이해가 어렵다면 도움말 보기</summary><div>${st.help}</div></details></div>`:''}
+      <div class="blk"><h4>📌 잠깐!</h4><div class="hint" style="margin:-2px 0 10px">이 사료의 내용을 확인한 뒤 다음으로 넘어가요.</div>
+        ${C.map((c,ci)=>`<div class="chk" data-c="${ci}"><div class="qq">${C.length>1?`Q${ci+1}. `:''}${c.q}</div><div class="opts one">${c.opts.map((o,oi)=>`<button class="opt" data-o="${oi}"><span class="num">${NUMS[oi]}</span><span>${o}</span></button>`).join('')}</div><div class="fb"></div></div>`).join('')}
+      </div>
+      ${st.after?`<div class="verdict hidden" id="after">${fmt(st.after)}</div>`:''}
+    </div>
   </div>${nextBtn(st.nextLabel||'다음 ▶',true)}</div>`;
-  let pick=-1; const marks=$$('.orig mark'), nx=$('#nx');
-  const check=()=>{ nx.disabled = !(pick>=0 && (!W || $('#why').value.trim().length>=2)); };
-  const choose=i=>{
-    pick=i; marks.forEach((m,j)=>m.classList.toggle('on',j===i));
-    $('#found').innerHTML=`<b>내가 찾은 표현:</b> 「${esc(marks[i].textContent)}」`;
-    if(W){ $('#wbox').classList.remove('hidden'); }
-    if(st.after) $('#after').classList.remove('hidden');
-    check();
-  };
-  marks.forEach((m,i)=>m.onclick=()=>{tick();choose(i);if(W)setTimeout(()=>$('#why')?.focus(),50)});
-  if(W){ $('#why').oninput=check; $('#why').onkeydown=e=>{if(e.key==='Enter'&&!nx.disabled) nx.click()}; }
-  const prev=S.rec[st.id]; if(prev){ if(W) $('#why').value=prev.reason||''; choose(prev.i); }
+  const nx=$('#nx'), chunks=$$('.orig .pk'); let pick=-1; const solved=C.map(()=>false);
+  const flash=a=>{ const el=$(`.orig [data-a="${a}"]`); if(!el) return; el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); setTimeout(()=>el.classList.remove('flash'),2400); };
+  const check=()=>{ const ok=(!F||pick>=0)&&solved.every(Boolean); nx.disabled=!ok; if(ok&&st.after) $('#after').classList.remove('hidden'); };
+  const choose=i=>{ pick=i; chunks.forEach((m,j)=>m.classList.toggle('on',j===i)); $('#found').innerHTML=`<b>내가 찾은 표현:</b> 「${esc(chunks[i].textContent)}」`; check(); };
+  chunks.forEach((m,i)=>m.onclick=()=>{tick();choose(i)});
+  const markSolved=(ci,oi)=>{ const box=$(`.chk[data-c="${ci}"]`); solved[ci]=true;
+    box.querySelectorAll('.opt').forEach(b=>{b.classList.toggle('ok',+b.dataset.o===oi);b.classList.remove('no');b.disabled=true});
+    const fb=box.querySelector('.fb'); fb.className='fb ok'; fb.textContent='✔ '+(C[ci].ok||'맞아요! 원문에서 확인한 대로예요.'); };
+  $$('.chk .opt').forEach(b=>b.onclick=()=>{
+    const ci=+b.closest('.chk').dataset.c, oi=+b.dataset.o, c=C[ci];
+    if(oi===c.a){ chime(); markSolved(ci,oi); flash(c.back); check(); }
+    else { tick(); b.classList.remove('no'); void b.offsetWidth; b.classList.add('no'); const fb=b.closest('.chk').querySelector('.fb'); fb.className='fb no'; fb.textContent='다시 생각해 봐요 — '+c.wrong; flash(c.back); }
+  });
+  const prev=S.rec[st.id];
+  if(prev){ if(F&&prev.i>=0&&chunks[prev.i]) choose(prev.i); C.forEach((c,ci)=>markSolved(ci,c.a)); check(); }
   nx.onclick=()=>{
-    const o={label:st.label,choice:marks[pick].textContent,short:marks[pick].textContent,i:pick};
-    if(W){ o.reason=$('#why').value.trim(); o.sentence=`${W.pre} ${o.reason} ${W.post}`.trim(); }
-    rec(st.id,o); chime(); next();
+    const found=F&&pick>=0?chunks[pick].textContent:'';
+    const ans=C.map(c=>plain(c.opts[c.a])).join(' / ');
+    rec(st.id,{label:st.label,choice:found||ans,short:found||ans,i:pick,reason:found?('확인: '+ans):''});
+    chime(); next();
   };
+};
+
+/* [v7] 사진 한 장 + 짧은 내레이션 장면 (사진이 없으면 그림으로 대신) */
+R.photo=st=>{
+  stage.innerHTML=`<div class="pro" id="pro" data-adv="1"><div id="pin" style="width:100%;display:flex;flex-direction:column;align-items:center"><div class="pvis" id="pv">${(VIS[st.vis]||(()=>''))()}${photoLayer(st.img)}</div>${st.cap?`<div class="photocap">${st.cap}</div>`:''}<div class="pnar"></div></div><div class="tap" id="tap"></div></div>`;
+  const tap=$('#tap'); let ph=-1, can=false, tmr=null;
+  const ready=(d=0)=>{clearTimeout(tmr);tmr=setTimeout(()=>{can=true;tap.textContent='화면을 눌러 계속 ▶'},d)};
+  const phases=st.lines.map(t=>()=>typeText($('.pnar'),t,()=>ready(250),55));
+  phases.push(()=>{tap.textContent=''; $('.pnar').innerHTML=`${st.final||''}<div style="margin-top:18px"><button class="btn primary big" id="go">${st.button||'다음 ▶'}</button></div>`; thud();
+    $('#go').onclick=e=>{e.stopPropagation();next()}; $('#pro').removeAttribute('data-adv');});
+  const adv=()=>{ if(T){T.finish();return} if(ph===-1||can){can=false;tap.textContent='';ph++; if(phases[ph]) phases[ph]();} };
+  $('#pro').onclick=adv; setTimeout(adv,900);
+};
+/* 사진이 없을 때 보이는 그림: 조선총독부 건물 위 깃대에서 일장기가 내려가고 성조기가 올라감 */
+const VIS={
+  flag:()=>{
+    const stripes=[0,1,2,3,4,5,6].map(i=>`<rect y="${i*8}" width="76" height="4" fill="#b22234"/>`).join('');
+    const stars=[0,1,2,3].map(r=>[0,1,2,3,4].map(c=>`<circle cx="${4+c*6+(r%2)*3}" cy="${4+r*5.5}" r="1.2" fill="#fff"/>`).join('')).join('');
+    return `<svg viewBox="0 0 800 360" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="fsky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fb0b8"/><stop offset="1" stop-color="#d9d2c0"/></linearGradient>
+      <style>.fdown{animation:fdown 3.2s .8s ease-in-out forwards}.fup{animation:fup 3.4s 3.6s ease-in-out forwards}
+      @keyframes fdown{70%{opacity:.6}to{transform:translateY(70px);opacity:0}}@keyframes fup{to{transform:translateY(-150px)}}</style></defs>
+      <rect width="800" height="360" fill="url(#fsky)"/>
+      <rect x="120" y="190" width="560" height="140" fill="#b9b2a2" stroke="#6d6556" stroke-width="2"/>
+      ${[0,1,2,3,4,5,6,7,8,9,10,11,12].map(i=>`<rect x="${140+i*41}" y="215" width="20" height="34" fill="#5b5446"/><rect x="${140+i*41}" y="268" width="20" height="34" fill="#5b5446"/>`).join('')}
+      <rect x="330" y="150" width="140" height="44" fill="#a9a291" stroke="#6d6556" stroke-width="2"/>
+      <path d="M345 150 Q400 70 455 150Z" fill="#8f897a" stroke="#6d6556" stroke-width="2"/>
+      <rect y="330" width="800" height="30" fill="#7d7464"/>
+      <line x1="400" y1="20" x2="400" y2="96" stroke="#3a352d" stroke-width="3"/>
+      <g class="fdown"><rect x="402" y="22" width="60" height="40" fill="#fff" stroke="#999"/><circle cx="432" cy="42" r="12" fill="#bc002d"/></g>
+      <g class="fup" transform="translate(0,0)"><g transform="translate(402 172)">${stripes}<rect width="76" height="52" fill="none" stroke="#999"/><rect width="32" height="28" fill="#3c3b6e"/>${stars}</g></g>
+      <rect x="0" y="168" width="800" height="22" fill="#a9a291" opacity="0"/>
+    </svg>`;
+  }
 };
 
 const BONUS=[
@@ -983,7 +1062,7 @@ function openSources(key){
   const draw=()=>{const b=list[cur];box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">📜 당시 상황을 보여주는 사료</b><button class="btn ghost" id="mc">닫기 ✕</button></div>
     ${list.length>1?`<div class="tabs">${list.map((x,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${x.t}</button>`).join('')}</div>`:'<div style="height:12px"></div>'}
     <div class="orig"><h4>${b.t}</h4><div class="src-meta">${b.meta||''}</div>${b.body||''}</div>
-    ${b.easy?`<div class="easy" style="margin-top:14px"><h4>💡 쉽게 읽기</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`:''}`;
+    ${b.easy?`<div class="easy" style="margin-top:14px"><h4>💡 도움말</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`:''}`;
     $('#mc').onclick=()=>$('#modal').classList.remove('open');
     box.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{cur=+x.dataset.i;draw()});};
   draw(); $('#modal').classList.add('open');
@@ -993,7 +1072,7 @@ function openBonus(){
   const draw=()=>{const b=BONUS[cur];box.innerHTML=`<div style="display:flex;justify-content:space-between;align-items:center"><b style="font-size:18px">⭐ BONUS 사료 (선택 활동)</b><button class="btn ghost" id="mc">닫기 ✕</button></div>
     <div class="tabs">${BONUS.map((x,i)=>`<button class="${i===cur?'on':''}" data-i="${i}">${x.t}</button>`).join('')}</div>
     <div class="orig"><h4>${b.t}</h4><div class="src-meta">${b.meta}</div>${b.body}</div>
-    <div class="easy" style="margin-top:14px"><h4>💡 쉽게 읽기</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`;
+    <div class="easy" style="margin-top:14px"><h4>💡 도움말</h4><div style="font-size:16px;line-height:1.7">${b.easy}</div></div>`;
     $('#mc').onclick=()=>$('#modal').classList.remove('open');
     box.querySelectorAll('.tabs button').forEach(x=>x.onclick=()=>{cur=+x.dataset.i;draw()});};
   draw(); $('#modal').classList.add('open');
@@ -1180,23 +1259,35 @@ const COMMON=[
     opts:['우선 [[치안]]과 질서를 유지한다.','식량을 확보하고 배급 문제를 해결한다.','정치 세력을 모아 새로운 나라의 방향을 논의한다.','여러 문제를 동시에 해결할 조직부터 만든다.'],
     short:['치안과 질서','식량 문제','새 나라의 방향','문제를 해결할 조직'],
     write:{lead:'왜 그것이 가장 먼저라고 생각했나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'사람들이 안전해야 하기'}},
-  {t:'scene',part:1,bg:'office',place:'서울',date:'1945년 8월 15일',chars:[{k:'endo',p:'l'},{k:'yeo',p:'c'},{k:'ahn',p:'r'}],lines:[
-    {text:'실제로 광복 직후, 이 문제에 먼저 나선 사람들이 있었다.'},
-    {text:'광복 직전, 총독부의 [[정무총감]] 엔도는 여운형에게 치안 협조를 부탁했다. 여운형은 [[정치범]] 석방과 식량 확보 등을 조건으로 내걸었다.'},
+  /* [v7] 장면 A — 광복 직전: 엔도와 여운형만 등장 */
+  {t:'scene',part:1,bg:'gov',place:'정무총감 관저 (서울)',date:'1945년 8월 15일 이른 아침 · 항복 발표 직전',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],amb:[{k:'clock',vol:.7}],lines:[
+    {text:'시간을 조금 되돌려 보자. 1945년 8월 15일 이른 아침, 일본의 항복이 공식 발표되기 몇 시간 전.'},
+    {text:'조선총독부는 패배가 코앞이라는 것을 알고 있었다. 이제 식민지 조선을 통제하기 어려웠다. 조선에 사는 일본인들의 안전과 치안이 급했다.'},
+    {who:'endo',text:'곧 중대한 발표가 있을 것이오. 혼란이 일어나지 않도록 치안을 유지하고, 일본인들의 안전을 지켜 주시오.'},
+    {who:'yeo',cut:1,text:'그렇다면 조건이 있습니다. [[정치범]]을 석방하고, 식량을 확보하고, 우리가 치안을 유지하고 건국을 준비하는 데 간섭하지 마시오.'},
+    {text:'엔도가 바란 것은 일본인을 위한 ‘협조’였다. 그러나 여운형은 이제 조선의 질서를 조선인 스스로 지켜야 한다고 생각했다.'}]},
+  /* [v7] 장면 B — 광복 당일: 여운형과 안재홍 → 건준 */
+  {t:'scene',part:1,bg:'office',place:'서울',date:'1945년 8월 15일 · 광복 당일',chars:[{k:'yeo',p:'l'},{k:'ahn',p:'r'}],lines:[
+    {text:'정오, 일본의 항복이 공식 발표되었다. 그날 여운형은 안재홍과 마주 앉았다.'},
+    {who:'ahn',text:'일본 경찰과 관청이 무너지고 있습니다. 서울뿐 아니라 지방의 질서도 지켜야 합니다.'},
     {text:'여운형은 1944년부터 비밀 단체 [[건국동맹]]을 만들어 광복 이후를 준비해 왔다.',cards:[{img:'src_geonguk',d:'1944년',cap:'조선건국동맹 조직 — 광복 이후를 준비하다'}]},
-    {who:'yeo',text:'지금은 질서를 지키며 새 나라를 준비해야 합니다.'},
-    {text:'8월 15일, 여운형과 안재홍은 **조선건국준비위원회**, 줄여서 [[건준]]을 만들었다.'}]},
+    {who:'yeo',text:'혼란을 수습하고 새 나라를 준비할 조직을 만듭시다.'},
+    {text:'그날, 두 사람은 **조선건국준비위원회**, 줄여서 [[건준]]을 만들었다.'}]},
   {t:'scene',part:1,bg:'map',map:'branch',place:'[[건국준비위원회]]',date:'1945년 8월 하순',lines:[
     {text:'8월 말까지 전국에 **145개** 지부가 생겼다. 각 지역에서는 [[치안대]]가 질서를 지켰다.'}]},
   {t:'history',part:1,bg:'map',map:'branch',ref:'s1',title:'나의 선택 → 실제 역사에서는?',
     mine:r=>`나는 「${esc(r.short)}」${josa(r.short,'을','를')} 가장 먼저 해결하겠다고 했다.`,
     real:'광복 직후에는 [[치안]], 식량, 정치, [[행정]] 문제가 **동시에** 있었어요. [[건국준비위원회]]는 [[치안대]]로 질서를 지키고 식량 문제에 대응하며, 새 나라를 세울 준비를 했어요. 하지만 건준은 **정부가 아니라 준비 조직**이었어요.',
     key:'광복 = 곧바로 정부가 생긴 것은 아니었다.'},
-  {t:'find',part:1,id:'g1',kicker:'② 광복 직후, 무엇부터 해결할까?',title:'건준은 어떤 나라를 꿈꾸었을까?',label:'사료 찾기 · 건준의 강령',
-    intro:'건준이 발표한 [[강령]]의 일부예요. 두 줄만 읽으면 돼요.',
-    doc:{title:'조선건국준비위원회 강령 (일부)',meta:'1945년 8월 말 (현대어로 다듬음)',body:`<p>1. 우리는 <mark>완전한 독립 국가 건설</mark>을 기함.</p><p>2. 우리는 전 민족의 정치적·경제적·사회적 기본 요구를 실현할 수 있는 <mark>민주주의 정권의 수립</mark>을 기함.</p>`},
-    easy:`<ul><li><b>1</b>다른 나라에 기대지 않는, 완전히 독립된 나라를 세우겠다.</li><li><b>2</b>민족 모두의 바람을 이루는 민주주의 정부를 세우겠다.</li></ul><div class="sum">※ 「기함」 = 꼭 이루겠다고 다짐한다는 뜻</div>`,
-    q:'새롭게 만들 나라의 모습이 드러난 표현을 하나 눌러 보세요.',
+  {t:'find',part:1,id:'g1',kicker:'② 광복 직후, 무엇부터 해결할까?',title:'건준은 무엇을 목표로 했을까?',label:'사료 읽기 · 건국준비위원회 강령',
+    intro:'건준이 발표한 [[강령]]이에요. 강령은 단체가 이루려는 목표를 정리한 글이에요.',
+    doc:{title:'「건국준비위원회 강령」',meta:'조선건국준비위원회 · 1945년 8월',body:`
+      <p class="art" data-a="1"><span class="num">1.</span>우리는 <span class="pk">완전한 독립 국가의 건설</span>을 목표로 함.</p>
+      <p class="art" data-a="2"><span class="num">2.</span>우리는 <span class="pk">전 민족의 정치적·경제적·사회적 기본 요구를 실현할 수 있는</span> <span class="pk">민주주의 정권 수립</span>을 목표로 함.</p>
+      <p class="art" data-a="3"><span class="num">3.</span>우리는 <span class="pk">일시적 과도기에 국내 질서를 자주적으로 유지하며</span> <span class="pk">대중 생활의 확보</span>를 목표로 함.</p>`},
+    find:{q:'건준이 만들고 싶었던 나라의 모습이나, 당장 하려던 일을 보여 주는 표현을 하나 찾아 눌러 보세요.'},
+    help:'세 문장이 모두 ‘우리는 ~을 목표로 함’으로 되어 있어요. 각 문장에서 <b>무엇을</b> 목표로 하는지, ‘목표로 함’ 바로 앞부분을 천천히 다시 읽어 보세요. 낯선 낱말은 앞뒤 말과 이어서 읽으면 뜻을 짐작하기 쉬워요.',
+    checks:[{q:'이 강령에 따르면, 건준은 ‘일시적 과도기’에 무엇을 하려고 했나?',opts:['국내 질서를 자주적으로 유지하려 했다.','외국 군대에 질서 유지를 맡기려 했다.','곧바로 총선거를 실시하려 했다.'],a:0,back:3,wrong:'3번 문장을 다시 읽어 보세요.',ok:'맞아요! 3번 문장에 나와 있어요.'}],
     after:'👉 광복 직후 실제로도 **새로운 나라를 준비하려는 움직임**이 있었어요.'},
 
   /* ---------- ③ 그런데 왜 바로 나라를 만들지 못했을까? (약 3분) ---------- */
@@ -1213,16 +1304,27 @@ const COMMON=[
     mine:r=>`38선은 「${esc(r.short)}」이었을 것이다.`,
     real:'38선은 처음부터 국경으로 만든 선이 아니라, 일본군의 [[무장 해제]]와 미·소의 점령을 나누기 위한 **임시 군사 경계선**이었어요. 그런데 남과 북이 서로 다른 군대의 관리를 받게 되면서, 하나의 정부를 만드는 일이 복잡해지기 시작했어요.',
     key:'처음에는 임시적인 선이었다. 그런데 이 선은 앞으로 어떻게 될까?'},
-  {t:'find',part:2,id:'s5',kicker:'③ 그런데 왜 바로 나라를 만들지 못했을까?',title:'미군이 발표한 문서',label:'사료 찾기 · 맥아더 포고 제1호',
+  {t:'find',part:2,id:'s5',kicker:'③ 그런데 왜 바로 나라를 만들지 못했을까?',title:'미군이 발표한 문서',label:'사료 읽기 · 맥아더 포고령 제1호',
     intro:'1945년 9월, 미군이 남한에 들어오면서 발표한 [[포고]]예요.',
-    doc:{title:'맥아더 포고 제1호 (일부)',meta:'1945년 9월 7일 발표 · 미 태평양 육군 총사령관 맥아더 (현대어로 다듬음)',body:`
-      <p><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 <mark>정부의 모든 권한은 당분간 본관의 권한 아래 시행한다.</mark></p>
-      <p><b>제3조</b> 주민은 <mark>본관 및 본관의 권한 아래 발포한 명령에 즉각 복종</mark>해야 한다.</p>
-      <p><b>제5조</b> 군정 기간 동안 <mark>영어를 모든 목적에 사용하는 공용어로 한다.</mark></p>`},
-    easy:`<ul><li><b>1조</b>38선 남쪽을 다스리는 힘은 당분간 <u>미군</u>이 갖는다.</li><li><b>3조</b>주민은 미군의 명령을 따라야 한다.</li><li><b>5조</b>공식 언어는 영어다.</li></ul>`,
-    q:'미군이 남한을 직접 다스렸다는 것을 보여 주는 표현을 하나 눌러 보세요.',
-    after:'👉 남한에는 [[미군정]]이 세워졌어요. 북쪽에서는 소련군이 [[인민위원회]]를 통해 영향력을 넓혔어요. 광복은 되었지만, **곧바로 우리 정부가 생긴 것은 아니었어요.**',
-    nextLabel:'④ 나의 길 고르러 가기 ▶'},
+    doc:{title:'「태평양 미 육군 총사령관 맥아더 포고령」 제1호',meta:'1945년 9월 9일 발표 (일부 발췌, 현대어로 다듬음)',body:`
+      <p class="art pre" data-a="0">본관은 본관에게 부여된 태평양 미 육군 총사령관의 권한으로써, 이로부터 북위 38도 이남의 조선과 조선 인민에 대하여 군정을 설립하고 다음과 같은 점령에 관한 조건을 포고함.</p>
+      <p class="art" data-a="1"><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 정부의 모든 행정권은 당분간 본관의 권한 하에서 시행함.</p>
+      <p class="art" data-a="2"><b>제2조</b> 정부, 공공 단체 또는 기타의 명예 직원과 고용인, 공익사업·공중위생을 포함한 공공사업에 종사하는 유급 혹은 무급 직원 및 고용인, 그 밖에 중요한 사업에 종사하는 모든 사람은 별도의 명령이 있을 때까지 종래의 정상적인 기능과 업무를 수행할 것이며, 모든 기록과 재산을 보존·보호하여야 함.</p>
+      <p class="cut">(이하 생략)</p>`},
+    guide:'🔎 제1조와 제2조에서 답의 근거를 찾아보세요.',
+    help:'먼저 맨 앞 문장에서 ‘본관’이 누구를 가리키는지 찾아보세요. 제2조는 문장이 길어요. 사람들을 죽 늘어놓은 <b>앞부분</b>과, 그 사람들이 해야 할 일을 적은 <b>뒷부분</b>으로 나누어 읽어 보세요.',
+    checks:[
+      {q:'제1조에 따르면 행정권은 누가 행사하는가?',opts:['조선총독부','건국준비위원회','태평양 미 육군 총사령관','대한민국 임시정부'],a:2,back:1,wrong:'제1조와 맨 앞 문장을 다시 읽어 보세요. ‘본관’은 누구일까요?',ok:'맞아요! ‘본관’은 맨 앞 문장의 태평양 미 육군 총사령관이에요.'},
+      {q:'제2조에 해당하는 사람은 누구인가?',opts:['일제의 통치에 협력한 친일 관료와 경찰','새로 귀국한 독립운동가','미국에서 건너온 군인','38선 북쪽에 사는 주민'],a:0,back:2,wrong:'제2조에서 사람들을 늘어놓은 앞부분을 다시 읽어 보세요.',ok:'맞아요! 제2조 앞부분에 나와 있어요.'}],
+    after:'👉 행정권은 미군이 갖고, 원래 관청에서 일하던 사람들은 하던 일을 계속하게 했어요. 조선인이 직접 정부를 세운다는 내용은 없었어요.',
+    nextLabel:'다음 장면 ▶'},
+  /* [v7] ③→④ 전환: 조선총독부의 깃발이 바뀌다 */
+  {t:'photo',part:2,img:'flag_change',vis:'flag',cap:'1945년 9월 9일, 조선총독부',lines:[
+    '1945년 9월 9일, 서울 조선총독부.',
+    '건물 앞 깃대에서 일장기가 내려가고, 그 자리에 성조기가 올라갔다.',
+    '일본의 식민 통치는 끝났다. 그러나 조선은 곧바로 자주적인 정부를 세운 것이 아니었다.'],
+    final:'<h1 class="bigq" style="font-size:clamp(26px,5vw,44px);margin:0">남쪽에서는<br>미군정이 시작되었다.</h1>',
+    button:'④ 나의 길 고르러 가기 ▶'},
 
   /* ---------- ④ 1945, 나는 어떤 길을 선택할까? (약 7분) ---------- */
   {t:'select',part:3}
