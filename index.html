@@ -17,6 +17,8 @@ button{font-family:inherit;cursor:pointer}
 /* header */
 #top{display:flex;align-items:center;gap:12px;padding:10px 16px;background:#2a2119;color:#f4ecdc;position:sticky;top:0;z-index:20}
 #top .logo{font-family:'Noto Serif KR',serif;font-weight:900;font-size:16px;white-space:nowrap}
+#top .brand{display:flex;flex-direction:column;line-height:1.2}
+#top .maker{font-size:10.5px;color:#a8977c;white-space:nowrap;margin-top:2px;letter-spacing:.02em}
 #top .part{flex:1;min-width:0;font-size:13px;color:#d9c9a8;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #top .part b{color:#fff;font-weight:700}
 #top .dots{display:flex;gap:5px}
@@ -265,14 +267,21 @@ ul.fact li{margin:3px 0}
 @keyframes dotin{from{opacity:0;transform:scale(2.5)}to{opacity:1;transform:scale(1)}}
 .flagw{animation:wave 1.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:left center}
 @keyframes wave{to{transform:skewY(4deg) scaleX(.94)}}
-.vis img.bgphoto,.pvis img.bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.35) grayscale(.35) contrast(1.05);animation:fade 2.2s both;z-index:1}
+.vis img.bgphoto,.pvis img.bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.35) grayscale(.35) contrast(1.05);opacity:0;z-index:1}
+.vis img.bgphoto.ready{opacity:1} /* [v8] 불러온 뒤에만 보임, 기존 그림은 그 순간 숨김 */
+.pvis img.bgphoto.ready{opacity:1;animation:fade .8s both}
 .ptag{position:absolute;right:8px;bottom:6px;z-index:3;font-size:11px;color:#f4ecdc;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:6px}
 .wcards{position:absolute;right:12px;top:12px;z-index:4;display:flex;gap:8px;animation:pop .5s both}
 .wcard{width:clamp(84px,13vw,132px);background:#fffaf0;border:1.5px solid var(--ink);border-radius:8px;padding:5px;box-shadow:3px 3px 0 var(--ink);font-size:11.5px;line-height:1.35;font-weight:700}
 .wcard img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block;filter:grayscale(1) sepia(.2);border-radius:4px;margin-bottom:4px}
 .wcard b{display:block;color:var(--red);font-size:11px}
 .wcard.one{width:clamp(130px,20vw,200px)}
-.newsbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.18;filter:grayscale(1)}
+.newsbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.34;filter:grayscale(1)}
+.sitcard{background:#f6edd8;border-left:5px solid var(--gold);border-radius:10px;padding:10px 14px;margin:0 0 12px;font-size:16px;line-height:1.65}
+.sitcard b{display:block;font-size:13px;color:var(--red);margin-bottom:2px}
+.sitnext{font-size:13px;font-weight:900;color:var(--muted);margin:0 0 4px}
+.opt .termtag{display:block;font-size:12.5px;font-weight:700;color:var(--muted);margin-top:2px}
+.opt.sel .termtag{color:#d9c9a8}
 .opt .pros,.opt .cons{display:block;font-size:14px;font-weight:500;margin-top:4px;line-height:1.5}
 .opt b{display:block;font-size:clamp(17px,2.1vw,19px)}
 .opt .pros{color:#2e6a4c}.opt .cons{color:#8f261e}
@@ -286,6 +295,7 @@ details.opt-more summary{cursor:pointer;font-weight:700;color:var(--muted)}
 .readfirst{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(18px,2.4vw,22px);margin:0 0 8px;color:var(--ink)}
 .orig .pk{border-bottom:1.5px dashed #b9a57e;cursor:pointer;border-radius:3px;transition:background .15s}
 .orig .pk:hover{background:#f3e3b8}
+.orig .ev{border-bottom:1.5px dashed #b9a57e;border-radius:3px} /* [v8] 답의 근거 밑줄 (클릭 없음) */
 .orig .pk.on{background:#e8574b;color:#fff;border-bottom-color:transparent;box-shadow:0 0 0 2px #e8574b}
 .orig .art{border-radius:6px;transition:background .4s,box-shadow .4s}
 .orig .art.flash{background:#fbe6a6;box-shadow:0 0 0 6px #fbe6a6}
@@ -326,6 +336,9 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
   .hrow .lb{justify-self:start}
   #top .dots{display:none}
   #top .logo{display:none}
+  #top{flex-wrap:wrap;row-gap:0}
+  #top .brand{order:10;flex-basis:100%}
+  #top .maker{font-size:9.5px;text-align:right;margin:-2px 0 -4px}
   .panel{padding:16px 16px 24px}
 }
 @media print{
@@ -357,7 +370,7 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 
 <div id="app">
   <header id="top">
-    <div class="logo">1945, 해방된 조선의 선택</div>
+    <div class="brand"><div class="logo">1945, 해방된 조선의 선택</div><div class="maker">제작: 이태형T(한백고)</div></div>
     <div class="part" id="partLabel"></div>
     <div class="dots" id="dots"></div>
     <button class="ibtn" id="recBtn">📒 나의 기록</button>
@@ -370,6 +383,18 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 <div id="pop"></div>
 
 <script>
+/* =====================================================================
+   [v8 변경 내역] 부분 수정
+   1. 호외 장면 뒷사진(.newsbg)만 조금 더 선명하게 (opacity .18 → .34)
+   2. 만세 장면 현수막 '조선 독립 만세' → '대한 독립 만세'
+   3. 맥아더 포고령 사료: 답의 근거 표현에 건준 강령과 같은 점선 밑줄(.ev)
+   4. 포고령 Q1 정답 해설에 '더글러스 맥아더(맥아더 장군)' 설명 추가
+   5. 상단 header에 '제작: 이태형T(한백고)' 작게 표시 (모바일은 header 맨 아래 한 줄)
+   6. 배경 사진: 사진이 다 불러와지면 기존 SVG를 즉시 숨기고 사진 표시 (photoReady) → 겹쳐 보이지 않음
+   7. 마지막 질문 1: 'PART 4에서 내가 걸은 인물의 선택'에 동의하는지와 이유를 묻는 문항으로 변경
+   8. PART 4 난이도: 선택 전 '당시 상황' 카드(sit), 장면 대사·선택지를 쉬운 말로, 선택지 아래 관련 용어(term) 작게 표시
+      (딜레마·선택지 수·장점/한계·선택 결과·실제 역사 비교 구조는 그대로)
+   ===================================================================== */
 /* =====================================================================
    [v7 변경 내역] 광복 전후 장면 정확도 + 사료 읽기 활동 개선
    - ② 엔도–여운형(8월 15일 이른 아침, 항복 발표 직전, 총독부 배경)과
@@ -717,7 +742,7 @@ const BG={
     <g fill="#c99a78">${[[0,140,90],[86,112,70],[150,160,110],[262,132,60],[318,96,92],[420,150,80],[498,120,120],[620,145,70],[686,108,114]].map(([x,y,w])=>`<rect x="${x}" y="${y}" width="${w}" height="${290-y}"/>`).join('')}</g>
     ${hanok(212)}
     <rect y="290" width="800" height="70" fill="#8b6b51"/>
-    ${st.cheer?`<g><line x1="250" y1="140" x2="250" y2="300" stroke="#5a3e2b" stroke-width="5"/><line x1="550" y1="140" x2="550" y2="300" stroke="#5a3e2b" stroke-width="5"/><rect x="250" y="140" width="300" height="46" fill="#fffaf0" stroke="#5a3e2b" stroke-width="2"/><text x="400" y="172" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="26" fill="#a02a22">조선 독립 만세</text></g>`:''}
+    ${st.cheer?`<g><line x1="250" y1="140" x2="250" y2="300" stroke="#5a3e2b" stroke-width="5"/><line x1="550" y1="140" x2="550" y2="300" stroke="#5a3e2b" stroke-width="5"/><rect x="250" y="140" width="300" height="46" fill="#fffaf0" stroke="#5a3e2b" stroke-width="2"/><text x="400" y="172" text-anchor="middle" font-family="Noto Serif KR,serif" font-weight="900" font-size="26" fill="#a02a22">대한 독립 만세</text></g>`:''}
     ${crowd(!!st.cheer, st.cheer?296:304, st.cheer?30:22)}`),
   gov:()=>svg(`<defs><linearGradient id="gw" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4b4741"/><stop offset="1" stop-color="#2b2925"/></linearGradient><linearGradient id="gl" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d9e1e3"/><stop offset="1" stop-color="#9fb1b8"/></linearGradient></defs>
     <rect width="800" height="360" fill="url(#gw)"/>
@@ -806,7 +831,9 @@ function bgPhotoKey(st){
   if(st.bg==='room') return st.night?'bg_room_night':'bg_room';
   return ({gov:'bg_gov',office:'bg_office',rally:'bg_rally',ballot:'bg_ballot',dawn:'bg_dawn'})[st.bg]||'';
 }
-function photoLayer(key){ return key?`<img class="bgphoto" src="images/${key}.jpg" alt="" onerror="this.remove()" onload="showCredit(this,'${key}')">`:''; }
+function photoLayer(key){ return key?`<img class="bgphoto" src="images/${key}.jpg" alt="" onerror="this.remove()" onload="photoReady(this,'${key}')">`:''; }
+/* [v8] 사진이 준비되면 같은 칸의 기존 SVG 그림을 즉시 숨기고 사진을 보여 줌 */
+function photoReady(img,key){ const box=img.parentElement; if(box) [...box.children].forEach(el=>{ if(el.tagName.toLowerCase()==='svg') el.style.display='none'; }); img.classList.add('ready'); showCredit(img,key); }
 function frame(st){
   const chars=(st.chars||[]).map(c=>{const C=CH[c.k];return `<div class="ch ${c.p}" data-k="${c.k}" style="--c:${C.c}"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div></div>`}).join('');
   stage.innerHTML=`<div class="vis">${(BG[st.bg]||BG.none)(st)}${photoLayer(bgPhotoKey(st))}<div class="tags">${st.place?`<span class="tag">📍 ${fmt(st.place)}</span>`:''}${st.date?`<span class="tag">🗓 ${st.date}</span>`:''}</div><div class="chars">${chars}</div></div><div class="panel" id="panel"></div>`;
@@ -932,7 +959,7 @@ const NUMS='①②③④⑤', ABC='ABCD';
 R.choice=st=>{
   const p=frame(st); speak(null);
   const mk=st.abc?ABC:NUMS; const W=st.write;
-  p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}<h3>${fmt(st.q)}</h3>
+  p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}${st.sit?`<div class="sitcard"><b>📍 당시 상황</b>${fmt(st.sit)}</div><div class="sitnext">🤔 당신 앞에 놓인 선택</div>`:''}<h3>${fmt(st.q)}</h3>
     <div class="opts ${st.abc?'one':''}">${st.opts.map((o,i)=>`<button class="opt ${st.big?'big':''}" data-i="${i}">${st.big?'':`<span class="num">${mk[i]}</span>`}<span>${fmt(o)}</span></button>`).join('')}</div>
     ${W?`<div class="reason hidden"><label>✏️ ${W.lead}</label><div id="sentBox"></div><div class="hint">빈칸만 채우면 돼요. 짧게 써도 괜찮아요. (2글자 이상)</div></div>`:''}</div>${nextBtn('다음 ▶',true)}`;
   let pick=-1; const nx=$('#nx'); const prev=S.rec[st.id];
@@ -1175,14 +1202,16 @@ R.final1=()=>{
 };
 
 /* 최종 성찰 ②: 그 시대에 살았다면 + 핵심 질문에 대한 나의 답 */
-const WOULD=['김구의 길','여운형의 길','이승만의 길','또 다른 길'];
+const WOULD=['동의한다','일부만 동의한다','동의하지 않는다'];
 const CORE_HINTS=['미국과 소련의 대립','남북 분단','정치 세력 간의 갈등'];
 R.final2=()=>{
   const E=S.extra; const ids=S.order.filter(id=>id!=='pick');
+  const nm=CH[S.route].n, myCh=S.order.filter(id=>id.startsWith(S.route+'_r')).map(id=>S.rec[id].choice); /* [v8] */
   stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">⑤ 내가 선택한 길 · 마지막 질문</div><h2>나의 생각 정리하기</h2></div>
-    <div class="q qa"><div class="fq"><div class="qlabel write">질문 1</div><h4 style="font-size:21px">내가 1945년의 정치가였다면 어떤 길을 선택했을까? 그리고 그 이유는 무엇일까?</h4>
+    <div class="q qa"><div class="fq"><div class="qlabel write">질문 1</div><h4 style="font-size:21px">PART 4에서 내가 걸은 ${nm}의 길. ${nm}${josa(nm,'은','는')} 어떤 문제를 해결하려 했을까? 내가 그 인물이었다면, 그 선택에 동의했을까?</h4>
+      ${myCh.length?`<div class="hint" style="margin:-4px 0 10px">📒 내가 PART 4에서 한 선택: ${myCh.map((c,i)=>`${NUMS[i]} ${esc(c)}`).join(' &nbsp;')}</div>`:''}
       <div class="pick" id="would">${WOULD.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
-      <textarea id="wy" maxlength="400" style="margin-top:12px" placeholder="2~3문장으로 써 보세요. 예) 나는 ___의 길을 선택하겠다. 왜냐하면 ___ 때문이다. 하지만 ___ 점은 걱정된다."></textarea></div>
+      <textarea id="wy" maxlength="400" style="margin-top:12px" placeholder="2~3문장으로 써 보세요. 예) ${nm}${josa(nm,'은','는')} ___ 문제를 해결하려고 ___을 선택했다. 나는 이 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea></div>
     <div class="fq"><div class="qlabel write">질문 2</div><h4 style="font-size:21px">광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h4>
       <div class="hints" style="margin:0 0 10px"><span class="hint" style="margin:0 4px 0 0">💡 이런 말을 써서 내 말로 설명해 보세요:</span>${CORE_HINTS.map(h=>`<button data-h="${h}">${h}</button>`).join('')}</div>
       <textarea id="core" maxlength="400" placeholder="예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다."></textarea></div>
@@ -1217,7 +1246,7 @@ R.ending=()=>{
   stage.innerHTML=`<div class="full"><div class="cert" id="cert"><h2>📜 나의 역사 활동 기록</h2><div class="meta">「1945, 해방된 조선의 선택」 · ${esc(S.name||'이름 없음')} · ${ds}</div>
     <div class="sumg"><div><small>내가 선택한 인물</small><b>${CH[me].n}</b></div><div><small>내가 중요하게 생각한 가치</small><b>${esc(val)}</b></div><div><small>가장 기억에 남는 선택</small><b>${esc(mem)}</b></div></div>
     <h5>실제 역사에서는?</h5><div style="font-size:15px;line-height:1.7"><b>${endSt.headline}</b> — ${fmt(endSt.body)}</div>
-    <h5>질문 1 · 내가 1945년의 정치가였다면 어떤 길을, 왜?</h5><div class="ans">${esc(wouldSentence(E))}</div>
+    <h5>질문 1 · ${CH[me].n}의 선택, 나는 동의할까? 그 이유는?</h5><div class="ans">${esc(wouldSentence(E))}</div>
     <h5>질문 2 · 광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h5><div class="ans">${esc(coreSentence(E))}</div>
     <h5>나의 기록 전체</h5><div class="rec">${recHTML()}</div>
     <div class="credit">인물 사진: 위키미디어 공용(Wikimedia Commons) · 대화 장면은 역사적 상황을 바탕으로 재구성</div></div>
@@ -1229,7 +1258,7 @@ R.ending=()=>{
   $('#cp').onclick=()=>{
     const txt=`[1945, 해방된 조선의 선택] ${S.name} (${ds})\n`+
       `- 내가 선택한 인물: ${CH[me].n}\n- 중요하게 생각한 가치: ${val}\n- 가장 기억에 남는 선택: ${mem}\n`+
-      `- 질문 1 (어떤 길을, 왜?): ${wouldSentence(E)}\n- 질문 2 (왜 하나의 정부를 바로 만들지 못했을까?): ${coreSentence(E)}\n[전체 기록]\n`+
+      `- 질문 1 (${CH[me].n}의 선택에 동의하는가, 왜?): ${wouldSentence(E)}\n- 질문 2 (왜 하나의 정부를 바로 만들지 못했을까?): ${coreSentence(E)}\n[전체 기록]\n`+
       S.order.map(id=>{const r=S.rec[id];return `- ${r.label}: ${r.choice}${r.sentence?' / '+r.sentence:(r.reason?' / '+r.reason:'')}`}).join('\n');
     const ok=()=>{$('#cp').textContent='✅ 복사했어요!';setTimeout(()=>$('#cp').textContent='📋 기록 복사하기',1800)};
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok,()=>fallback(txt,ok)); else fallback(txt,ok);
@@ -1306,16 +1335,16 @@ const COMMON=[
     key:'처음에는 임시적인 선이었다. 그런데 이 선은 앞으로 어떻게 될까?'},
   {t:'find',part:2,id:'s5',kicker:'③ 그런데 왜 바로 나라를 만들지 못했을까?',title:'미군이 발표한 문서',label:'사료 읽기 · 맥아더 포고령 제1호',
     intro:'1945년 9월, 미군이 남한에 들어오면서 발표한 [[포고]]예요.',
-    doc:{title:'「태평양 미 육군 총사령관 맥아더 포고령」 제1호',meta:'1945년 9월 9일 발표 (일부 발췌, 현대어로 다듬음)',body:`
-      <p class="art pre" data-a="0">본관은 본관에게 부여된 태평양 미 육군 총사령관의 권한으로써, 이로부터 북위 38도 이남의 조선과 조선 인민에 대하여 군정을 설립하고 다음과 같은 점령에 관한 조건을 포고함.</p>
-      <p class="art" data-a="1"><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 정부의 모든 행정권은 당분간 본관의 권한 하에서 시행함.</p>
-      <p class="art" data-a="2"><b>제2조</b> 정부, 공공 단체 또는 기타의 명예 직원과 고용인, 공익사업·공중위생을 포함한 공공사업에 종사하는 유급 혹은 무급 직원 및 고용인, 그 밖에 중요한 사업에 종사하는 모든 사람은 별도의 명령이 있을 때까지 종래의 정상적인 기능과 업무를 수행할 것이며, 모든 기록과 재산을 보존·보호하여야 함.</p>
+    doc:{title:'「태평양 미 육군 총사령관 맥아더 포고령」 제1호',meta:'1945년 9월 7일 발표 (일부 발췌, 현대어로 다듬음)',body:`
+      <p class="art pre" data-a="0"><span class="ev">본관은</span> 본관에게 부여된 <span class="ev">태평양 미 육군 총사령관</span>의 권한으로써, 이로부터 북위 38도 이남의 조선과 조선 인민에 대하여 군정을 설립하고 다음과 같은 점령에 관한 조건을 포고함.</p>
+      <p class="art" data-a="1"><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 <span class="ev">정부의 모든 행정권은 당분간 본관의 권한 하에서 시행함.</span></p>
+      <p class="art" data-a="2"><b>제2조</b> <span class="ev">정부, 공공 단체 또는 기타의 명예 직원과 고용인</span>, 공익사업·공중위생을 포함한 공공사업에 종사하는 유급 혹은 무급 직원 및 고용인, 그 밖에 중요한 사업에 종사하는 모든 사람은 별도의 명령이 있을 때까지 종래의 정상적인 기능과 업무를 수행할 것이며, 모든 기록과 재산을 보존·보호하여야 함.</p>
       <p class="cut">(이하 생략)</p>`},
     guide:'🔎 제1조와 제2조에서 답의 근거를 찾아보세요.',
     help:'먼저 맨 앞 문장에서 ‘본관’이 누구를 가리키는지 찾아보세요. 제2조는 문장이 길어요. 사람들을 죽 늘어놓은 <b>앞부분</b>과, 그 사람들이 해야 할 일을 적은 <b>뒷부분</b>으로 나누어 읽어 보세요.',
     checks:[
-      {q:'제1조에 따르면 행정권은 누가 행사하는가?',opts:['조선총독부','건국준비위원회','태평양 미 육군 총사령관','대한민국 임시정부'],a:2,back:1,wrong:'제1조와 맨 앞 문장을 다시 읽어 보세요. ‘본관’은 누구일까요?',ok:'맞아요! ‘본관’은 맨 앞 문장의 태평양 미 육군 총사령관이에요.'},
-      {q:'제2조에 해당하는 사람은 누구인가?',opts:['일제의 통치에 협력한 친일 관료와 경찰','새로 귀국한 독립운동가','미국에서 건너온 군인','38선 북쪽에 사는 주민'],a:0,back:2,wrong:'제2조에서 사람들을 늘어놓은 앞부분을 다시 읽어 보세요.',ok:'맞아요! 제2조 앞부분에 나와 있어요.'}],
+      {q:'제1조에 따르면 행정권은 누가 행사하는가?',opts:['조선총독부','건국준비위원회','태평양 미 육군 총사령관','대한민국 임시정부'],a:2,back:1,wrong:'제1조와 맨 앞 문장을 다시 읽어 보세요. ‘본관’은 누구일까요?',ok:'맞아요! ‘본관’은 맨 앞 문장의 태평양 미 육군 총사령관이에요. 이 사람이 바로 우리가 흔히 ‘맥아더 장군’이라고 부르는 더글러스 맥아더예요.'},
+      {q:'제2조에 해당하는 사람은 누구인가?',opts:['정부·공공 단체 등에서 일하던 직원과 고용인','새로 귀국한 독립운동가','미국에서 건너온 군인','38선 북쪽에 사는 주민'],a:0,back:2,wrong:'제2조에서 사람들을 늘어놓은 앞부분을 다시 읽어 보세요.',ok:'맞아요! 제2조 앞부분에 나와 있어요.'}],
     after:'👉 행정권은 미군이 갖고, 원래 관청에서 일하던 사람들은 하던 일을 계속하게 했어요. 조선인이 직접 정부를 세운다는 내용은 없었어요.',
     nextLabel:'다음 장면 ▶'},
   /* [v7] ③→④ 전환: 조선총독부의 깃발이 바뀌다 */
@@ -1330,30 +1359,37 @@ const COMMON=[
   {t:'select',part:3}
 ];
 
-/* 인물별 선택 상황: dl = [{t:선택, pro:장점, con:한계}] → 선택지·선택 결과로 자동 변환 */
+/* 인물별 선택 상황: dl = [{t:선택, term:관련 역사 용어(작게 표시), pro:장점, con:한계}] / sit = 선택 전 '당시 상황' 카드 [v8] */
 const ROUTES={
   kimgu:{steps:[
     {t:'scene',bg:'room',place:'중국 충칭 → 서울',date:'1945년 11월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'당신은 이제 **김구**다. 대한민국 [[임시정부]] 주석으로 오랫동안 독립운동을 이끌어 왔다.'},
-      {who:'aide',text:'주석님, 미군정은 임시정부를 정부로 인정하지 않고, 개인 자격으로만 귀국하라고 합니다.'}]},
-    {t:'choice',id:'r1',label:'김구의 선택 ① · 1945년 11월',q:'임시정부 자격을 인정받지 못한 채 귀국하겠는가?',
-      dl:[{t:'개인 자격이라도 지금 귀국한다.',pro:'서둘러 국내 정치에 참여할 수 있다.',con:'임시정부의 정부 자격을 인정받지 못한 채 시작해야 한다.'},
-          {t:'정부 자격을 인정받을 때까지 기다린다.',pro:'임시정부의 정통성을 지킬 수 있다.',con:'그 사이 국내 정치에서 뒤처질 수 있다.'}]},
+      {text:'당신은 이제 **김구**다. 중국에서 대한민국 [[임시정부]]를 이끌며 오랫동안 독립운동을 해 왔다.'},
+      {who:'aide',text:'주석님, 남쪽을 다스리는 미군이 임시정부를 ‘정부’로 인정하지 않겠답니다. 한 사람의 개인으로만 귀국하라고 합니다.'}]},
+    {t:'choice',id:'r1',label:'김구의 선택 ① · 1945년 11월',
+      sit:'광복 소식을 듣고 고국으로 돌아가려 한다. 그런데 남쪽을 다스리는 미군은 임시정부를 나라의 정부로 인정하지 않는다.',
+      q:'그래도 지금 귀국하겠는가?',
+      dl:[{t:'개인 자격이라도 지금 귀국해 나라 만들기에 참여한다.',pro:'서둘러 국내 정치에 참여할 수 있다.',con:'임시정부가 정부로 인정받지 못한 채 시작해야 한다.'},
+          {t:'임시정부가 정부로 인정받을 때까지 기다린다.',pro:'임시정부가 정당한 정부라는 자격을 지킬 수 있다.',con:'그 사이 국내 정치에서 뒤처질 수 있다.'}]},
     {t:'history',ref:'r1',real:'김구와 임시정부 요인들은 1945년 11월 **개인 자격**으로 귀국했어요. 그래도 김구는 임시정부를 중심으로 자주적인 정부를 세우려 했어요.'},
     {t:'scene',bg:'room',night:1,place:'서울 경교장',date:'1948년 초',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'미국과 소련의 협상은 실패했고, [[유엔]]은 선거가 가능한 남한에서만 [[총선거]]를 하기로 했다.'},
-      {who:'aide',text:'이대로라면 남과 북에 따로 정부가 생깁니다. 북쪽 지도자들과 직접 만나 보자는 의견도 있습니다.'}]},
-    {t:'choice',id:'r2',label:'김구의 선택 ② · 1948년 초',q:'북쪽 지도자들과 협상하러 가겠는가?',
-      dl:[{t:'북으로 가서 남북 지도자 회담을 시도한다.',pro:'통일 정부의 가능성을 끝까지 이어 갈 수 있다.',con:'성과 없이 끝날 위험이 크다.'},
-          {t:'남한에서 현실적인 길을 찾는다.',pro:'남한 정치에서 영향력을 지킬 수 있다.',con:'분단을 막을 기회를 놓칠 수 있다.'}]},
-    {t:'history',ref:'r2',real:'1948년 4월 김구는 김규식과 함께 평양에서 열린 [[남북 협상]]에 참여했어요. 하지만 통일 정부 수립으로 이어지지는 못했어요.'},
+      {text:'그 뒤 미국과 소련은 하나의 정부를 만드는 방법을 두고 끝내 뜻을 모으지 못했다. 결국 국제기구인 [[유엔]]이 나섰다.'},
+      {text:'유엔은 선거를 할 수 있는 남쪽에서만 먼저 선거를 하기로 했다. 이대로라면 남과 북에 따로 정부가 생길 수 있다.'},
+      {who:'aide',text:'주석님, 북쪽 지도자들을 직접 만나 담판을 지어 보자는 의견이 있습니다.'}]},
+    {t:'choice',id:'r2',label:'김구의 선택 ② · 1948년 초',
+      sit:'남쪽만의 선거가 다가오고, 나라가 둘로 갈라질 위기다. 북쪽 지도자를 만나도 성과가 있을지는 알 수 없다.',
+      q:'북쪽 지도자들을 만나러 가겠는가?',
+      dl:[{t:'북쪽으로 가서 지도자들과 하나의 정부를 만드는 방법을 의논한다.',term:'남북 협상',pro:'하나의 나라를 만들 가능성을 끝까지 이어 갈 수 있다.',con:'아무 성과 없이 끝날 위험이 크다.'},
+          {t:'남쪽에 남아 현실적으로 할 수 있는 일을 찾는다.',pro:'남쪽 정치에서 영향력을 지킬 수 있다.',con:'분단을 막을 기회를 놓칠 수 있다.'}]},
+    {t:'history',ref:'r2',real:'1948년 4월 김구는 김규식과 함께 평양으로 가서 북쪽 지도자들과 회의를 했어요([[남북 협상]]). 하지만 하나의 정부를 만드는 데까지는 이어지지 못했어요.'},
     {t:'scene',bg:'ballot',place:'서울',date:'1948년 5월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'5·10 [[총선거]]가 다가왔다. 남한만의 선거다.'},
-      {who:'kimgu',text:'이 선거가 분단을 굳히는 것이라면…….'}]},
-    {t:'choice',id:'r3',label:'김구의 선택 ③ · 1948년 5월',q:'5·10 총선거에 참여하겠는가?',
-      dl:[{t:'선거에 참여해 새 정부 안에서 목소리를 낸다.',pro:'새 나라의 헌법과 정부 구성에 영향을 줄 수 있다.',con:'남한만의 정부를 인정하는 셈이 될 수 있다.'},
-          {t:'단독 선거에 참여하지 않는다.',pro:'통일 정부라는 원칙을 지킬 수 있다.',con:'새 정부를 만드는 과정에서 빠지게 된다.'}]},
-    {t:'history',ref:'r3',real:'김구는 [[단독 정부]] 수립에 반대하며 **5·10 총선거에 참여하지 않았어요.**'},
+      {text:'1948년 5월 10일, 남쪽에서만 국회의원을 뽑는 선거([[총선거]])가 열리게 되었다.'},
+      {who:'kimgu',text:'이 선거로 남쪽만의 정부가 생기면, 나라가 둘로 굳어지는 것 아닌가…….'}]},
+    {t:'choice',id:'r3',label:'김구의 선택 ③ · 1948년 5월',
+      sit:'선거에 나가면 새 정부 안에서 목소리를 낼 수 있다. 하지만 남쪽만의 정부를 인정하는 셈이 될 수도 있다.',
+      q:'5·10 총선거에 참여하겠는가?',
+      dl:[{t:'선거에 참여해 새 정부 안에서 목소리를 낸다.',term:'5·10 총선거 참여',pro:'새 나라의 헌법과 정부를 만드는 데 영향을 줄 수 있다.',con:'남쪽만의 정부를 인정하는 셈이 될 수 있다.'},
+          {t:'남쪽만의 선거에는 참여하지 않는다.',term:'단독 선거 불참',pro:'‘하나의 나라’라는 원칙을 지킬 수 있다.',con:'새 정부를 만드는 과정에서 빠지게 된다.'}]},
+    {t:'history',ref:'r3',real:'김구는 남쪽만의 정부([[단독 정부]])를 세우는 데 반대하며 **5·10 총선거에 참여하지 않았어요.**'},
     {t:'routeEnd',who:'kimgu',bg:'dawn',
       headline:'대한민국 정부 수립에 참여하지 않고 남북 협상과 통일 정부를 추구했던 김구의 선택',
       body:'1948년 8월 남쪽에 대한민국 정부가, 9월에는 북쪽에 별도의 정권이 세워졌어요. 김구는 그 뒤에도 통일 정부를 주장하며 활동하다가 1949년 6월 암살당했어요.',
@@ -1363,24 +1399,30 @@ const ROUTES={
   yeo:{steps:[
     {t:'scene',bg:'office',place:'서울 · 건준 본부',date:'1945년 9월 초',chars:[{k:'yeo',p:'l'},{k:'aide',p:'r'}],lines:[
       {text:'당신은 이제 **여운형**이다. [[건준]]을 이끌며 광복 직후의 혼란을 수습해 왔다.'},
-      {who:'aide',text:'선생님, 곧 미군이 들어옵니다. 그 전에 우리 정부를 선포하자는 목소리가 큽니다. 하지만 [[우익]] 인사들은 반대하고 있습니다.'}]},
-    {t:'choice',id:'r1',label:'여운형의 선택 ① · 1945년 9월',q:'미군이 오기 전에 정부를 선포하겠는가?',
-      dl:[{t:'서둘러 우리 정부를 선포한다.',pro:'미군이 오기 전에 조선인의 정부를 보여 줄 수 있다.',con:'참여하지 않은 세력의 반발을 살 수 있다.'},
-          {t:'더 많은 세력이 모일 때까지 기다린다.',pro:'더 넓은 지지를 모을 수 있다.',con:'그 사이 미군정이 먼저 자리를 잡을 수 있다.'}]},
+      {who:'aide',text:'선생님, 곧 미군이 들어옵니다. 그 전에 우리 손으로 정부를 세웠다고 발표하자는 목소리가 큽니다. 하지만 함께하지 않겠다는 사람들도 많습니다.'}]},
+    {t:'choice',id:'r1',label:'여운형의 선택 ① · 1945년 9월',
+      sit:'미군이 들어오면 남쪽을 직접 다스릴 것이다. 그 전에 우리 정부를 발표할 수 있지만, 아직 모든 세력이 함께하지는 않았다.',
+      q:'미군이 오기 전에 정부를 발표하겠는가?',
+      dl:[{t:'서둘러 우리 손으로 세운 정부를 발표한다.',term:'조선인민공화국 선포',pro:'미군이 오기 전에 조선인의 정부를 보여 줄 수 있다.',con:'함께하지 않은 사람들의 반발을 살 수 있다.'},
+          {t:'더 많은 사람이 함께할 때까지 기다린다.',pro:'더 넓은 지지를 모을 수 있다.',con:'그 사이 미군이 먼저 자리를 잡을 수 있다.'}]},
     {t:'history',ref:'r1',real:'1945년 9월 6일 건준이 중심이 되어 [[조선인민공화국]]을 선포했어요. 그러나 우익 다수는 참여하지 않았고, [[미군정]]도 인정하지 않았어요.'},
     {t:'scene',bg:'office',place:'서울',date:'1945년 가을',chars:[{k:'yeo',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'미군정은 남한의 유일한 정부는 미군정뿐이라고 밝혔다.'},
-      {who:'yeo',text:'(미군정과 손을 잡아야 할까, 맞서야 할까?)'}]},
-    {t:'choice',id:'r2',label:'여운형의 선택 ② · 1945년 가을',q:'미군정을 어떻게 대하겠는가?',
-      dl:[{t:'미군정과 대화하며 협력의 길을 찾는다.',pro:'현실 정치에서 영향력을 키울 수 있다.',con:'지지자들에게 비판받을 수 있다.'},
+      {text:'미군은 남쪽을 다스리는 정부는 ‘미군정’ 하나뿐이라고 발표했다. 여운형 쪽이 발표한 정부도 인정하지 않았다.'},
+      {who:'yeo',text:'(미군과 손을 잡아야 할까, 맞서야 할까?)'}]},
+    {t:'choice',id:'r2',label:'여운형의 선택 ② · 1945년 가을',
+      sit:'지금 남쪽을 실제로 다스리는 것은 미군이다. 미군과 손을 잡을지, 거리를 둘지 정해야 한다.',
+      q:'미군정을 어떻게 대하겠는가?',
+      dl:[{t:'미군정과 대화하며 함께할 길을 찾는다.',pro:'현실 정치에서 영향력을 키울 수 있다.',con:'지지자들에게 비판받을 수 있다.'},
           {t:'미군정에 맞서 우리 조직을 지킨다.',pro:'자주성을 분명히 지킬 수 있다.',con:'미군정과 충돌해 활동이 어려워질 수 있다.'}]},
     {t:'history',ref:'r2',real:'여운형은 새 정당(조선인민당)을 만들고, **미군정과도 대화하며** 활동을 이어 갔어요.'},
     {t:'scene',bg:'room',place:'서울',date:'1946년',chars:[{k:'yeo',p:'l'},{k:'kks',p:'r'}],lines:[
-      {text:'[[좌익]]과 [[우익]]의 대립이 깊어지고, 미·소 협상도 멈춰 섰다.'},
-      {who:'kks',text:'여 선생, 이대로면 나라가 둘로 갈라집니다. 좌우가 함께해야 합니다.'}]},
-    {t:'choice',id:'r3',label:'여운형의 선택 ③ · 1946년',q:'김규식과 함께 좌우합작에 나서겠는가?',
-      dl:[{t:'비난을 받더라도 좌우합작에 나선다.',pro:'분단을 막을 통합의 길을 열 수 있다.',con:'좌우 양쪽에서 공격받을 수 있다.'},
-          {t:'한쪽 진영에 힘을 실어 세력을 키운다.',pro:'확실한 지지 세력을 얻을 수 있다.',con:'좌우 대립이 더 깊어질 수 있다.'}]},
+      {text:'광복 뒤 사람들은 크게 두 편으로 갈렸다. 사회주의 쪽([[좌익]])과 자본주의·민족주의 쪽([[우익]])이다.'},
+      {who:'kks',text:'여 선생, 두 편이 이렇게 싸우면 나라가 둘로 갈라집니다. 양쪽이 손을 잡아야 합니다.'}]},
+    {t:'choice',id:'r3',label:'여운형의 선택 ③ · 1946년',
+      sit:'두 편의 생각 차이는 매우 크다. 양쪽을 이으려 하면 양쪽 모두에게 비판받을 수 있다.',
+      q:'김규식과 함께 두 편을 하나로 묶는 일에 나서겠는가?',
+      dl:[{t:'비판을 받더라도 두 편이 손잡게 하는 일에 나선다.',term:'좌우합작 운동',pro:'분단을 막을 통합의 길을 열 수 있다.',con:'양쪽 모두에게 공격받을 수 있다.'},
+          {t:'한쪽 편에 힘을 실어 먼저 세력을 키운다.',pro:'확실한 지지 세력을 얻을 수 있다.',con:'두 편의 대립이 더 깊어질 수 있다.'}]},
     {t:'history',ref:'r3',real:'여운형은 우익의 김규식과 함께 **[[좌우합작]] 운동**을 이끌었어요. 1946년 10월 좌우합작 7원칙을 발표했지만, 좌우 양쪽에서 비판을 받았어요.'},
     {t:'routeEnd',who:'yeo',bg:'dawn',
       headline:'좌우의 협력과 민족 통합을 추구했던 여운형의 정치적 활동',
@@ -1390,25 +1432,31 @@ const ROUTES={
   ]},
   rhee:{steps:[
     {t:'scene',bg:'rally',banner:'환영 이승만 박사 귀국',place:'서울',date:'1945년 10월',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'당신은 이제 **이승만**이다. 미국에서 오랫동안 외교 활동으로 독립운동을 해 왔다.'},
-      {who:'aide',text:'박사님, 국내 세력을 먼저 모을까요, 아니면 국제 사회부터 설득할까요?'}]},
-    {t:'choice',id:'r1',label:'이승만의 선택 ① · 1945년 10월',q:'무엇에 더 힘을 쏟겠는가?',
-      dl:[{t:'미국 등 국제 사회의 지지를 얻는 데 힘쓴다.',pro:'국제 무대에서 한국 문제를 풀 힘을 얻을 수 있다.',con:'국내 지지 기반이 약해질 수 있다.'},
-          {t:'국내 정치 세력을 하나로 모으는 데 먼저 힘쓴다.',pro:'국내 지지 기반을 넓힐 수 있다.',con:'국제 정세의 흐름을 놓칠 수 있다.'}]},
+      {text:'당신은 이제 **이승만**이다. 미국에서 오랫동안 외교로 독립운동을 해 왔다.'},
+      {who:'aide',text:'박사님, 나라 안의 세력을 먼저 모을까요, 아니면 미국 같은 나라들의 지지부터 얻을까요?'}]},
+    {t:'choice',id:'r1',label:'이승만의 선택 ① · 1945년 10월',
+      sit:'광복 직후, 남쪽에는 미군이, 북쪽에는 소련군이 와 있다. 나라의 앞날은 강대국들의 생각에도 크게 좌우된다.',
+      q:'무엇에 더 힘을 쏟겠는가?',
+      dl:[{t:'미국 등 다른 나라들의 지지를 얻는 데 힘쓴다.',pro:'국제 무대에서 한국 문제를 풀 힘을 얻을 수 있다.',con:'나라 안의 지지 기반이 약해질 수 있다.'},
+          {t:'나라 안의 여러 세력을 하나로 모으는 데 먼저 힘쓴다.',pro:'나라 안의 지지 기반을 넓힐 수 있다.',con:'국제 정세의 흐름을 놓칠 수 있다.'}]},
     {t:'history',ref:'r1',real:'이승만은 [[독립촉성중앙협의회]]를 만들어 국내 세력을 모으는 한편, **미국 등 국제 사회를 상대로 한 외교**를 중요하게 여겼어요. 공산주의 세력에는 강하게 반대했어요([[반공]]).'},
     {t:'scene',bg:'rally',place:'전라북도 정읍',date:'1946년 6월',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'[[미·소 공동 위원회]]가 결렬되었다. 남한에서 먼저 정부를 세우자는 주장이 나오기 시작했다.'},
-      {text:'하지만 미·소 협상을 기다린다면 통일 정부의 가능성을 완전히 포기하지 않을 수 있다.'}]},
-    {t:'choice',id:'r2',label:'이승만의 선택 ② · 1946년 6월',q:'당신이라면?',
-      dl:[{t:'남쪽만이라도 먼저 정부를 세우자고 주장한다.',pro:'정부의 틀을 빠르게 만들 수 있다.',con:'남북 분단이 굳어질 가능성이 있다.'},
-          {t:'미·소 협상이 다시 열릴 때까지 기다린다.',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 계속 늦어질 수 있다.'}]},
+      {text:'미국과 소련은 함께 회의를 열어 하나의 정부를 만들 방법을 의논했다([[미·소 공동 위원회]]). 그러나 의견이 맞지 않아 회의가 멈춰 버렸다.'},
+      {text:'이제 언제 하나의 정부가 생길지 아무도 알 수 없게 되었다.'}]},
+    {t:'choice',id:'r2',label:'이승만의 선택 ② · 1946년 6월',
+      sit:'남쪽만이라도 먼저 정부를 세우자는 생각이 나오기 시작했다. 하지만 기다리면 하나의 정부를 만들 기회가 다시 올 수도 있다.',
+      q:'당신이라면?',
+      dl:[{t:'남쪽만이라도 먼저 정부를 세우자고 주장한다.',term:'남한 단독 정부 주장',pro:'정부의 틀을 빠르게 만들 수 있다.',con:'남북 분단이 굳어질 가능성이 있다.'},
+          {t:'미국과 소련이 다시 의논할 때까지 기다린다.',term:'미·소 공동 위원회 재개 기대',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 계속 늦어질 수 있다.'}]},
     {t:'history',ref:'r2',real:'1946년 6월 이승만은 정읍에서 남쪽만이라도 정부를 세워야 한다는 뜻을 밝혔어요(**정읍 발언**). 이 주장을 두고 찬성과 반대가 크게 엇갈렸어요.'},
     {t:'scene',bg:'ballot',place:'서울',date:'1948년 초',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'한국 문제는 [[유엔]]으로 넘어갔고, 유엔은 선거가 가능한 지역에서만 [[총선거]]를 하기로 했다.'},
-      {who:'aide',text:'김구 선생은 통일 정부를 위해 북으로 간다고 합니다.'}]},
-    {t:'choice',id:'r3',label:'이승만의 선택 ③ · 1948년 초',q:'당신의 선택은?',
-      dl:[{t:'총선거로 먼저 정부를 세운다.',pro:'나라의 틀을 갖추고 국제적으로 인정받을 수 있다.',con:'북쪽과 따로 정부가 생겨 분단이 굳어질 수 있다.'},
-          {t:'정부 수립을 미루고 남북 협상에 함께한다.',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 언제 될지 알 수 없다.'}]},
+      {text:'결국 한국 문제는 국제기구인 [[유엔]]으로 넘어갔다. 유엔은 선거를 할 수 있는 곳에서만 먼저 선거를 하기로 했다.'},
+      {who:'aide',text:'김구 선생은 하나의 정부를 위해 북쪽 지도자들을 만나러 간다고 합니다.'}]},
+    {t:'choice',id:'r3',label:'이승만의 선택 ③ · 1948년 초',
+      sit:'선거를 하면 남쪽에 정부가 생긴다. 하지만 북쪽과 따로 정부가 생겨 나라가 갈라질 수 있다.',
+      q:'당신의 선택은?',
+      dl:[{t:'선거로 남쪽에 먼저 정부를 세운다.',term:'5·10 총선거 참여',pro:'나라의 틀을 갖추고 국제적으로 인정받을 수 있다.',con:'북쪽과 따로 정부가 생겨 분단이 굳어질 수 있다.'},
+          {t:'정부 세우기를 미루고 북쪽과의 협상에 함께한다.',term:'남북 협상',pro:'통일 정부의 가능성을 이어 갈 수 있다.',con:'정부 수립이 언제 될지 알 수 없다.'}]},
     {t:'history',ref:'r3',real:'이승만은 **5·10 총선거**에 참여했고, [[제헌 국회]]에서 대통령으로 뽑혔어요.'},
     {t:'routeEnd',who:'rhee',bg:'dawn',
       headline:'국제 정세 속에서 남한의 단독 정부 수립을 추진했던 이승만',
@@ -1423,7 +1471,7 @@ function buildRoute(k){
     if(o.id) o.id=`${k}_${o.id}`;
     if(o.ref) o.ref=`${k}_${o.ref}`;
     /* [v5] 딜레마(dl) → 장단점이 함께 보이는 선택지 */
-    if(o.dl){ o.abc=1; o.opts=o.dl.map(d=>`<b>${d.t}</b><span class="pros">＋ ${d.pro}</span><span class="cons">－ ${d.con}</span>`); o.short=o.dl.map(d=>d.t); }
+    if(o.dl){ o.abc=1; o.opts=o.dl.map(d=>`<b>${d.t}</b>${d.term?`<small class="termtag">→ ${d.term}</small>`:''}<span class="pros">＋ ${d.pro}</span><span class="cons">－ ${d.con}</span>`); o.short=o.dl.map(d=>d.t); }
     return o;
   }).map((o,i,arr)=>{
     if(o.t==='history'&&o.ref&&!o.res){ const ch=arr[i-1]; if(ch&&ch.dl){ o.res=ch.dl.map(d=>`👍 ${d.pro}<br>⚠️ ${d.con}`); o.title=o.title||'나의 선택 → 실제 역사에서는?'; } }
