@@ -288,6 +288,14 @@ ul.fact li{margin:3px 0}
 .pcard2 .pros{color:#2e6a4c;margin-bottom:4px}.pcard2 .cons{color:#8f261e}
 .hrow.cmpr .lb{background:var(--gold);color:#fff}
 @media (max-width:720px){.pc2{grid-template-columns:1fr}}
+.srcno{display:inline-block;background:var(--red);color:#fff;font-size:13px;font-weight:900;padding:1px 8px;border-radius:5px;vertical-align:3px;font-family:'Noto Sans KR',sans-serif}
+.wcnt{font-size:13px;font-weight:700;color:#b3352b;margin-left:6px}
+.wcnt.ok{color:#2e6a4c}
+div.wcnt{margin:4px 0 0;text-align:right}
+.sa{width:100%;font-size:18px;padding:12px 14px;border:2px solid var(--ink);border-radius:10px;background:#fff;font-family:inherit;color:var(--ink);resize:vertical}
+.sa:focus{outline:3px solid #f0b85a;outline-offset:1px}
+.safb{font-size:15px;font-weight:700;margin-top:8px;min-height:1.2em;line-height:1.6}
+.safb.ok{color:#2e6a4c}.safb.no{color:#b3352b}
 .stagebar{display:flex;flex-wrap:wrap;align-items:center;gap:4px 6px;margin:0 0 10px;font-size:12.5px;font-weight:700;color:var(--muted)}
 .stagebar span{border:1.5px solid var(--line);border-radius:99px;padding:2px 9px;background:#fff}
 .stagebar span.done{color:var(--gold);border-color:var(--gold)}
@@ -410,6 +418,20 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 
 <script>
 /* =====================================================================
+   [v11 변경 내역] 수업 후 '복습' 활동으로 방향 전환
+   (역사적 감정이입 + 역사적 의사결정 + 수업 내용 복습 + 사료 탐구)
+   - 시작 화면·안내·마무리 문구를 복습 활동에 맞게 수정
+   - PART 1(광복, 그런데 나라가 없다)과 PART 2(무엇부터 해결할까?)를 PART 1로 통합 → 전체 4개 PART
+   - '무엇부터 해결할까?' 이유 쓰기: 20자 이상 (글자 수 표시)
+   - 사료마다 [사료 1]·[사료 2]·[사료 3] 번호
+   - 38선: 객관식 → '미·소가 38선을 그은 까닭' 주관식(소련·남하·견제 등 핵심 낱말이 있어야 통과)
+   - 새 렌더러 R.short: 복습 주관식(키워드 확인, 틀리면 단계별 힌트)
+   - 김구: 신탁통치 반대 → 남북 협상(김규식, 평양에서 김일성 등과 회담) → [사료 3] 남북 협상 공동 성명 → 협상의 한계·5·10 총선거
+   - 여운형: 정부 선포 뒤 '조선인민공화국' 주관식, 좌우합작 7원칙 토지 조항 딜레마 + [사료 3] 좌우합작 7원칙
+   - 이승만: [사료 3] 정읍 발언
+   - 마지막 질문: 질문 1 80자 이상, 질문 2 60자 이상 (글자 수 표시)
+   ===================================================================== */
+/* =====================================================================
    [v10 변경 내역] PART 4를 '정답 맞히기'가 아닌 '역사적 판단 → 비교' 활동으로
    - (선생님이 직접 고친 포고령 날짜 9월 9일, 제2조 정답 선택지는 그대로 유지)
    - 선택지 아래 사건명·조직명(→ ○○ 선포 등) 삭제. 선택 전에는 실제 역사를 알 수 있는 단서 없음
@@ -507,11 +529,11 @@ const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
 const stage = $('#stage');
 const S = { name:'', rec:{}, order:[], route:null, done:[], extra:{}, muted:false };
-const PARTS = ['광복, 그런데 나라가 없다','광복 직후, 무엇부터 해결할까?','그런데 왜 바로 나라를 만들지 못했을까?','1945, 나는 어떤 길을 선택할까?','내가 선택한 길'];
+const PARTS = ['광복, 그런데 나라가 없다 · 무엇부터 해결할까?','그런데 왜 바로 나라를 만들지 못했을까?','1945, 나는 어떤 길을 선택할까?','내가 선택한 길'];
 const CORE_Q = '광복은 되었는데, 왜 하나의 나라를 바로 만들지 못했을까?';
 const COMMON_LINE = '실제 역사는 한 사람의 선택만으로 결정되지 않았습니다. 광복 이후의 역사는 국제 정세, 미군과 소련군의 주둔, 여러 정치 세력의 갈등과 협상 속에서 전개되었습니다.';
 const RECON = '※ 이 대화는 당시의 역사적 상황과 자료를 바탕으로 재구성한 것입니다.';
-const STORE_KEY = 'gwangbok3_v7';
+const STORE_KEY = 'gwangbok3_v11';
 
 /* ================= 용어 사전 ================= */
 const TERMS = {
@@ -522,6 +544,9 @@ const TERMS = {
   '정무총감':'조선총독부의 2인자. 1945년에는 엔도 류사쿠가 이 자리에 있었어요.',
   '건준':'조선건국준비위원회의 줄임말. 광복 직후 치안·행정을 맡고 새 나라 세우기를 준비한 조직이에요. 정부는 아니었어요.',
   '건국준비위원회':'조선건국준비위원회(건준). 광복 직후 여운형·안재홍 등이 만든 조직으로, 치안과 질서를 지키고 새 나라 건설을 준비했어요. 정부는 아니었어요.',
+  '반탁 운동':'신탁통치에 반대한 운동. 김구 등 우익 세력이 앞장섰어요.',
+  '공동 성명':'여러 단체나 사람이 함께 뜻을 모아 발표하는 글.',
+  '체감 매상':'값을 차츰 낮추어 가며 사들이는 것.',
   '과도기':'어떤 상태에서 다른 상태로 넘어가는 중간 시기.',
   '건국동맹':'조선건국동맹. 1944년 여운형이 일본의 패망과 광복 이후를 대비해 비밀리에 만든 단체예요.',
   '치안대':'건준이 지역의 질서를 지키기 위해 만든 자치 조직.',
@@ -718,6 +743,7 @@ const CH = {
   ahn:{n:'안재홍',h:'安在鴻',c:'#7a5230',hist:1,loc:'p_ahn'},
   kimgu:{n:'김구',h:'金九',c:'#8e2c23',hist:1,img:'Kim_Gu_in_1949.jpg',loc:'p_kimgu'},
   rhee:{n:'이승만',h:'李承晩',c:'#24447c',hist:1,img:'Syngman_Rhee.jpg',loc:'p_rhee'},
+  kimil:{n:'김일성',h:'金日成',c:'#6b3a3a',hist:1,loc:'p_kimil'},
   kks:{n:'김규식',h:'金奎植',c:'#58457e',hist:1,img:'Kim_Gyu-sik_in_1947.jpg',loc:'p_kks'},
   aide:{n:'동지',h:'同',c:'#5d5a52',loc:'n_aide'}
 };
@@ -894,7 +920,7 @@ function hasHist(st){ return (st.lines||[]).some(L=>L.who&&CH[L.who].hist); }
 
 /* 한 문장 쓰기 블록: pre [입력] post */
 function sentHTML(pre,post,ph,id='why'){
-  return `<div class="sent">${pre?`<span>${pre}</span>`:''}<input id="${id}" maxlength="80" autocomplete="off" placeholder="예) ${esc(ph||'')}">${post?`<span>${post}</span>`:''}</div>`;
+  return `<div class="sent">${pre?`<span>${pre}</span>`:''}<input id="${id}" maxlength="200" autocomplete="off" placeholder="예) ${esc(ph||'')}">${post?`<span>${post}</span>`:''}</div>`;
 }
 
 /* ================= 렌더러 ================= */
@@ -906,11 +932,11 @@ R.intro=()=>{
     <svg class="flag" viewBox="0 0 360 240"><use href="#tg"/></svg>
     <h1>1945, 해방된 조선의 선택</h1>
     <div class="coreq"><small>오늘의 핵심 질문</small>「${CORE_Q}」</div>
-    <div class="sub">광복 이후, 새로운 나라를 만드는 세 가지 길<br><small style="color:#cbb894">광복된 1945년, 당신이라면 어떤 나라를 만들기 위해 어떤 선택을 했을까?</small></div>
-    <div class="steps5"><span>① 광복, 그런데 나라가 없다</span><em>→</em><span>② 무엇부터 해결할까?</span><em>→</em><span>③ 왜 바로 나라를 못 만들었을까?</span><em>→</em><span>④ 나는 어떤 길을?</span><em>→</em><span>⑤ 내가 선택한 길</span></div>
+    <div class="sub">광복 이후, 새로운 나라를 만드는 세 가지 길<br><small style="color:#cbb894">수업에서 배운 1945~1948년의 역사를, 그 시대 사람이 되어 다시 걸어 봅니다.<br>그 시대 사람의 마음으로 선택하고, 배운 내용을 떠올리고, 사료로 확인해 보세요.</small></div>
+    <div class="steps5"><span>① 광복, 무엇부터 해결할까?</span><em>→</em><span>② 왜 바로 나라를 못 만들었을까?</span><em>→</em><span>③ 나는 어떤 길을?</span><em>→</em><span>④ 내가 선택한 길</span></div><div class="steps5" style="margin-top:-8px"><span>🫂 그 시대 사람 되기</span><span>⚖️ 역사적 선택</span><span>📚 배운 내용 복습</span><span>📜 사료 탐구</span></div>
     <div class="namebox"><input id="nm" maxlength="20" placeholder="학번 이름 (예: 10305 김하늘)"><button class="btn primary big" id="st">${canResume?'처음부터 시작 ▶':'시작하기 ▶'}</button></div>
     ${canResume?`<div class="resume">💾 이전에 하던 기록이 있어요 <button class="btn" id="rs">이어하기 ▶</button></div>`:''}
-    <div class="note">⏱ 약 20분 · 🎧 소리가 중요해요(이어폰 권장) · 밑줄 친 <span class="term" data-k="사료" style="color:#f0c46b">어려운 말</span>을 누르면 뜻이 나와요<br>📒 진행 상황은 이 브라우저에 자동 저장되고, 마지막 화면에서 복사·인쇄할 수 있어요</div>
+    <div class="note">⏱ 약 25분 · 🎧 소리가 중요해요(이어폰 권장) · 밑줄 친 <span class="term" data-k="사료" style="color:#f0c46b">어려운 말</span>을 누르면 뜻이 나와요<br>📒 진행 상황은 이 브라우저에 자동 저장되고, 마지막 화면에서 복사·인쇄할 수 있어요</div>
   </div>`;
   $('#nm').value = S.name || (sv&&sv.S&&sv.S.name) || '';
   const start=()=>{
@@ -1010,10 +1036,10 @@ R.choice=st=>{
   const mk=st.abc?ABC:NUMS; const W=st.write;
   p.innerHTML=`<div class="q"><div class="qlabel ${W?'write':''}">${st.label}</div>${st.situation?`<div class="lead">${fmt(st.situation)}</div>`:''}${st.stage?`<div class="stagebar">${STAGES.map((t,i)=>`<span class="${i+1===st.stage?'on':i+1<st.stage?'done':''}">${NUMS[i]} ${t}</span>`).join('<em>→</em>')}</div>`:''}${st.sit?`<div class="sitcard"><b>📍 당시 상황</b>${fmt(st.sit)}</div><div class="sitnext">🤔 당신 앞에 놓인 선택</div>`:''}<h3>${fmt(st.q)}</h3>
     <div class="opts ${st.abc?'one':''}">${st.opts.map((o,i)=>`<button class="opt ${st.big?'big':''}" data-i="${i}">${st.big?'':`<span class="num">${mk[i]}</span>`}<span>${fmt(o)}</span></button>`).join('')}</div>
-    ${W?`<div class="reason hidden"><label>✏️ ${W.lead}</label><div id="sentBox"></div><div class="hint">빈칸만 채우면 돼요. 짧게 써도 괜찮아요. (2글자 이상)</div></div>`:''}</div>${nextBtn('다음 ▶',true)}`;
+    ${W?`<div class="reason hidden"><label>✏️ ${W.lead}</label><div id="sentBox"></div><div class="hint">${(W.min||2)>2?`‘왜냐하면 ~ 때문이다’ 빈칸에 수업에서 배운 내용을 떠올려 <b>${W.min}자 이상</b> 구체적으로 써 보세요. <span class="wcnt" id="wcnt"></span>`:'빈칸만 채우면 돼요. 짧게 써도 괜찮아요. (2글자 이상)'}</div></div>`:''}</div>${nextBtn('다음 ▶',true)}`;
   let pick=-1; const nx=$('#nx'); const prev=S.rec[st.id];
   const short=i=>st.short?st.short[i]:plain(st.opts[i]);
-  const check=()=>{ const inp=$('#why'); nx.disabled = !(pick>=0 && (!W || (inp && inp.value.trim().length>=2))); };
+  const check=()=>{ const inp=$('#why'), mn=W?(W.min||2):0, n=inp?inp.value.trim().length:0; if($('#wcnt')) $('#wcnt').textContent=`(지금 ${n}자 / ${mn}자 이상)`; if($('#wcnt')) $('#wcnt').classList.toggle('ok',n>=mn); nx.disabled = !(pick>=0 && (!W || (inp && n>=mn))); };
   const choose=(i,keep)=>{
     pick=i; $$('.opt').forEach(b=>b.classList.toggle('sel',+b.dataset.i===i));
     if(W){
@@ -1032,6 +1058,26 @@ R.choice=st=>{
     if(W){ o.reason=$('#why').value.trim(); o.sentence=plain(`${W.pre(short(pick))} ${o.reason} ${W.post||''}`).trim(); }
     rec(st.id,o); chime(); next();
   };
+};
+
+/* [v11] 복습 주관식: 핵심 낱말이 들어가야 통과, 틀리면 단계별 힌트 */
+R.short=st=>{
+  const p=frame(st); speak(null); let fails=0, ok=false;
+  p.innerHTML=`<div class="q"><div class="qlabel write">${st.label}</div>${st.lead?`<div class="sitcard"><b>📚 수업 내용 떠올리기</b>${fmt(st.lead)}</div>`:''}<h3>${fmt(st.q)}</h3>
+    ${st.area?`<textarea id="sa" class="sa" rows="3" maxlength="300" placeholder="${esc(st.ph||'')}"></textarea>`:`<input id="sa" class="sa" maxlength="60" autocomplete="off" placeholder="${esc(st.ph||'')}">`}
+    <div class="actions" style="justify-content:flex-start;margin-top:10px"><button class="btn" id="sachk">✔ 확인하기</button><span class="wcnt" id="sacnt"></span></div>
+    <div class="safb" id="safb"></div>${st.ok?`<div class="verdict hidden" id="saok">${fmt(st.ok)}</div>`:''}</div>${nextBtn('다음 ▶',true)}`;
+  const inp=$('#sa'), nx=$('#nx'), fb=$('#safb');
+  const cnt=()=>{ const n=inp.value.trim().length; $('#sacnt').textContent=st.min?`${n}자`:''; };
+  const pass=()=>{ ok=true; fb.className='safb ok'; fb.textContent='✔ 맞아요!'; if($('#saok')) $('#saok').classList.remove('hidden'); nx.disabled=false; chime(); };
+  const tryIt=()=>{ const v=inp.value.trim();
+    if(st.min&&v.length<st.min){ fb.className='safb no'; fb.textContent=`조금 더 자세히 써 보세요. (${st.min}자 이상)`; return; }
+    if(st.test(v)){ pass(); return; }
+    fails++; tick(); const h=st.hints[Math.min(fails,st.hints.length)-1]; fb.className='safb no'; fb.innerHTML='다시 생각해 봐요 — '+fmt(typeof h==='function'?h(v):h); };
+  $('#sachk').onclick=tryIt; inp.oninput=()=>{cnt(); if(ok){ ok=false; nx.disabled=true; fb.textContent=''; if($('#saok')) $('#saok').classList.add('hidden'); }};
+  inp.onkeydown=e=>{ if(e.key==='Enter'&&!st.area){ e.preventDefault(); ok?nx.click():tryIt(); } };
+  const prev=S.rec[st.id]; if(prev){ inp.value=prev.choice; cnt(); pass(); }
+  nx.onclick=()=>{ const v=inp.value.trim(); rec(st.id,{label:st.label,choice:v,short:v,i:0}); next(); };
 };
 
 /* 실제 역사에서는? — 나의 판단 / 역사적 맥락 / 역사적 사실 / 실제 인물의 선택 / 핵심 생각 */
@@ -1075,8 +1121,8 @@ R.find=st=>{
   stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">${st.kicker}</div><h2>${st.title}</h2><p>${fmt(st.intro)}</p></div>
   <div class="src">
     <div><div class="readfirst">📜 먼저 원문을 읽어보세요.</div>
-      <div class="orig ${F?'pickable':''}"><h4>${st.doc.title}</h4><div class="src-meta">${st.doc.meta}</div>${st.doc.body}</div></div>
-    <div class="q srcq"><div class="qlabel">${st.label}</div>
+      <div class="orig ${F?'pickable':''}"><h4>${st.doc.no?`<span class="srcno">[사료 ${st.doc.no}]</span> `:''}${st.doc.title}</h4><div class="src-meta">${st.doc.meta}</div>${st.doc.body}</div></div>
+    <div class="q srcq"><div class="qlabel">${st.doc.no?`[사료 ${st.doc.no}] `:''}${st.label}</div>
       ${F?`<div class="blk"><h4>👀 사료에서 찾아보세요</h4><div class="qq">${fmt(F.q)}</div><div class="mine" id="found">👆 원문에서 해당하는 표현을 눌러 보세요.</div></div>`:''}
       ${st.guide?`<div class="blk"><h4>${st.guide}</h4></div>`:''}
       ${st.help?`<div class="blk"><details class="help"><summary>💡 이해가 어렵다면 도움말 보기</summary><div>${st.help}</div></details></div>`:''}
@@ -1195,8 +1241,8 @@ const PATHS={
 };
 const PICK_W={lead:'내가 이 인물의 길을 선택한 이유는 무엇인가?',pre:'내가 이 인물을 선택한 이유는',post:'중요하다고 생각했기 때문이다.',ph:'분단을 막는 것이'};
 R.select=()=>{
-  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">④ 1945, 나는 어떤 길을 선택할까?</div><h2>1945, 나는 어떤 길을 선택할까?</h2><p>광복 이후, 새로운 나라를 만드는 방법을 두고 사람들의 생각은 달랐다.<br>이제 당신이 한 사람의 정치 지도자가 되어 그 시대의 선택을 직접 경험해 보자.</p></div>
-  <div class="notice"><b>잠깐!</b> 지금부터는 실제 역사 속 인물의 선택을 참고하여 1945년의 상황을 체험해 봅니다. 하지만 한 인물의 생각과 행동을 하나의 노선으로만 단순하게 설명할 수는 없습니다. <b>당시의 상황 속에서 여러 가능성을 고민하며</b> 세 사람 중 한 명의 입장에서 선택해 보세요.<br><span style="font-size:14px;color:#cbb894">※ 정답을 맞히는 활동이 아니에요. 고른 뒤에 실제 역사와 비교해 봅니다.</span></div>
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">③ 1945, 나는 어떤 길을 선택할까?</div><h2>1945, 나는 어떤 길을 선택할까?</h2><p>광복 이후, 새로운 나라를 만드는 방법을 두고 사람들의 생각은 달랐다.<br>이제 당신이 한 사람의 정치 지도자가 되어 그 시대의 선택을 직접 경험해 보자.</p></div>
+  <div class="notice"><b>잠깐!</b> 지금부터는 실제 역사 속 인물의 선택을 참고하여 1945년의 상황을 체험해 봅니다. 하지만 한 인물의 생각과 행동을 하나의 노선으로만 단순하게 설명할 수는 없습니다. <b>당시의 상황 속에서 여러 가능성을 고민하며</b> 세 사람 중 한 명의 입장에서 선택해 보세요.<br><span style="font-size:14px;color:#cbb894">※ 정답을 맞히는 활동이 아니에요. 수업에서 배운 내용을 떠올리며 고르고, 고른 뒤에 실제 역사와 비교해 봅니다.</span></div>
   <div class="sel3">${Object.keys(PATHS).map(k=>{const C=CH[k],P=PATHS[k];return `<button class="sc" data-k="${k}" style="--c:${C.c}"><div class="face ${faceCls(C.h)}">${faceInner(C)}</div><div class="nm">${C.n}</div><div class="kws">${P.kws.map(w=>`<span>${w}</span>`).join('')}</div><div class="path" style="font-size:17px">“${P.q}”</div>${S.done.includes(k)?'<div class="done">✔ 이미 플레이함</div>':''}</button>`}).join('')}</div>
   <div class="actions"><button class="btn primary big" id="nx" disabled>이 길을 걷는다 ▶</button></div></div>`;
   let pick=null; const nx=$('#nx');
@@ -1238,7 +1284,7 @@ const FATE={
 };
 R.summary=()=>{
   const me=S.route;
-  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">⑤ 내가 선택한 길</div><h2>광복에서 정부 수립까지, 3년</h2><p><b>색칠된 칸</b>은 내가 걸은 ${CH[me].n}의 길과 관련된 사건이에요. 자세한 정리는 선생님과 수업에서 함께 해요.</p></div>
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">④ 내가 선택한 길</div><h2>광복에서 정부 수립까지, 3년</h2><p><b>색칠된 칸</b>은 내가 걸은 ${CH[me].n}의 길과 관련된 사건이에요. 자세한 정리는 선생님과 수업에서 함께 해요.</p></div>
     <div class="tl">${TL.map(([d,t,w])=>`<div class="${w==='end'?'end':w.split(' ').includes(me)?'hl':''}"><b>${d}</b>${t}</div>`).join('')}</div>
     <div class="ttl"><h2 style="font-size:22px">세 사람의 길은 이렇게 이어졌다</h2></div>
     <div class="fate">${['kimgu','yeo','rhee'].map(k=>`<div class="${k===me?'me':''}" style="--c:${CH[k].c}"><b>${CH[k].n} ${k===me?'(나의 선택)':''}</b>${FATE[k]}</div>`).join('')}</div>
@@ -1273,23 +1319,27 @@ R.final2=()=>{
   const E=S.extra; const ids=S.order.filter(id=>id!=='pick');
   const nm=CH[S.route].n, myCh=S.order.filter(id=>id.startsWith(S.route+'_r')).map(id=>S.rec[id].choice); /* [v8] */
   const rsteps=ROUTES[S.route].steps, endSt=rsteps.find(x=>x.t==='routeEnd'), realList=rsteps.filter(x=>x.t==='history'&&x.real).map(x=>x.real); /* [v9] 기존 '실제 역사' 내용 재활용 */
-  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">⑤ 내가 선택한 길 · 마지막 질문</div><h2>나의 생각 정리하기</h2></div>
+  stage.innerHTML=`<div class="full"><div class="ttl"><div class="kicker">④ 내가 선택한 길 · 마지막 질문</div><h2>나의 생각 정리하기</h2></div>
     <div class="q qa"><div class="fq"><div class="qlabel write">질문 1 · 인물의 선택을 판단하기</div>
       <div class="realfirst"><b class="t">📜 먼저, 실제 역사에서는?</b>${nm}${josa(nm,'은','는')} 실제 역사에서 이런 선택을 했어요. → <b>${fmt(endSt.headline)}</b><details><summary>${nm}의 실제 선택 다시 보기</summary><ol>${realList.map(t=>`<li>${fmt(t)}</li>`).join('')}</ol></details></div>
       <h4 style="font-size:21px">그렇다면 나는? <u>당시의 상황을 고려했을 때</u>, 나는 ${nm}의 이 선택에 동의하는가? 왜 그렇게 생각하는가?</h4><div class="hint" style="margin:-6px 0 8px">※ 지금의 눈이 아니라, 1945~1948년 당시 사람들이 처한 상황을 떠올리며 판단해 보세요.</div>
-      ${myCh.length?`<div class="hint" style="margin:-4px 0 10px">📒 내가 PART 4에서 한 선택: ${myCh.map((c,i)=>`${NUMS[i]} ${esc(c)}`).join(' &nbsp;')}</div>`:''}
+      ${myCh.length?`<div class="hint" style="margin:-4px 0 10px">📒 내가 PART 3에서 한 선택: ${myCh.map((c,i)=>`${NUMS[i]} ${esc(c)}`).join(' &nbsp;')}</div>`:''}
       <div class="pick" id="would">${WOULD.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
-      <textarea id="wy" maxlength="400" style="margin-top:12px" placeholder="당시 상황을 근거로 2~3문장으로 써 보세요. 예) 당시에는 ___ 상황이었다. 그래서 나는 ${nm}의 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea></div>
+      <textarea id="wy" maxlength="800" style="margin-top:12px" placeholder="당시 상황을 근거로 3문장 이상(80자 이상)으로 써 보세요. 예) 당시에는 ___ 상황이었다. 그래서 나는 ${nm}의 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea><div class="wcnt" id="wyc"></div></div>
     <div class="fq"><div class="qlabel write">질문 2 · 핵심 질문: 광복 이후를 종합하기</div><h4 style="font-size:21px">광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h4>
       <div class="hintbtns"><span class="hint" style="margin:0 4px 0 0">💡 힌트가 필요하다면 눌러보세요.</span>${CORE_HINTS.map((h,i)=>`<button data-i="${i}">힌트 ${i+1}</button>`).join('')}</div><div class="hintshow" id="hintshow"></div>
-      <textarea id="core" maxlength="400" placeholder="예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다."></textarea></div>
+      <textarea id="core" maxlength="800" placeholder="2~3문장(60자 이상)으로 써 보세요. 예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다. 또 ___"></textarea><div class="wcnt" id="corec"></div></div>
     <details class="opt-more" id="more"><summary>➕ 더 해 보기 (선택)</summary>
       <div class="fq" style="margin-top:12px"><h4>💎 내가 중요하게 생각한 가치는?</h4><div class="pick" id="vals">${VALUES.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div></div>
       <div class="fq"><h4>⭐ 가장 기억에 남는 선택은?</h4><div class="pick list" id="mem">${ids.map(id=>{const r=S.rec[id];return `<button data-id="${id}"><small>${esc(r.label)}</small>${esc(r.choice)}</button>`}).join('')}</div></div>
     </details></div>
     ${nextBtn('나의 기록 완성하기 ▶',true)}</div>`;
   const nx=$('#nx'), wy=$('#wy'), core=$('#core');
-  const check=()=>{nx.disabled=!(E.would && wy.value.trim().length>=5 && core.value.trim().length>=5)};
+  const MIN1=80, MIN2=60; /* [v11] 최소 글자 수 */
+  const check=()=>{ const a=wy.value.trim().length, b=core.value.trim().length;
+    $('#wyc').textContent=`지금 ${a}자 / ${MIN1}자 이상`; $('#wyc').classList.toggle('ok',a>=MIN1);
+    $('#corec').textContent=`지금 ${b}자 / ${MIN2}자 이상`; $('#corec').classList.toggle('ok',b>=MIN2);
+    nx.disabled=!(E.would && a>=MIN1 && b>=MIN2); };
   const setW=v=>{E.would=v;$$('#would button').forEach(b=>b.classList.toggle('sel',b.dataset.v===v));check()};
   const setVal=v=>{E.value=v;$$('#vals button').forEach(b=>b.classList.toggle('sel',b.dataset.v===v))};
   const setMem=id=>{E.memory=id;$$('#mem button').forEach(b=>b.classList.toggle('sel',b.dataset.id===id))};
@@ -1317,7 +1367,7 @@ R.ending=()=>{
     <h5>질문 1 · ${CH[me].n}의 실제 선택, 나는 동의하는가? 왜?</h5><div class="ans">${esc(wouldSentence(E))}</div>
     <h5>질문 2 · 광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h5><div class="ans">${esc(coreSentence(E))}</div>
     <h5>나의 기록 전체</h5><div class="rec">${recHTML()}</div>
-    <div class="key" style="font-size:19px;margin-top:18px">「광복했지만, 나라를 만드는 것은 또 다른 문제였다.」<div style="font-size:14px;font-weight:500;color:var(--muted);margin-top:4px;font-family:'Noto Sans KR',sans-serif">이제 수업에서 그 이유를 함께 알아봅시다.</div></div>
+    <div class="key" style="font-size:19px;margin-top:18px">「광복했지만, 나라를 만드는 것은 또 다른 문제였다.」<div style="font-size:14px;font-weight:500;color:var(--muted);margin-top:4px;font-family:'Noto Sans KR',sans-serif">오늘 배운 내용을 나의 말로 정리해 보았나요?</div></div>
     <div class="credit">인물 사진: 위키미디어 공용(Wikimedia Commons) · 대화 장면은 역사적 상황을 바탕으로 재구성</div></div>
     <div class="actions noprint" style="justify-content:center">
       <button class="btn" id="cp">📋 기록 복사하기</button><button class="btn" id="pr">🖨 인쇄 / PDF 저장</button>
@@ -1345,41 +1395,40 @@ const COMMON=[
   {t:'prologue',part:0},
 
   /* ---------- ② 광복 직후, 무엇부터 해결할까? (약 4분) ---------- */
-  {t:'partcard',part:1,text:'일본이 물러갔다.<br>이제 조선 사람들이 스스로 나라를 운영해야 한다.'},
-  {t:'scene',part:1,bg:'street',cheer:1,amb:[{k:'manse',vol:.35,fadeOutAfter:6000}],place:'서울 거리',date:'1945년 8월 16일',chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],lines:[
+  {t:'scene',part:0,bg:'street',cheer:1,amb:[{k:'manse',vol:.35,fadeOutAfter:6000}],place:'서울 거리',date:'1945년 8월 16일',chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],lines:[
     {text:'다음 날, 서울 거리는 만세를 부르는 사람들로 가득 찼다. 감옥에서 풀려난 [[정치범]]들도 거리로 나왔다.'},
     {who:'merchant',text:'일본은 물러갔는데 쌀은 어디서 구하지?'},
     {who:'resident',text:'경찰도 혼란스러운데 누가 우리를 지켜주지?'},
     {text:'일본 경찰과 관청은 혼란에 빠졌다. 그리고 아직 새로운 정부는 없다.'}]},
-  {t:'choice',part:1,bg:'street',cheer:1,chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],id:'s1',label:'광복 직후, 무엇부터 해결할까?',
+  {t:'choice',part:0,bg:'street',cheer:1,chars:[{k:'merchant',p:'l'},{k:'youth',p:'c'},{k:'resident',p:'r'}],id:'s1',label:'광복 직후, 무엇부터 해결할까?',
     situation:'일본이 물러갔다. 이제 조선 사람들이 스스로 나라를 운영해야 한다.',
     q:'당신이라면 가장 먼저 무엇부터 해결하겠는가?',
     opts:['우선 [[치안]]과 질서를 유지한다.','식량을 확보하고 배급 문제를 해결한다.','정치 세력을 모아 새로운 나라의 방향을 논의한다.','여러 문제를 동시에 해결할 조직부터 만든다.'],
     short:['치안과 질서','식량 문제','새 나라의 방향','문제를 해결할 조직'],
-    write:{lead:'왜 그것이 가장 먼저라고 생각했나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'사람들이 안전해야 하기'}},
+    write:{min:20,lead:'왜 그것이 가장 먼저라고 생각했나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'일본 경찰과 관청이 무너져 혼란이 커졌고, 질서가 없으면 식량 배급도 나라 만들기도 할 수 없기'}},
   /* [v7] 장면 A — 광복 직전: 엔도와 여운형만 등장 */
-  {t:'scene',part:1,bg:'gov',place:'정무총감 관저 (서울)',date:'1945년 8월 15일 이른 아침 · 항복 발표 직전',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],amb:[{k:'clock',vol:.7}],lines:[
+  {t:'scene',part:0,bg:'gov',place:'정무총감 관저 (서울)',date:'1945년 8월 15일 이른 아침 · 항복 발표 직전',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],amb:[{k:'clock',vol:.7}],lines:[
     {text:'시간을 조금 되돌려 보자. 1945년 8월 15일 이른 아침, 일본의 항복이 공식 발표되기 몇 시간 전.'},
     {text:'조선총독부는 패배가 코앞이라는 것을 알고 있었다. 이제 식민지 조선을 통제하기 어려웠다. 조선에 사는 일본인들의 안전과 치안이 급했다.'},
     {who:'endo',text:'곧 중대한 발표가 있을 것이오. 혼란이 일어나지 않도록 치안을 유지하고, 일본인들의 안전을 지켜 주시오.'},
     {who:'yeo',cut:1,text:'그렇다면 조건이 있습니다. [[정치범]]을 석방하고, 식량을 확보하고, 우리가 치안을 유지하고 건국을 준비하는 데 간섭하지 마시오.'},
     {text:'엔도가 바란 것은 일본인을 위한 ‘협조’였다. 그러나 여운형은 이제 조선의 질서를 조선인 스스로 지켜야 한다고 생각했다.'}]},
   /* [v7] 장면 B — 광복 당일: 여운형과 안재홍 → 건준 */
-  {t:'scene',part:1,bg:'office',place:'서울',date:'1945년 8월 15일 · 광복 당일',chars:[{k:'yeo',p:'l'},{k:'ahn',p:'r'}],lines:[
+  {t:'scene',part:0,bg:'office',place:'서울',date:'1945년 8월 15일 · 광복 당일',chars:[{k:'yeo',p:'l'},{k:'ahn',p:'r'}],lines:[
     {text:'정오, 일본의 항복이 공식 발표되었다. 그날 여운형은 안재홍과 마주 앉았다.'},
     {who:'ahn',text:'일본 경찰과 관청이 무너지고 있습니다. 서울뿐 아니라 지방의 질서도 지켜야 합니다.'},
     {text:'여운형은 1944년부터 비밀 단체 [[건국동맹]]을 만들어 광복 이후를 준비해 왔다.',cards:[{img:'src_geonguk',d:'1944년',cap:'조선건국동맹 조직 — 광복 이후를 준비하다'}]},
     {who:'yeo',text:'혼란을 수습하고 새 나라를 준비할 조직을 만듭시다.'},
     {text:'그날, 두 사람은 **조선건국준비위원회**, 줄여서 [[건준]]을 만들었다.'}]},
-  {t:'scene',part:1,bg:'map',map:'branch',place:'[[건국준비위원회]]',date:'1945년 8월 하순',lines:[
+  {t:'scene',part:0,bg:'map',map:'branch',place:'[[건국준비위원회]]',date:'1945년 8월 하순',lines:[
     {text:'8월 말까지 전국에 **145개** 지부가 생겼다. 각 지역에서는 [[치안대]]가 질서를 지켰다.'}]},
-  {t:'history',part:1,bg:'map',map:'branch',ref:'s1',title:'나의 선택 → 실제 역사에서는?',
+  {t:'history',part:0,bg:'map',map:'branch',ref:'s1',title:'나의 선택 → 실제 역사에서는?',
     mine:r=>`나는 「${esc(r.short)}」${josa(r.short,'을','를')} 가장 먼저 해결하겠다고 했다.`,
     real:'광복 직후에는 [[치안]], 식량, 정치, [[행정]] 문제가 **동시에** 있었어요. [[건국준비위원회]]는 [[치안대]]로 질서를 지키고 식량 문제에 대응하며, 새 나라를 세울 준비를 했어요. 하지만 건준은 **정부가 아니라 준비 조직**이었어요.',
     key:'광복 = 곧바로 정부가 생긴 것은 아니었다.'},
-  {t:'find',part:1,id:'g1',kicker:'② 광복 직후, 무엇부터 해결할까?',title:'건준은 무엇을 목표로 했을까?',label:'사료 읽기 · 건국준비위원회 강령',
+  {t:'find',part:0,id:'g1',kicker:'① 광복, 무엇부터 해결할까?',title:'건준은 무엇을 목표로 했을까?',label:'사료 읽기 · 건국준비위원회 강령',
     intro:'건준이 발표한 [[강령]]이에요. 강령은 단체가 이루려는 목표를 정리한 글이에요.',
-    doc:{title:'「건국준비위원회 강령」',meta:'조선건국준비위원회 · 1945년 8월',body:`
+    doc:{no:1,title:'「건국준비위원회 강령」',meta:'조선건국준비위원회 · 1945년 8월',body:`
       <p class="art" data-a="1"><span class="num">1.</span>우리는 <span class="pk">완전한 독립 국가의 건설</span>을 목표로 함.</p>
       <p class="art" data-a="2"><span class="num">2.</span>우리는 <span class="pk">전 민족의 정치적·경제적·사회적 기본 요구를 실현할 수 있는</span> <span class="pk">민주주의 정권 수립</span>을 목표로 함.</p>
       <p class="art" data-a="3"><span class="num">3.</span>우리는 <span class="pk">일시적 과도기에 국내 질서를 자주적으로 유지하며</span> <span class="pk">대중 생활의 확보</span>를 목표로 함.</p>`},
@@ -1389,22 +1438,26 @@ const COMMON=[
     after:'👉 광복 직후 실제로도 **새로운 나라를 준비하려는 움직임**이 있었어요.'},
 
   /* ---------- ③ 그런데 왜 바로 나라를 만들지 못했을까? (약 3분) ---------- */
-  {t:'partcard',part:2,text:'“광복했으니 바로 하나의 정부를<br>만들면 되는 것 아닐까?”'},
-  {t:'scene',part:2,bg:'map',map:'38',place:'한반도',date:'1945년 8월 하순 ~ 9월',lines:[
+  {t:'partcard',part:1,text:'“광복했으니 바로 하나의 정부를<br>만들면 되는 것 아닐까?”'},
+  {t:'scene',part:1,bg:'map',map:'38',place:'한반도',date:'1945년 8월 하순 ~ 9월',lines:[
     {text:'광복 직후 한반도에는 미국과 소련의 군대가 들어왔다.',
       cards:[{img:'card_us',d:'미국',cap:'38선 남쪽에 미군 주둔'},{img:'card_ussr',d:'소련',cap:'38선 북쪽에 소련군 주둔'},{img:'card_38',d:'38선',cap:'남과 북을 나눈 경계선'}]},
     {text:'[[38선]]을 기준으로 남과 북에 서로 다른 군대가 주둔하게 되었다.'},
     {text:'이제 새로운 나라를 만드는 문제는 **조선 사람들만의 문제가 아니게** 되었다.'}]},
-  {t:'choice',part:2,bg:'map',map:'38',id:'s38',label:'38선의 의미',q:'1945년 8월의 사람들에게 38선은 어떤 의미였을까?',
-    opts:['처음부터 영구적인 한반도 국경이었다.','일본군의 무장 해제와 미·소의 점령을 위한 임시적인 기준선이었다.','새롭게 만들어진 대한민국의 행정구역이었다.','당시에는 아무런 의미가 없었다.'],
-    short:['영구적인 국경','임시적인 기준선','대한민국의 행정구역','의미 없는 선']},
-  {t:'history',part:2,bg:'map',map:'38',ref:'s38',title:'나의 생각 → 실제 역사에서는?',
-    mine:r=>`38선은 「${esc(r.short)}」이었을 것이다.`,
-    real:'38선은 처음부터 국경으로 만든 선이 아니라, 일본군의 [[무장 해제]]와 미·소의 점령을 나누기 위한 **임시 군사 경계선**이었어요. 그런데 남과 북이 서로 다른 군대의 관리를 받게 되면서, 하나의 정부를 만드는 일이 복잡해지기 시작했어요.',
-    key:'처음에는 임시적인 선이었다. 그런데 이 선은 앞으로 어떻게 될까?'},
-  {t:'find',part:2,id:'s5',kicker:'③ 그런데 왜 바로 나라를 만들지 못했을까?',title:'미군이 발표한 문서',label:'사료 읽기 · 맥아더 포고령 제1호',
+  {t:'short',part:1,bg:'map',map:'38',id:'s38',label:'📚 복습 문제 · 38선',
+    lead:'1945년 8월, 소련군은 이미 한반도 북쪽으로 빠르게 내려오고 있었다. 미국은 북위 38도선을 경계로 나누어 일본군의 항복을 받자고 제안했고, 소련이 이를 받아들였다.',
+    q:'미국과 소련은 왜 38선을 그었을까? 특히 미국의 입장에서 생각해 써 보세요.',ph:'예) 미국은 ___을 막기 위해 38선을 제안했다.',min:6,area:1,
+    test:v=>{const t=v.replace(/\s/g,''); return /소련|소군|소비에트/.test(t) && /남하|막|견제|저지|차지|점령|내려|확대|확장|독점|장악|차단|멈추/.test(t);},
+    hints:[v=>/일본|무장/.test(v)?'그것은 겉으로 내세운 이유예요. 미국이 정말로 걱정한 나라는 어디였을까요?':'수업에서 배운 내용을 떠올려 보세요. 8월에 먼저 한반도 북쪽으로 들어온 군대는 어느 나라 군대였나요?',
+           '핵심 낱말을 넣어 다시 써 보세요: \u2018소련(군)\u2019, \u2018남하\u2019 또는 \u2018견제\u2019·\u2018막기 위해\u2019'],
+    ok:'좋아요! 미국은 **소련군이 한반도 전체를 차지하는 것(소련군의 남하)을 막기 위해** 38선을 그어 나누어 점령하자고 했어요.'},
+  {t:'history',part:1,bg:'map',map:'38',ref:'s38',title:'내가 쓴 답 → 실제 역사에서는?',
+    mine:r=>`내가 쓴 답: 「${esc(r.choice)}」`,
+    real:'1945년 8월, 소련군이 한반도 북쪽으로 빠르게 내려오자 미국은 소련이 한반도 전체를 차지하는 것을 막기 위해 북위 38도선을 경계로 나누어 점령하자고 제안했고, 소련이 받아들였어요. 겉으로는 일본군의 [[무장 해제]]를 위한 **임시 군사 경계선**이었지만, 남과 북이 서로 다른 군대의 관리를 받게 되면서 하나의 정부를 만드는 일이 복잡해졌어요.',
+    key:'처음에는 임시적인 선이었다. 그런데 이 선은 점점 분단의 선이 되어 갔다.'},
+  {t:'find',part:1,id:'s5',kicker:'② 그런데 왜 바로 나라를 만들지 못했을까?',title:'미군이 발표한 문서',label:'사료 읽기 · 맥아더 포고령 제1호',
     intro:'1945년 9월, 미군이 남한에 들어오면서 발표한 [[포고]]예요.',
-    doc:{title:'「태평양 미 육군 총사령관 맥아더 포고령」 제1호',meta:'1945년 9월 9일 발표 (일부 발췌, 현대어로 다듬음)',body:`
+    doc:{no:2,title:'「태평양 미 육군 총사령관 맥아더 포고령」 제1호',meta:'1945년 9월 9일 발표 (일부 발췌, 현대어로 다듬음)',body:`
       <p class="art pre" data-a="0"><span class="ev">본관은</span> 본관에게 부여된 <span class="ev">태평양 미 육군 총사령관</span>의 권한으로써, 이로부터 북위 38도 이남의 조선과 조선 인민에 대하여 군정을 설립하고 다음과 같은 점령에 관한 조건을 포고함.</p>
       <p class="art" data-a="1"><b>제1조</b> 북위 38도 이남의 조선 영토와 조선 인민에 대한 <span class="ev">정부의 모든 행정권은 당분간 본관의 권한 하에서 시행함.</span></p>
       <p class="art" data-a="2"><b>제2조</b> <span class="ev">정부, 공공 단체 또는 기타의 명예 직원과 고용인</span>, 공익사업·공중위생을 포함한 공공사업에 종사하는 유급 혹은 무급 직원 및 고용인, 그 밖에 중요한 사업에 종사하는 모든 사람은 별도의 명령이 있을 때까지 종래의 정상적인 기능과 업무를 수행할 것이며, 모든 기록과 재산을 보존·보호하여야 함.</p>
@@ -1417,52 +1470,75 @@ const COMMON=[
     after:'👉 행정권은 미군이 갖고, 원래 관청에서 일하던 사람들은 하던 일을 계속하게 했어요. 조선인이 직접 정부를 세운다는 내용은 없었어요.',
     nextLabel:'다음 장면 ▶'},
   /* [v7] ③→④ 전환: 조선총독부의 깃발이 바뀌다 */
-  {t:'photo',part:2,img:'flag_change',vis:'flag',cap:'1945년 9월 9일, 조선총독부',lines:[
+  {t:'photo',part:1,img:'flag_change',vis:'flag',cap:'1945년 9월 9일, 조선총독부',lines:[
     '1945년 9월 9일, 서울 조선총독부.',
     '건물 앞 깃대에서 일장기가 내려가고, 그 자리에 성조기가 올라갔다.',
     '일본의 식민 통치는 끝났다. 그러나 조선은 곧바로 자주적인 정부를 세운 것이 아니었다. 남쪽에서는 미군정이 시작되었다.',
     '광복은 끝이 아니었다. 일본이 물러난 자리에서, 이제 새로운 나라를 어떻게 만들어 갈지 선택해야 했다.'],
     final:'<div class="pnar2" style="color:#d9c9a8;margin-bottom:14px">그렇다면 이제 정치 세력들은 어떤 선택을 해야 했을까?</div><h1 class="bigq" style="font-size:clamp(24px,4.6vw,40px);margin:0">1945년, 만약 내가 그 시대의 정치인이라면<br>어떤 길을 선택했을까?</h1>',
-    button:'④ 나의 길 고르러 가기 ▶'},
+    button:'③ 나의 길 고르러 가기 ▶'},
 
   /* ---------- ④ 1945, 나는 어떤 길을 선택할까? (약 7분) ---------- */
-  {t:'select',part:3}
+  {t:'select',part:2}
 ];
 
-/* 인물별 선택 상황 [v10]
+/* 인물별 선택 상황 [v11]
    dl = [{t:선택, pro:이 선택이 가져올 가능성, con:이 선택이 안고 있는 어려움}]
    ri = 실제 역사에서 인물이 택한 쪽의 번호(0/1), 두 가지를 함께 추진했으면 null — 화면에는 선택 뒤에만 쓰임
-   sit = 선택 전 '당시 상황' 카드. 선택지에는 사건명·조직명 등 실제 역사를 암시하는 말을 넣지 않음 */
+   sit = 선택 전 '당시 상황' 카드. 선택지에는 사건명·조직명 등 실제 역사를 암시하는 말을 넣지 않음
+   t:'short' = 복습 주관식(키워드 확인), t:'find' = 사료 읽기 */
 const ROUTES={
   kimgu:{steps:[
-    {t:'scene',bg:'room',place:'중국 충칭 → 서울',date:'1945년 11월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
-      {text:'당신은 이제 **김구**다. 중국에서 대한민국 [[임시정부]]를 이끌며 오랫동안 독립운동을 해 왔다.'},
-      {who:'aide',text:'주석님, 남쪽을 다스리는 미군이 임시정부를 ‘정부’로 인정하지 않겠답니다. 한 사람의 개인으로만 귀국하라고 합니다.'}]},
-    {t:'choice',id:'r1',label:'김구의 선택 ① · 1945년 11월',ri:1,
-      sit:'광복 소식을 듣고 고국으로 돌아가려 한다. 그런데 남쪽을 다스리는 미군은 임시정부를 나라의 정부로 인정하지 않는다. 먼저 나와 임시정부 동지들이 어떻게 할지 정해야 한다.',
-      q:'지금 고국으로 돌아가겠는가?',
-      dl:[{t:'정부로 인정받을 때까지 머물며 미군을 계속 설득한다.',pro:'오랫동안 지켜 온 임시정부가 정당한 정부라는 자격을 지킬 수 있다.',con:'그 사이 국내 정치에서 자리를 잃고 뒤처질 수 있다.'},
-          {t:'인정받지 못하더라도 개인 자격으로 지금 돌아간다.',pro:'광복 직후 국내에서 서둘러 새 나라 만들기에 참여할 수 있다.',con:'임시정부가 정부로 인정받지 못한 상태에서 시작해야 한다.'}]},
-    {t:'history',ref:'r1',real:'김구와 임시정부 요인들은 1945년 11월 **개인 자격**으로 귀국했어요. 그래도 김구는 임시정부를 중심으로 자주적인 정부를 세우려 했어요.'},
+    {t:'scene',bg:'news',mast:'1945년 12월 말',headline:'신탁통치 결정',sub:'모스크바 3국 외상 회의 결과 보도',place:'서울',date:'1945년 12월 말',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'당신은 이제 **김구**다. 1945년 11월, 대한민국 [[임시정부]] 요인들과 함께 개인 자격으로 고국에 돌아왔다.'},
+      {text:'그해 12월 말, [[모스크바 3국 외상 회의]] 소식이 전해졌다. 한국에 임시 정부를 세우고, 최대 5년간 [[신탁통치]]를 협의한다는 내용이었다.'},
+      {who:'aide',text:'주석님, 다른 나라가 우리를 또 몇 년이나 맡아 다스린다는 말입니까? 거리마다 분노가 들끓고 있습니다.'}]},
+    {t:'choice',id:'r1',label:'김구의 선택 ① · 1945년 12월',ri:1,
+      sit:'광복한 지 넉 달. 독립을 기다려 온 사람들에게 ‘신탁통치’라는 말은 큰 충격이다. 그러나 회의 결정에는 ‘임시 정부를 세운다’는 내용도 들어 있다. 임시정부를 이끄는 내가 먼저 방향을 정해야 한다.',
+      q:'이 소식에 어떻게 대응하겠는가?',
+      dl:[{t:'결정 내용을 차분히 따져 보고, 먼저 임시 정부를 세우는 협의에 힘을 보탠다.',pro:'미·소와 협의해 하나의 임시 정부를 빨리 세울 길을 열 수 있다.',con:'다른 나라의 간섭을 받아들인다는 비판과 큰 반발을 살 수 있다.'},
+          {t:'임시정부 세력을 모아 신탁통치에 반대하는 운동에 바로 나선다.',pro:'다시는 다른 나라의 지배를 받지 않겠다는 독립 의지를 분명히 보여 줄 수 있다.',con:'회의 결정 전체를 거부하면 미·소와 협의해 정부를 세우는 길이 막히고 좌우 대립이 깊어질 수 있다.'}]},
+    {t:'history',ref:'r1',real:'김구는 신탁통치를 ‘또 다른 식민 지배’로 보고 [[반탁 운동]]에 앞장섰어요. 처음에는 좌익도 반대했지만, 곧 좌익은 회의 결정 전체를 지지하는 쪽으로 돌아섰어요. 이후 신탁통치를 둘러싸고 좌우 대립이 크게 깊어졌어요.'},
     {t:'scene',bg:'room',night:1,place:'서울 경교장',date:'1948년 초',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
       {text:'그 뒤 미국과 소련은 하나의 정부를 만드는 방법을 두고 끝내 뜻을 모으지 못했다. 결국 국제기구인 [[유엔]]이 나섰다.'},
       {text:'유엔은 선거를 할 수 있는 남쪽에서만 먼저 선거를 하기로 했다. 이대로라면 남과 북에 따로 정부가 생길 수 있다.'},
-      {who:'aide',text:'주석님, 북쪽 지도자들을 직접 만나 담판을 지어 보자는 의견이 있습니다. 남쪽에서 선거를 준비하자는 의견도 있고요.'}]},
-    {t:'choice',id:'r2',label:'김구의 선택 ② · 1948년 초',ri:0,
+      {who:'aide',text:'주석님, 김규식 선생은 북쪽 지도자들을 직접 만나 담판을 지어 보자고 하십니다. 남쪽에서 선거를 준비하자는 의견도 있고요.'}]},
+    {t:'choice',id:'r2',label:'김구의 선택 ② · 1948년 초',ri:1,
       sit:'남쪽만의 선거가 다가오고, 나라가 둘로 갈라질 위기다. 남쪽과 북쪽 정치 세력의 생각은 서로 다르고, 북쪽 지도자를 만나도 성과가 있을지는 알 수 없다.',
       q:'어느 쪽에 힘을 쏟겠는가?',
-      dl:[{t:'북쪽으로 가서 북쪽 지도자들과 직접 담판을 시도한다.',pro:'나라가 둘로 갈라지는 것을 막을 마지막 기회를 붙잡을 수 있다.',con:'북쪽에 이용당하거나 아무 성과 없이 끝날 수 있다.'},
-          {t:'남쪽에 남아 다가오는 선거와 새 정부에 대비한다.',pro:'남쪽 정치에서 영향력을 지키고 새 나라 만들기에 목소리를 낼 수 있다.',con:'분단을 막으려는 노력을 멈추는 것처럼 보일 수 있다.'}]},
-    {t:'history',ref:'r2',real:'1948년 4월 김구는 김규식과 함께 평양으로 가서 북쪽 지도자들과 회의를 했어요([[남북 협상]]). 하지만 하나의 정부를 만드는 데까지는 이어지지 못했어요.'},
+      dl:[{t:'남쪽에 남아 다가오는 선거와 새 정부에 대비한다.',pro:'남쪽 정치에서 영향력을 지키고 새 나라 만들기에 목소리를 낼 수 있다.',con:'분단을 막으려는 노력을 멈추는 것처럼 보일 수 있다.'},
+          {t:'북쪽으로 가서 북쪽 지도자들과 직접 담판을 시도한다.',pro:'나라가 둘로 갈라지는 것을 막을 마지막 기회를 붙잡을 수 있다.',con:'북쪽에 이용당하거나 아무 성과 없이 끝날 수 있다.'}]},
+    {t:'history',ref:'r2',real:'1948년 4월, 김구는 김규식과 함께 38선을 넘어 평양으로 갔어요. 그곳에서 김일성·김두봉 등 북쪽 지도자들과 만나 회의를 열었어요([[남북 협상]]).'},
+    {t:'scene',bg:'room',place:'평양',date:'1948년 4월',chars:[{k:'kimgu',p:'l'},{k:'kks',p:'c'},{k:'kimil',p:'r'}],lines:[
+      {text:'1948년 4월, 평양. 남과 북의 여러 정당·사회단체 대표들이 한자리에 모였다.'},
+      {text:'김구와 김규식은 북쪽의 김일성·김두봉과 따로 만나 이야기를 나누기도 했다.'},
+      {who:'kimgu',text:'외국 군대가 물러가고, 우리 민족 스스로 하나의 정부를 세워야 합니다.'},
+      {text:'회의가 끝난 뒤, 참석자들은 [[공동 성명]]을 발표했다.'}]},
+    {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'남북 협상은 무엇을 주장했을까?',label:'사료 읽기 · 남북 협상 공동 성명',
+      intro:'평양 회의가 끝난 뒤 발표한 [[공동 성명]]이에요.',
+      doc:{no:3,title:'「남북 조선 제정당 사회단체 지도자 협의회 공동 성명」',meta:'1948년 4월 30일 (일부 발췌, 현대어로 다듬음)',body:`
+        <p class="art" data-a="1"><b>1.</b> 우리 강토에서 외국 군대가 즉시 동시에 철거하는 것은 조선 문제를 해결하는 가장 정당하고 유일한 방법이다.</p>
+        <p class="art" data-a="2"><b>2.</b> 남북 정당·사회단체 지도자들은 외국 군대가 철퇴한 이후 내전이 발생할 수 없다는 것을 확인한다.</p>
+        <p class="art" data-a="3"><b>3.</b> 외국 군대가 철퇴한 이후 전조선 정치 회의를 소집하여 민주주의 임시 정부를 수립하고, 이 정부는 일반적·직접적·평등적 비밀 투표로 통일적 입법 기관을 선거하며, 그 입법 기관은 헌법을 제정하여 통일적 민주 정부를 수립할 것이다.</p>
+        <p class="art" data-a="4"><b>4.</b> 남조선에서 단독 선거가 실시된다 하여도 결코 그 결과를 인정하지 않을 것이며 지지하지 않을 것이다.</p>`},
+      guide:'🔎 1항과 4항에서 답의 근거를 찾아보세요.',
+      help:'1항에서 ‘유일한 방법’이라는 말을 찾아 그 앞부분을 다시 읽어 보세요. 4항은 ‘단독 선거’라는 말 뒤에 오는 부분이 핵심이에요.',
+      checks:[
+        {q:'1항에 따르면, 조선 문제를 해결하는 ‘유일한 방법’은 무엇인가?',opts:['외국 군대가 즉시 동시에 물러가는 것','유엔 감시 아래 남쪽에서 먼저 선거를 하는 것','미국과 소련이 5년 동안 신탁통치를 하는 것'],a:0,back:1,wrong:'1항을 다시 읽어 보세요.',ok:'맞아요! 1항에 나와 있어요.'},
+        {q:'4항에서 남조선 단독 선거에 대해 어떤 태도를 보였나?',opts:['선거에 참여해 결과를 지켜본다','결과를 인정하지 않고 지지하지 않는다','북쪽에서도 같은 날 선거를 연다'],a:1,back:4,wrong:'4항의 끝부분을 다시 읽어 보세요.',ok:'맞아요! 단독 선거를 인정하지도, 지지하지도 않겠다고 했어요.'}],
+      after:'👉 남북 협상은 외국 군대 철수와 통일 정부 수립을 주장했어요. 그런데 이 성명대로 이루어졌을까요?',
+      nextLabel:'다음 장면 ▶'},
     {t:'scene',bg:'ballot',place:'서울',date:'1948년 5월',chars:[{k:'kimgu',p:'l'},{k:'aide',p:'r'}],lines:[
+      {text:'그러나 미국과 소련은 이 공동 성명을 받아들이지 않았다. 북쪽도 이미 따로 정부를 세울 준비를 하고 있었다.'},
+      {text:'남북 협상은 성명은 냈지만 실제 통일 정부로 이어지지 못했다. **남북 협상의 한계**였다.'},
       {text:'1948년 5월 10일, 남쪽에서만 국회의원을 뽑는 선거([[총선거]])가 열리게 되었다.'},
       {who:'kimgu',text:'이 선거로 남쪽만의 정부가 생기면, 나라가 둘로 굳어지는 것 아닌가…….'}]},
-    {t:'choice',id:'r3',label:'김구의 선택 ③ · 1948년 5월',ri:1,
-      sit:'이 선거로 새 나라의 모습이 정해진다. 선거에 나가면 새 정부 안에서 목소리를 낼 수 있다. 하지만 남쪽만의 정부를 인정하는 셈이 될 수도 있다.',
+    {t:'choice',id:'r3',label:'김구의 선택 ③ · 1948년 5월',ri:0,
+      sit:'협상은 성과를 거두지 못했고, 선거는 다가온다. 이 선거로 새 나라의 모습이 정해진다. 선거에 나가면 새 정부 안에서 목소리를 낼 수 있지만, 남쪽만의 정부를 인정하는 셈이 될 수도 있다.',
       q:'이 선거에 어떻게 하겠는가?',
-      dl:[{t:'선거에 참여해 새 정부 안에서 목소리를 낸다.',pro:'새 나라의 헌법과 정부를 만드는 데 직접 영향을 줄 수 있다.',con:'남쪽만의 정부를 인정하는 셈이 될 수 있다.'},
-          {t:'남쪽만의 선거에는 참여하지 않는다.',pro:'‘하나의 나라’라는 원칙을 끝까지 지킬 수 있다.',con:'새 정부를 만드는 과정에서 빠지게 되고 영향력이 줄 수 있다.'}]},
-    {t:'history',ref:'r3',real:'김구는 남쪽만의 정부([[단독 정부]])를 세우는 데 반대하며 **5·10 총선거에 참여하지 않았어요.**'},
+      dl:[{t:'남쪽만의 선거에는 참여하지 않는다.',pro:'‘하나의 나라’라는 원칙을 끝까지 지킬 수 있다.',con:'새 정부를 만드는 과정에서 빠지게 되고 영향력이 줄 수 있다.'},
+          {t:'선거에 참여해 새 정부 안에서 목소리를 낸다.',pro:'새 나라의 헌법과 정부를 만드는 데 직접 영향을 줄 수 있다.',con:'남쪽만의 정부를 인정하는 셈이 될 수 있다.'}]},
+    {t:'history',ref:'r3',real:'김구는 남쪽만의 정부([[단독 정부]])를 세우는 데 반대하며 **5·10 총선거에 참여하지 않았어요.** 남북 협상은 미·소의 반대와 남북에서 이미 진행되던 단독 정부 준비 때문에 성과를 거두기 어려웠어요.'},
     {t:'routeEnd',who:'kimgu',bg:'dawn',
       headline:'대한민국 정부 수립에 참여하지 않고 남북 협상과 통일 정부를 추구했던 김구의 선택',
       body:'1948년 8월 남쪽에 대한민국 정부가, 9월에는 북쪽에 별도의 정권이 세워졌어요. 김구는 그 뒤에도 통일 정부를 주장하며 활동하다가 1949년 6월 암살당했어요.',
@@ -1478,7 +1554,12 @@ const ROUTES={
       q:'미군이 오기 전에 어떻게 하겠는가?',
       dl:[{t:'미군이 오기 전에 서둘러 우리 정부를 발표한다.',pro:'조선인 스스로 나라를 운영할 준비가 되어 있음을 먼저 보여 줄 수 있다.',con:'충분히 의논하지 못해 함께하지 않은 세력의 반발을 살 수 있다.'},
           {t:'발표를 미루고 더 많은 세력과 먼저 의논한다.',pro:'더 넓은 지지를 모아 힘 있는 조직을 만들 수 있다.',con:'그 사이 미군이 들어와 먼저 자리를 잡을 수 있다.'}]},
-    {t:'history',ref:'r1',real:'1945년 9월 6일 건준이 중심이 되어 [[조선인민공화국]]을 선포했어요. 그러나 우익 다수는 참여하지 않았고, [[미군정]]도 인정하지 않았어요.'},
+    {t:'history',ref:'r1',real:'1945년 9월 6일, 건준 세력은 미군이 들어오기 직전 서둘러 정부 수립을 선포했어요. 그러나 우익 다수는 참여하지 않았고, [[미군정]]도 이 정부를 인정하지 않았어요.'},
+    {t:'short',id:'q1',label:'📚 복습 문제',lead:'1945년 9월 6일, 건준 세력은 미군이 들어오기 직전 서둘러 정부 수립을 선포했다.',
+      q:'이때 선포한 정부의 이름은 무엇일까?',ph:'정부 이름을 써 보세요',min:4,
+      test:v=>/조선인민공화국/.test(v.replace(/\s/g,'')),
+      hints:['‘조선 ○○ 공화국’이에요. 수업에서 배운 이름을 떠올려 보세요.','가운데 두 글자는 ‘백성’과 비슷한 뜻의 낱말이에요. (ㅇㅁ)'],
+      ok:'맞아요! **조선인민공화국**이에요. 그러나 미군정은 이 정부도, 대한민국 임시정부도 정부로 인정하지 않았어요.'},
     {t:'scene',bg:'office',place:'서울',date:'1945년 가을',chars:[{k:'yeo',p:'l'},{k:'aide',p:'r'}],lines:[
       {text:'미군은 남쪽을 다스리는 정부는 ‘미군정’ 하나뿐이라고 발표했다. 여운형 쪽이 발표한 정부도 인정하지 않았다.'},
       {who:'yeo',text:'(미군과 손을 잡아야 할까, 맞서야 할까?)'}]},
@@ -1490,13 +1571,29 @@ const ROUTES={
     {t:'history',ref:'r2',real:'여운형은 새 정당(조선인민당)을 만들고, **미군정과도 대화하며** 활동을 이어 갔어요.'},
     {t:'scene',bg:'room',place:'서울',date:'1946년',chars:[{k:'yeo',p:'l'},{k:'kks',p:'r'}],lines:[
       {text:'광복 뒤 사람들은 크게 두 편으로 갈렸다. 사회주의 쪽([[좌익]])과 자본주의·민족주의 쪽([[우익]])이다.'},
-      {who:'kks',text:'여 선생, 두 편이 이렇게 싸우면 나라가 둘로 갈라집니다. 양쪽이 손을 잡아야 합니다.'}]},
-    {t:'choice',id:'r3',label:'여운형의 선택 ③ · 1946년',ri:0,
-      sit:'이대로 두 편이 갈라서면 나라도 둘로 나뉠 수 있다. 어떤 나라를 세울지가 걸린 문제다. 하지만 양쪽을 이으려 하면 양쪽 모두에게 비판받을 수 있다.',
-      q:'두 편 사이에서 어떻게 하겠는가?',
-      dl:[{t:'비판을 무릅쓰고 두 편이 손잡을 방법을 찾는다.',pro:'나라가 둘로 나뉘는 것을 막을 통합의 길을 열 수 있다.',con:'양쪽 모두에게 공격받고 힘을 잃을 수 있다.'},
-          {t:'생각이 가까운 쪽과 먼저 힘을 모은다.',pro:'확실한 지지 세력을 얻어 빠르게 힘을 키울 수 있다.',con:'두 편의 대립이 더 깊어질 수 있다.'}]},
-    {t:'history',ref:'r3',real:'여운형은 우익의 김규식과 함께 **[[좌우합작]] 운동**을 이끌었어요. 1946년 10월 좌우합작 7원칙을 발표했지만, 좌우 양쪽에서 비판을 받았어요.'},
+      {text:'1946년, 여운형은 우익의 김규식과 함께 위원회를 만들고, 두 편이 함께 받아들일 원칙을 정하기로 했다.'},
+      {who:'kks',text:'여 선생, 가장 큰 걸림돌은 토지 문제입니다. 좌익은 땅을 대가 없이 거두어 농민에게 나눠 주자 하고, 우익은 땅값을 치르고 사서 나눠 주자고 합니다.'}]},
+    {t:'choice',id:'r3',label:'여운형의 선택 ③ · 1946년',ri:1,
+      sit:'농민이 대부분인 나라에서 땅을 어떻게 나눌지는 새 나라의 모습을 정하는 문제다. 원칙에 어떤 내용을 넣느냐에 따라 좌익과 우익 중 누가 등을 돌릴지가 달라진다.',
+      q:'두 편이 함께 받아들일 원칙의 토지 조항에 무엇을 넣겠는가?',
+      dl:[{t:'지주에게 땅값을 치르고 사들여, 농민에게 값을 받고 나누어 준다.',pro:'지주와 우익의 지지를 얻고 갈등을 줄일 수 있다.',con:'가난한 농민에게 부담이 크고 좌익이 등을 돌릴 수 있다.'},
+          {t:'땅을 몰수하거나 조건을 붙여 몰수하고, 값을 점점 깎아 사들인 땅까지 모아 농민에게 무상으로 나누어 준다.',pro:'농민의 지지를 얻고, 좌우의 주장 사이에서 중간 길을 찾을 수 있다.',con:'지주와 우익이 반발하고, 대가 없는 몰수를 원한 좌익도 만족하지 않을 수 있다.'}]},
+    {t:'history',ref:'r3',real:'1946년 10월 좌우합작위원회는 **좌우합작 7원칙**을 발표했어요. 토지는 몰수·조건부 몰수·체감 매상으로 거두어 농민에게 무상으로 나누어 준다는 절충안이었어요. 그러나 좌익(조선공산당)과 우익(한국민주당) 모두 반대해 [[좌우합작]] 운동은 힘을 잃었어요.'},
+    {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'좌우합작 7원칙에는 무엇이 담겼을까?',label:'사료 읽기 · 좌우합작 7원칙',
+      intro:'좌우합작위원회가 발표한 원칙의 일부예요.',
+      doc:{no:3,title:'「좌우합작 7원칙」',meta:'좌우합작위원회 · 1946년 10월 (일부 발췌, 현대어로 다듬음)',body:`
+        <p class="art" data-a="1"><b>1.</b> 모스크바 3국 외상 회의 결정에 의하여 남북을 통한 좌우 합작으로 민주주의 임시 정부를 수립할 것</p>
+        <p class="art" data-a="2"><b>2.</b> 미·소 공동 위원회의 속개를 요청하는 공동 성명을 발표할 것</p>
+        <p class="art" data-a="3"><b>3.</b> 토지 개혁에 있어 몰수, 조건부 몰수, 체감 매상 등으로 토지를 농민에게 무상으로 분여하며, 중요 산업을 국유화할 것</p>
+        <p class="art" data-a="4"><b>4.</b> 친일파 및 민족 반역자를 처리할 조례를 장차 구성될 입법 기구에서 제정하여 처리하게 할 것</p>
+        <p class="cut">(5~7 생략)</p>`},
+      guide:'🔎 1항과 4항에서 답의 근거를 찾아보세요.',
+      help:'각 항의 끝 ‘~할 것’ 앞부분이 무엇을 하자는 것인지 보세요. 낯선 낱말(체감 매상, 입법 기구)은 앞뒤 말과 이어서 읽으면 뜻을 짐작할 수 있어요.',
+      checks:[
+        {q:'1항에 따르면, 임시 정부는 어떤 방법으로 세우자고 했나?',opts:['남쪽에서 먼저 총선거를 실시해서','모스크바 3국 외상 회의 결정에 따라 좌우 합작으로','미군정이 직접 지도자를 지명해서'],a:1,back:1,wrong:'1항을 다시 읽어 보세요.',ok:'맞아요! 1항에 나와 있어요.'},
+        {q:'4항에 따르면, 친일파·민족 반역자 처리는 어디에 맡기자고 했나?',opts:['앞으로 만들 입법 기구','미군정','각 지역의 치안대'],a:0,back:4,wrong:'4항의 뒷부분을 다시 읽어 보세요.',ok:'맞아요! 장차 구성될 입법 기구에 맡기자고 했어요.'}],
+      after:'👉 7원칙은 좌우의 주장을 절충했어요. 하지만 바로 그 때문에 양쪽 모두에게 비판받았어요.',
+      nextLabel:'다음 ▶'},
     {t:'routeEnd',who:'yeo',bg:'dawn',
       headline:'좌우의 협력과 민족 통합을 추구했던 여운형의 정치적 활동',
       body:'여운형은 1947년 7월 암살당했어요. 좌우합작 운동은 힘을 잃었고, 한국 문제는 [[유엔]]으로 넘어갔어요. 이후 남과 북에 각각 정부가 세워졌어요.',
@@ -1522,6 +1619,19 @@ const ROUTES={
       dl:[{t:'남쪽만이라도 먼저 정부를 세우자고 공개적으로 주장한다.',pro:'혼란을 빨리 끝내고 정부의 틀을 만들 수 있다.',con:'나라를 둘로 굳힌다는 비판과 큰 갈등을 부를 수 있다.'},
           {t:'미국과 소련이 다시 의논할 때까지 기다린다.',pro:'하나의 정부를 만들 가능성을 이어 갈 수 있다.',con:'언제 정부가 생길지 알 수 없어 혼란이 길어질 수 있다.'}]},
     {t:'history',ref:'r2',real:'1946년 6월 이승만은 정읍에서 남쪽만이라도 정부를 세워야 한다는 뜻을 밝혔어요(**정읍 발언**). 이 주장을 두고 찬성과 반대가 크게 엇갈렸어요.'},
+    {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'정읍에서 이승만은 무엇이라고 말했을까?',label:'사료 읽기 · 정읍 발언',
+      intro:'1946년 6월, 이승만이 전라북도 정읍에서 한 연설이에요.',
+      doc:{no:3,title:'「이승만의 정읍 발언」',meta:'1946년 6월 3일 연설 · 《서울신문》 1946년 6월 4일 보도 (일부, 현대어로 다듬음)',body:`
+        <p class="art" data-a="1">이제 우리는 무기 휴회된 공위가 재개될 기색도 보이지 않으며, 통일 정부를 고대하나 여의치 않으니,</p>
+        <p class="art" data-a="2">우리는 남방만이라도 임시 정부 혹은 위원회 같은 것을 조직하여 38 이북에서 소련이 철퇴하도록 세계 공론에 호소하여야 될 것이니,</p>
+        <p class="art" data-a="3">여러분도 결심하여야 할 것이다.</p>`},
+      guide:'🔎 첫째 줄과 둘째 줄에서 답의 근거를 찾아보세요.',
+      help:'‘공위’는 미·소 공동 위원회의 줄임말이에요. ‘~니,’로 끝나는 앞부분이 까닭이고, 그 뒤가 하자는 일이에요.',
+      checks:[
+        {q:'이승만이 ‘남방(남쪽)만이라도’ 조직하자고 한 것은 무엇인가?',opts:['남북 지도자 회의','임시 정부 혹은 위원회 같은 것','좌우 합작 위원회'],a:1,back:2,wrong:'둘째 줄을 다시 읽어 보세요.',ok:'맞아요! 둘째 줄에 나와 있어요.'},
+        {q:'그렇게 주장한 까닭으로 든 것은 무엇인가?',opts:['공위(미·소 공동 위원회)가 다시 열릴 기색이 없어서','남북 협상이 실패해서','유엔이 남쪽만의 선거를 결정해서'],a:0,back:1,wrong:'첫째 줄을 다시 읽어 보세요. 남북 협상과 유엔 결정은 언제 일어난 일이었나요?',ok:'맞아요! 남북 협상과 유엔 결정은 그 뒤인 1948년의 일이에요.'}],
+      after:'👉 정읍 발언은 남한만의 정부를 세우자는 주장으로 받아들여져 큰 논란이 되었어요.',
+      nextLabel:'다음 장면 ▶'},
     {t:'scene',bg:'ballot',place:'서울',date:'1948년 초',chars:[{k:'rhee',p:'l'},{k:'aide',p:'r'}],lines:[
       {text:'결국 한국 문제는 국제기구인 [[유엔]]으로 넘어갔다. 유엔은 선거를 할 수 있는 곳에서만 먼저 선거를 하기로 했다.'},
       {who:'aide',text:'북쪽 지도자들을 만나 하나의 정부를 의논해 보자는 사람들도 있습니다.'}]},
@@ -1540,7 +1650,7 @@ const ROUTES={
 };
 function buildRoute(k){
   return ROUTES[k].steps.map(s=>{
-    const o=Object.assign({part:s.t==='routeEnd'?4:3},s);
+    const o=Object.assign({part:s.t==='routeEnd'?3:2},s);
     if(o.id){ o.stage=+o.id.slice(1); o.id=`${k}_${o.id}`; } /* [v9] r1·r2·r3 → 단계 1·2·3 */
     if(o.ref) o.ref=`${k}_${o.ref}`;
     /* [v5] 딜레마(dl) → 장단점이 함께 보이는 선택지 */
@@ -1554,9 +1664,9 @@ function buildRoute(k){
 }
 /* ---------- ⑤ 내가 선택한 길 (약 4분): 인물 경로 마무리(routeEnd) → 타임라인 → 마지막 질문 2개 → 기록 ---------- */
 const ENDING=[
-  {t:'summary',part:4},
-  {t:'final2',part:4},
-  {t:'ending',part:4}
+  {t:'summary',part:3},
+  {t:'final2',part:3},
+  {t:'ending',part:3}
 ];
 
 /* ================= 키보드 ================= */
