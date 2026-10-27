@@ -1,4 +1,4 @@
-# images 폴더 (v11 기준)
+# images 폴더 (v12 기준)
 
 모두 `.jpg`, 소문자. 넣으면 자동으로 쓰이고, 없으면 기존 그림이 보입니다.
 
@@ -12,6 +12,7 @@
 | src_geonguk.jpg | ② 건준 장면의 건국동맹 카드 | 4:3 |
 | flag_change.jpg | ③→④ 전환 장면: 1945년 9월 9일 조선총독부 일장기 하강·성조기 게양 실제 사진 | ⭐ 가로 사진 (없으면 그림 애니메이션) |
 | card_us.jpg / card_ussr.jpg / card_38.jpg | ③ 미국·소련·38선 카드 | 4:3, 선택 |
+| bg_pyongyang.jpg | 김구 경로 평양(남북 협상) 장면 배경 | 가로 사진, 위쪽 기준으로 잘림 |
 | p_kimil.jpg | 김일성 (김구 경로 평양 장면, 없으면 한자 배지) | 정사각형, 선택 |
 | p_yeo.jpg / p_kimgu.jpg / p_rhee.jpg / p_kks.jpg | 인물 얼굴 (없으면 위키미디어 사진) | 정사각형 |
 | n_merchant.jpg / n_youth.jpg / n_resident.jpg / n_aide.jpg | 가상 인물 그림 | 정사각형, 선택 |

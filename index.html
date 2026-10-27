@@ -268,7 +268,8 @@ ul.fact li{margin:3px 0}
 .flagw{animation:wave 1.4s ease-in-out infinite alternate;transform-box:fill-box;transform-origin:left center}
 @keyframes wave{to{transform:skewY(4deg) scaleX(.94)}}
 .vis img.bgphoto,.pvis img.bgphoto{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:sepia(.35) grayscale(.35) contrast(1.05);opacity:0;z-index:1}
-.vis img.bgphoto.ready{opacity:1} /* [v8] 불러온 뒤에만 보임, 기존 그림은 그 순간 숨김 */
+.vis img.bgphoto.ready{opacity:1}
+.vis img.bgphoto[src*="bg_pyongyang"]{object-position:50% 8%} /* [v12] 위쪽 현수막이 보이도록 */ /* [v8] 불러온 뒤에만 보임, 기존 그림은 그 순간 숨김 */
 .pvis img.bgphoto.ready{opacity:1;animation:fade .8s both}
 .ptag{position:absolute;right:8px;bottom:6px;z-index:3;font-size:11px;color:#f4ecdc;background:rgba(0,0,0,.5);padding:2px 8px;border-radius:6px}
 .wcards{position:absolute;right:12px;top:12px;z-index:4;display:flex;gap:8px;animation:pop .5s both}
@@ -417,6 +418,12 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 <div id="pop"></div>
 
 <script>
+/* =====================================================================
+   [v12 변경 내역]
+   - 주관식 최소 글자 수 절반으로: 무엇부터 해결할까 20→10자, 38선 6→3자, 정부 이름 4→2자, 마지막 질문 80→40자·60→30자
+   - 인물별 사료 번호: 김구 [사료 3-1], 여운형 [사료 3-2], 이승만 [사료 3-3]
+   - 김구 경로 평양(남북 협상) 장면 배경: images/bg_pyongyang.jpg (없으면 기존 방 그림)
+   ===================================================================== */
 /* =====================================================================
    [v11 변경 내역] 수업 후 '복습' 활동으로 방향 전환
    (역사적 감정이입 + 역사적 의사결정 + 수업 내용 복습 + 사료 탐구)
@@ -828,6 +835,7 @@ const BG={
     <rect y="285" width="800" height="75" fill="#3a2a1e"/><rect x="230" y="246" width="340" height="22" fill="#5a3b25"/><rect x="250" y="268" width="16" height="40" fill="#4a2f1d"/><rect x="534" y="268" width="16" height="40" fill="#4a2f1d"/>
     <rect x="360" y="236" width="80" height="10" fill="#efe4c6"/><path d="M90 300 h60 v-70 h-60z M650 300 h60 v-70 h-60z" fill="#3e2a1c"/>`),
   office:()=>svg(`${room('#dcc7a1','#bea47a')}<g transform="translate(540 66) scale(.27)"><path d="${KOREA}" fill="#c9b48a" stroke="#6b5442" stroke-width="5"/></g>`),
+  pyongyang:st=>svg(room('#dcc7a1','#bea47a')), /* [v12] 사진이 없을 때 그림 */
   room:st=>svg(room(st.night?'#6d6253':'#dcc7a1', st.night?'#4b4237':'#bea47a', !!st.night)),
   map:st=>{
     const mode=st.map||'38';
@@ -904,7 +912,7 @@ function rebuildFlow(){ flow = COMMON.slice(); if(S.route) flow = flow.concat(bu
 function bgPhotoKey(st){
   if(st.bg==='street') return st.cheer?'bg_cheer':'bg_street';
   if(st.bg==='room') return st.night?'bg_room_night':'bg_room';
-  return ({gov:'bg_gov',office:'bg_office',rally:'bg_rally',ballot:'bg_ballot',dawn:'bg_dawn'})[st.bg]||'';
+  return ({pyongyang:'bg_pyongyang',gov:'bg_gov',office:'bg_office',rally:'bg_rally',ballot:'bg_ballot',dawn:'bg_dawn'})[st.bg]||'';
 }
 function photoLayer(key){ return key?`<img class="bgphoto" src="images/${key}.jpg" alt="" onerror="this.remove()" onload="photoReady(this,'${key}')">`:''; }
 /* [v8] 사진이 준비되면 같은 칸의 기존 SVG 그림을 즉시 숨기고 사진을 보여 줌 */
@@ -1325,17 +1333,17 @@ R.final2=()=>{
       <h4 style="font-size:21px">그렇다면 나는? <u>당시의 상황을 고려했을 때</u>, 나는 ${nm}의 이 선택에 동의하는가? 왜 그렇게 생각하는가?</h4><div class="hint" style="margin:-6px 0 8px">※ 지금의 눈이 아니라, 1945~1948년 당시 사람들이 처한 상황을 떠올리며 판단해 보세요.</div>
       ${myCh.length?`<div class="hint" style="margin:-4px 0 10px">📒 내가 PART 3에서 한 선택: ${myCh.map((c,i)=>`${NUMS[i]} ${esc(c)}`).join(' &nbsp;')}</div>`:''}
       <div class="pick" id="would">${WOULD.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div>
-      <textarea id="wy" maxlength="800" style="margin-top:12px" placeholder="당시 상황을 근거로 3문장 이상(80자 이상)으로 써 보세요. 예) 당시에는 ___ 상황이었다. 그래서 나는 ${nm}의 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea><div class="wcnt" id="wyc"></div></div>
+      <textarea id="wy" maxlength="800" style="margin-top:12px" placeholder="당시 상황을 근거로 2~3문장(40자 이상)으로 써 보세요. 예) 당시에는 ___ 상황이었다. 그래서 나는 ${nm}의 선택에 (동의한다 / 동의하지 않는다). 왜냐하면 ___ 때문이다."></textarea><div class="wcnt" id="wyc"></div></div>
     <div class="fq"><div class="qlabel write">질문 2 · 핵심 질문: 광복 이후를 종합하기</div><h4 style="font-size:21px">광복했는데도 왜 하나의 정부를 바로 만들지 못했을까?</h4>
       <div class="hintbtns"><span class="hint" style="margin:0 4px 0 0">💡 힌트가 필요하다면 눌러보세요.</span>${CORE_HINTS.map((h,i)=>`<button data-i="${i}">힌트 ${i+1}</button>`).join('')}</div><div class="hintshow" id="hintshow"></div>
-      <textarea id="core" maxlength="800" placeholder="2~3문장(60자 이상)으로 써 보세요. 예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다. 또 ___"></textarea><div class="wcnt" id="corec"></div></div>
+      <textarea id="core" maxlength="800" placeholder="1~2문장(30자 이상)으로 써 보세요. 예) 광복 이후에 ___ 때문에 하나의 정부를 만들기 어려웠다. 또 ___"></textarea><div class="wcnt" id="corec"></div></div>
     <details class="opt-more" id="more"><summary>➕ 더 해 보기 (선택)</summary>
       <div class="fq" style="margin-top:12px"><h4>💎 내가 중요하게 생각한 가치는?</h4><div class="pick" id="vals">${VALUES.map(v=>`<button data-v="${v}">${v}</button>`).join('')}</div></div>
       <div class="fq"><h4>⭐ 가장 기억에 남는 선택은?</h4><div class="pick list" id="mem">${ids.map(id=>{const r=S.rec[id];return `<button data-id="${id}"><small>${esc(r.label)}</small>${esc(r.choice)}</button>`}).join('')}</div></div>
     </details></div>
     ${nextBtn('나의 기록 완성하기 ▶',true)}</div>`;
   const nx=$('#nx'), wy=$('#wy'), core=$('#core');
-  const MIN1=80, MIN2=60; /* [v11] 최소 글자 수 */
+  const MIN1=40, MIN2=30; /* [v11] 최소 글자 수 */
   const check=()=>{ const a=wy.value.trim().length, b=core.value.trim().length;
     $('#wyc').textContent=`지금 ${a}자 / ${MIN1}자 이상`; $('#wyc').classList.toggle('ok',a>=MIN1);
     $('#corec').textContent=`지금 ${b}자 / ${MIN2}자 이상`; $('#corec').classList.toggle('ok',b>=MIN2);
@@ -1405,7 +1413,7 @@ const COMMON=[
     q:'당신이라면 가장 먼저 무엇부터 해결하겠는가?',
     opts:['우선 [[치안]]과 질서를 유지한다.','식량을 확보하고 배급 문제를 해결한다.','정치 세력을 모아 새로운 나라의 방향을 논의한다.','여러 문제를 동시에 해결할 조직부터 만든다.'],
     short:['치안과 질서','식량 문제','새 나라의 방향','문제를 해결할 조직'],
-    write:{min:20,lead:'왜 그것이 가장 먼저라고 생각했나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'일본 경찰과 관청이 무너져 혼란이 커졌고, 질서가 없으면 식량 배급도 나라 만들기도 할 수 없기'}},
+    write:{min:10,lead:'왜 그것이 가장 먼저라고 생각했나요?',pre:c=>`나는 <span class="fixed">${c}</span>${josa(c,'이','가')} 가장 중요하다고 생각한다. 왜냐하면`,post:'때문이다.',ph:'일본 경찰과 관청이 무너져 혼란이 커졌고, 질서가 없으면 식량 배급도 나라 만들기도 할 수 없기'}},
   /* [v7] 장면 A — 광복 직전: 엔도와 여운형만 등장 */
   {t:'scene',part:0,bg:'gov',place:'정무총감 관저 (서울)',date:'1945년 8월 15일 이른 아침 · 항복 발표 직전',chars:[{k:'endo',p:'l'},{k:'yeo',p:'r'}],amb:[{k:'clock',vol:.7}],lines:[
     {text:'시간을 조금 되돌려 보자. 1945년 8월 15일 이른 아침, 일본의 항복이 공식 발표되기 몇 시간 전.'},
@@ -1446,7 +1454,7 @@ const COMMON=[
     {text:'이제 새로운 나라를 만드는 문제는 **조선 사람들만의 문제가 아니게** 되었다.'}]},
   {t:'short',part:1,bg:'map',map:'38',id:'s38',label:'📚 복습 문제 · 38선',
     lead:'1945년 8월, 소련군은 이미 한반도 북쪽으로 빠르게 내려오고 있었다. 미국은 북위 38도선을 경계로 나누어 일본군의 항복을 받자고 제안했고, 소련이 이를 받아들였다.',
-    q:'미국과 소련은 왜 38선을 그었을까? 특히 미국의 입장에서 생각해 써 보세요.',ph:'예) 미국은 ___을 막기 위해 38선을 제안했다.',min:6,area:1,
+    q:'미국과 소련은 왜 38선을 그었을까? 특히 미국의 입장에서 생각해 써 보세요.',ph:'예) 미국은 ___을 막기 위해 38선을 제안했다.',min:3,area:1,
     test:v=>{const t=v.replace(/\s/g,''); return /소련|소군|소비에트/.test(t) && /남하|막|견제|저지|차지|점령|내려|확대|확장|독점|장악|차단|멈추/.test(t);},
     hints:[v=>/일본|무장/.test(v)?'그것은 겉으로 내세운 이유예요. 미국이 정말로 걱정한 나라는 어디였을까요?':'수업에서 배운 내용을 떠올려 보세요. 8월에 먼저 한반도 북쪽으로 들어온 군대는 어느 나라 군대였나요?',
            '핵심 낱말을 넣어 다시 써 보세요: \u2018소련(군)\u2019, \u2018남하\u2019 또는 \u2018견제\u2019·\u2018막기 위해\u2019'],
@@ -1509,14 +1517,14 @@ const ROUTES={
       dl:[{t:'남쪽에 남아 다가오는 선거와 새 정부에 대비한다.',pro:'남쪽 정치에서 영향력을 지키고 새 나라 만들기에 목소리를 낼 수 있다.',con:'분단을 막으려는 노력을 멈추는 것처럼 보일 수 있다.'},
           {t:'북쪽으로 가서 북쪽 지도자들과 직접 담판을 시도한다.',pro:'나라가 둘로 갈라지는 것을 막을 마지막 기회를 붙잡을 수 있다.',con:'북쪽에 이용당하거나 아무 성과 없이 끝날 수 있다.'}]},
     {t:'history',ref:'r2',real:'1948년 4월, 김구는 김규식과 함께 38선을 넘어 평양으로 갔어요. 그곳에서 김일성·김두봉 등 북쪽 지도자들과 만나 회의를 열었어요([[남북 협상]]).'},
-    {t:'scene',bg:'room',place:'평양',date:'1948년 4월',chars:[{k:'kimgu',p:'l'},{k:'kks',p:'c'},{k:'kimil',p:'r'}],lines:[
+    {t:'scene',bg:'pyongyang',place:'평양',date:'1948년 4월',chars:[{k:'kimgu',p:'l'},{k:'kks',p:'c'},{k:'kimil',p:'r'}],lines:[
       {text:'1948년 4월, 평양. 남과 북의 여러 정당·사회단체 대표들이 한자리에 모였다.'},
       {text:'김구와 김규식은 북쪽의 김일성·김두봉과 따로 만나 이야기를 나누기도 했다.'},
       {who:'kimgu',text:'외국 군대가 물러가고, 우리 민족 스스로 하나의 정부를 세워야 합니다.'},
       {text:'회의가 끝난 뒤, 참석자들은 [[공동 성명]]을 발표했다.'}]},
     {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'남북 협상은 무엇을 주장했을까?',label:'사료 읽기 · 남북 협상 공동 성명',
       intro:'평양 회의가 끝난 뒤 발표한 [[공동 성명]]이에요.',
-      doc:{no:3,title:'「남북 조선 제정당 사회단체 지도자 협의회 공동 성명」',meta:'1948년 4월 30일 (일부 발췌, 현대어로 다듬음)',body:`
+      doc:{no:'3-1',title:'「남북 조선 제정당 사회단체 지도자 협의회 공동 성명」',meta:'1948년 4월 30일 (일부 발췌, 현대어로 다듬음)',body:`
         <p class="art" data-a="1"><b>1.</b> 우리 강토에서 외국 군대가 즉시 동시에 철거하는 것은 조선 문제를 해결하는 가장 정당하고 유일한 방법이다.</p>
         <p class="art" data-a="2"><b>2.</b> 남북 정당·사회단체 지도자들은 외국 군대가 철퇴한 이후 내전이 발생할 수 없다는 것을 확인한다.</p>
         <p class="art" data-a="3"><b>3.</b> 외국 군대가 철퇴한 이후 전조선 정치 회의를 소집하여 민주주의 임시 정부를 수립하고, 이 정부는 일반적·직접적·평등적 비밀 투표로 통일적 입법 기관을 선거하며, 그 입법 기관은 헌법을 제정하여 통일적 민주 정부를 수립할 것이다.</p>
@@ -1556,7 +1564,7 @@ const ROUTES={
           {t:'발표를 미루고 더 많은 세력과 먼저 의논한다.',pro:'더 넓은 지지를 모아 힘 있는 조직을 만들 수 있다.',con:'그 사이 미군이 들어와 먼저 자리를 잡을 수 있다.'}]},
     {t:'history',ref:'r1',real:'1945년 9월 6일, 건준 세력은 미군이 들어오기 직전 서둘러 정부 수립을 선포했어요. 그러나 우익 다수는 참여하지 않았고, [[미군정]]도 이 정부를 인정하지 않았어요.'},
     {t:'short',id:'q1',label:'📚 복습 문제',lead:'1945년 9월 6일, 건준 세력은 미군이 들어오기 직전 서둘러 정부 수립을 선포했다.',
-      q:'이때 선포한 정부의 이름은 무엇일까?',ph:'정부 이름을 써 보세요',min:4,
+      q:'이때 선포한 정부의 이름은 무엇일까?',ph:'정부 이름을 써 보세요',min:2,
       test:v=>/조선인민공화국/.test(v.replace(/\s/g,'')),
       hints:['‘조선 ○○ 공화국’이에요. 수업에서 배운 이름을 떠올려 보세요.','가운데 두 글자는 ‘백성’과 비슷한 뜻의 낱말이에요. (ㅇㅁ)'],
       ok:'맞아요! **조선인민공화국**이에요. 그러나 미군정은 이 정부도, 대한민국 임시정부도 정부로 인정하지 않았어요.'},
@@ -1581,7 +1589,7 @@ const ROUTES={
     {t:'history',ref:'r3',real:'1946년 10월 좌우합작위원회는 **좌우합작 7원칙**을 발표했어요. 토지는 몰수·조건부 몰수·체감 매상으로 거두어 농민에게 무상으로 나누어 준다는 절충안이었어요. 그러나 좌익(조선공산당)과 우익(한국민주당) 모두 반대해 [[좌우합작]] 운동은 힘을 잃었어요.'},
     {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'좌우합작 7원칙에는 무엇이 담겼을까?',label:'사료 읽기 · 좌우합작 7원칙',
       intro:'좌우합작위원회가 발표한 원칙의 일부예요.',
-      doc:{no:3,title:'「좌우합작 7원칙」',meta:'좌우합작위원회 · 1946년 10월 (일부 발췌, 현대어로 다듬음)',body:`
+      doc:{no:'3-2',title:'「좌우합작 7원칙」',meta:'좌우합작위원회 · 1946년 10월 (일부 발췌, 현대어로 다듬음)',body:`
         <p class="art" data-a="1"><b>1.</b> 모스크바 3국 외상 회의 결정에 의하여 남북을 통한 좌우 합작으로 민주주의 임시 정부를 수립할 것</p>
         <p class="art" data-a="2"><b>2.</b> 미·소 공동 위원회의 속개를 요청하는 공동 성명을 발표할 것</p>
         <p class="art" data-a="3"><b>3.</b> 토지 개혁에 있어 몰수, 조건부 몰수, 체감 매상 등으로 토지를 농민에게 무상으로 분여하며, 중요 산업을 국유화할 것</p>
@@ -1621,7 +1629,7 @@ const ROUTES={
     {t:'history',ref:'r2',real:'1946년 6월 이승만은 정읍에서 남쪽만이라도 정부를 세워야 한다는 뜻을 밝혔어요(**정읍 발언**). 이 주장을 두고 찬성과 반대가 크게 엇갈렸어요.'},
     {t:'find',id:'src3',kicker:'③ 1945, 나는 어떤 길을 선택할까?',title:'정읍에서 이승만은 무엇이라고 말했을까?',label:'사료 읽기 · 정읍 발언',
       intro:'1946년 6월, 이승만이 전라북도 정읍에서 한 연설이에요.',
-      doc:{no:3,title:'「이승만의 정읍 발언」',meta:'1946년 6월 3일 연설 · 《서울신문》 1946년 6월 4일 보도 (일부, 현대어로 다듬음)',body:`
+      doc:{no:'3-3',title:'「이승만의 정읍 발언」',meta:'1946년 6월 3일 연설 · 《서울신문》 1946년 6월 4일 보도 (일부, 현대어로 다듬음)',body:`
         <p class="art" data-a="1">이제 우리는 무기 휴회된 공위가 재개될 기색도 보이지 않으며, 통일 정부를 고대하나 여의치 않으니,</p>
         <p class="art" data-a="2">우리는 남방만이라도 임시 정부 혹은 위원회 같은 것을 조직하여 38 이북에서 소련이 철퇴하도록 세계 공론에 호소하여야 될 것이니,</p>
         <p class="art" data-a="3">여러분도 결심하여야 할 것이다.</p>`},
