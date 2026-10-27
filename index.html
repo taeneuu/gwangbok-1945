@@ -289,6 +289,12 @@ ul.fact li{margin:3px 0}
 .pcard2 .pros{color:#2e6a4c;margin-bottom:4px}.pcard2 .cons{color:#8f261e}
 .hrow.cmpr .lb{background:var(--gold);color:#fff}
 @media (max-width:720px){.pc2{grid-template-columns:1fr}}
+.submitbox{margin-top:18px;background:#fff3d8;border:2px solid var(--ink);border-radius:14px;padding:14px 16px;box-shadow:4px 4px 0 var(--ink)}
+.subt{font-family:'Noto Serif KR',serif;font-weight:900;font-size:19px;margin-bottom:8px}
+.subrow{display:flex;gap:8px;flex-wrap:wrap}
+.subrow input{flex:1 1 200px;font-size:17px;padding:10px 12px;border:2px solid var(--ink);border-radius:10px;font-family:inherit}
+.submsg{font-size:14px;margin-top:8px;color:var(--muted);line-height:1.6}
+.submsg.ok{color:#2e6a4c;font-weight:700}.submsg.no{color:#b3352b;font-weight:700}
 .srcno{display:inline-block;background:var(--red);color:#fff;font-size:13px;font-weight:900;padding:1px 8px;border-radius:5px;vertical-align:3px;font-family:'Noto Sans KR',sans-serif}
 .wcnt{font-size:13px;font-weight:700;color:#b3352b;margin-left:6px}
 .wcnt.ok{color:#2e6a4c}
@@ -419,6 +425,11 @@ details.help div{margin-top:8px;font-size:15px;line-height:1.7;color:#4a3e2e}
 
 <script>
 /* =====================================================================
+   [v13 변경 내역] 선생님께 제출하기 (구글 스프레드시트 + Apps Script)
+   - 기록 화면에 [선생님께 제출하기] 버튼. SUBMIT_URL 로 학번·이름, 인물, 주요 답안, 전체 기록을 보냄
+   - 학번·이름이 없으면 기록 화면에서 입력 후 제출, 제출 완료 표시·두 번 누름 방지(인물별), 실패하면 다시 시도
+   ===================================================================== */
+/* =====================================================================
    [v12 변경 내역]
    - 주관식 최소 글자 수 절반으로: 무엇부터 해결할까 20→10자, 38선 6→3자, 정부 이름 4→2자, 마지막 질문 80→40자·60→30자
    - 인물별 사료 번호: 김구 [사료 3-1], 여운형 [사료 3-2], 이승만 [사료 3-3]
@@ -540,6 +551,8 @@ const PARTS = ['광복, 그런데 나라가 없다 · 무엇부터 해결할까?
 const CORE_Q = '광복은 되었는데, 왜 하나의 나라를 바로 만들지 못했을까?';
 const COMMON_LINE = '실제 역사는 한 사람의 선택만으로 결정되지 않았습니다. 광복 이후의 역사는 국제 정세, 미군과 소련군의 주둔, 여러 정치 세력의 갈등과 협상 속에서 전개되었습니다.';
 const RECON = '※ 이 대화는 당시의 역사적 상황과 자료를 바탕으로 재구성한 것입니다.';
+/* 선생님 제출용 Apps Script 웹 앱 주소 (바꾸려면 이 줄만 고치면 됩니다) */
+const SUBMIT_URL = 'https://script.google.com/macros/s/AKfycbyh_7Yly5B_uegiPNIdX8DtRPn2vvc4tA7PGyN4wqyhrB1G2-dQVJOlpbMNA_mX6s9d/exec';
 const STORE_KEY = 'gwangbok3_v11';
 
 /* ================= 용어 사전 ================= */
@@ -1377,16 +1390,40 @@ R.ending=()=>{
     <h5>나의 기록 전체</h5><div class="rec">${recHTML()}</div>
     <div class="key" style="font-size:19px;margin-top:18px">「광복했지만, 나라를 만드는 것은 또 다른 문제였다.」<div style="font-size:14px;font-weight:500;color:var(--muted);margin-top:4px;font-family:'Noto Sans KR',sans-serif">오늘 배운 내용을 나의 말로 정리해 보았나요?</div></div>
     <div class="credit">인물 사진: 위키미디어 공용(Wikimedia Commons) · 대화 장면은 역사적 상황을 바탕으로 재구성</div></div>
+    <div class="submitbox noprint" id="subbox">
+      <div class="subt">📮 선생님께 제출하기</div>
+      <div class="subrow"><input id="subname" maxlength="20" placeholder="학번 이름 (예: 10305 김하늘)" value="${esc(S.name||'')}"><button class="btn primary" id="subbtn">제출하기 ▶</button></div>
+      <div class="submsg" id="submsg">제출하면 선생님의 기록지에 오늘 작성한 답이 저장돼요.</div>
+    </div>
     <div class="actions noprint" style="justify-content:center">
       <button class="btn" id="cp">📋 기록 복사하기</button><button class="btn" id="pr">🖨 인쇄 / PDF 저장</button>
       ${S.done.length<3?'<button class="btn ghost" id="again">🔁 (시간이 남으면) 다른 인물의 길 보기</button>':''}
       <button class="btn ghost" id="home">처음으로</button></div></div>`;
   tone([523,659,784,1046],0.16);
-  $('#cp').onclick=()=>{
-    const txt=`[1945, 해방된 조선의 선택] ${S.name} (${ds})\n`+
+  const buildTxt=()=>`[1945, 해방된 조선의 선택] ${S.name} (${ds})\n`+
       `- 내가 선택한 인물: ${CH[me].n}\n- 중요하게 생각한 가치: ${val}\n- 가장 기억에 남는 선택: ${mem}\n`+
       `- 질문 1 (${CH[me].n}의 실제 선택에 동의하는가, 왜?): ${wouldSentence(E)}\n- 질문 2 (왜 하나의 정부를 바로 만들지 못했을까?): ${coreSentence(E)}\n[전체 기록]\n`+
       S.order.map(id=>{const r=S.rec[id];return `- ${r.label}: ${r.choice}${r.sentence?' / '+r.sentence:(r.reason?' / '+r.reason:'')}`}).join('\n');
+  /* [v13] 선생님께 제출하기 */
+  const subs=E.submitted||(E.submitted={}), sb=$('#subbtn'), sm=$('#submsg'), sn=$('#subname');
+  const showDone=t=>{ sb.disabled=true; sb.textContent='✅ 제출 완료'; sn.disabled=true; sm.className='submsg ok'; sm.textContent=`${t}에 제출했어요. 선생님께 잘 전달되었어요.`; };
+  if(subs[me]) showDone(subs[me]);
+  sb.onclick=()=>{
+    const nm=sn.value.trim();
+    if(nm.length<2){ sm.className='submsg no'; sm.textContent='학번과 이름을 먼저 입력해 주세요.'; sn.focus(); return; }
+    S.name=nm; save(); const mt=$('.cert .meta'); if(mt) mt.textContent=`「1945, 해방된 조선의 선택」 · ${nm} · ${ds}`; sb.disabled=true; sb.textContent='보내는 중…'; sm.className='submsg'; sm.textContent='잠시만 기다려 주세요.';
+    const r=id=>S.rec[id]||{};
+    const data={name:nm, route:CH[me].n, s1:r('s1').sentence||r('s1').choice||'', s38:r('s38').choice||'',
+      agree:E.would||'', q1:E.wouldReason||'', q2:E.core||'', all:buildTxt()};
+    const fail=()=>{ sb.disabled=false; sb.textContent='다시 시도 ▶'; sm.className='submsg no'; sm.textContent='제출하지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요. (안 되면 [기록 복사하기]로 선생님께 보내 주세요)'; };
+    const ctl=window.AbortController?new AbortController():null; const to=setTimeout(()=>ctl&&ctl.abort(),15000);
+    fetch(SUBMIT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(data),signal:ctl?ctl.signal:undefined})
+      .then(()=>{ clearTimeout(to); const d2=new Date(); const t=`${d2.getHours()}시 ${String(d2.getMinutes()).padStart(2,'0')}분`; subs[me]=t; save(); showDone(t); chime(); })
+      .catch(()=>{ clearTimeout(to); fail(); });
+  };
+  sn.onkeydown=e=>{ if(e.key==='Enter') sb.click(); };
+  $('#cp').onclick=()=>{
+    const txt=buildTxt();
     const ok=()=>{$('#cp').textContent='✅ 복사했어요!';setTimeout(()=>$('#cp').textContent='📋 기록 복사하기',1800)};
     if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(ok,()=>fallback(txt,ok)); else fallback(txt,ok);
   };
